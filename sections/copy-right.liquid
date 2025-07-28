@@ -1,0 +1,266 @@
+{% if section.settings.copyright_enable %}
+<footer class="footer-bottom-area">
+  <div class="container">
+    <div class="grid-wrap">
+      {% for block in section.blocks %}
+      {% case block.type %}
+      {% when 'logo' %}
+      <div class="grid-wrapper grid-logo">
+        <div class="footer-logo">
+          {% render 'company-logo-footer' %}
+        </div>
+      </div>
+      {% when 'copyright' %}
+      <div class="grid-wrapper grid-copyright">
+        <p>
+          <span>{{ block.settings.copy_right_text1 }}</span>
+          <span class="copy-icon"><i class="{{ block.settings.copy_right_icon }}"></i></span>
+          <span>{{ block.settings.copy_right_text2 }}</span>
+        </p>
+      </div>
+      {% when 'menu' %}
+      <div class="grid-wrapper grid-menu">
+        {% assign footer_menu = block.settings.footer_bt_menu_handle %}
+        {% for link in linklists[footer_menu].links %}
+        {% if linklists[footer_menu].links != '' %}
+        <a href="{{ link.url }}" class="ft-sublink">{{ link.title }}</a>
+        {% endif %}
+        {% endfor %}
+      </div>
+      {% when 'payment' %}
+        <div class="grid-wrapper grid-payment">
+          {% render 'payment-icon' %}
+        </div>
+      {% endcase %}
+      {% endfor %}
+    </div>
+  </div>
+</footer>
+{% endif %}
+{% schema %}
+{
+  "name": "Copyright",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "copyright_enable",
+      "label": "Copyright Enable",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Section padding"
+    },
+    {
+      "type": "range",
+      "id": "section_padding_top",
+      "label": "Section Padding Top",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "section_padding_bottom",
+      "label": "Section Padding Bottom",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 50
+    },
+    {
+      "type": "header",
+      "content": "Section Background"
+    },
+    {
+      "type": "header",
+      "content": "Background Color"
+    },
+    {
+      "type": "color",
+      "id": "section_bg_color",
+      "label": "Background Color",
+      "default": "#f7f7f7"
+    },
+    {
+      "type": "header",
+      "content": "Section Border"
+    },
+    {
+      "type": "range",
+      "id": "border",
+      "label": "Border",
+      "min": 0,
+      "max": 2,
+      "step": 1,
+      "unit": "px",
+      "default": 1
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border Color",
+      "default": "#7F462B"
+    },
+    {
+      "type": "checkbox",
+      "id": "border_enable",
+      "label": "Show Section Border",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "border_color_opacity",
+      "label": "Theme Border Color Opacity",
+      "min": 0,
+      "max": 1,
+      "step": 0.1,
+      "default": 0.3
+    }
+  ],
+  "blocks": [
+    {
+      "type": "logo",
+      "name": "Logo",
+      "limit": 1
+    },
+    {
+      "type": "copyright",
+      "name": "Copyright",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "copy_right_text1",
+          "label": "CopyRight Text1",
+          "default": "Derechos de autor"
+        },
+        {
+          "type": "text",
+          "id": "copy_right_icon",
+          "label": "CopyRight Class",
+          "default": "fa fa-copyright"
+        },
+        {
+          "type": "textarea",
+          "id": "copy_right_text2",
+          "label": "CopyRight Text2",
+          "default": "2022 by spacingtech<sup>TM</sup>"
+        }
+      ]
+    },
+    {
+      "type": "payment",
+      "name": "Payment icon",
+      "limit": 1
+    },
+    {
+      "type": "menu",
+      "name": "Menu",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "header",
+          "content": "Section Menu"
+        },
+        {
+          "type": "link_list",
+          "id": "footer_bt_menu_handle",
+          "label": "Select Menu"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Copyright"
+    }
+  ]
+}
+{% endschema %}
+{% if section.settings.copyright_enable %}
+<style>
+.footer-bottom-area {
+    background-color: {{ section.settings.section_bg_color }};
+    padding-top: {{ section.settings.section_padding_top }}px;
+    padding-bottom: {{ section.settings.section_padding_bottom }}px;
+    {% if section.settings.border_enable %}
+    border-top: {{ section.settings.border }}px solid {{ section.settings.border_color | color_modify: 'alpha', section.settings.border_color_opacity }};
+    {% endif %}
+}
+.footer-bottom-area .grid-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  {% if settings.enable_rtl %}
+  margin: -30px -30px 0px 0px;
+  {% else %}
+  margin: -30px 0px 0px -30px;
+  {% endif %}
+}
+.footer-bottom-area .grid-wrap .grid-wrapper{
+  width: calc(33.33% - 30px);
+  {% if settings.enable_rtl %}
+  margin: 30px 30px 0px 0px;
+  {% else %}
+  margin: 30px 0px 0px 30px;
+  {% endif %}
+}
+.footer-bottom-area .grid-wrap .grid-wrapper.grid-copyright {
+  text-align: center;
+}
+.footer-bottom-area .grid-wrap .grid-wrapper.grid-payment {
+  display: flex;
+  justify-content: flex-end;
+}
+@media (max-width: 991px) {
+  .footer-bottom-area .grid-wrap .grid-wrapper.grid-logo,
+  .footer-bottom-area .grid-wrap .grid-wrapper.grid-payment {
+    width: calc(50% - 30px);
+  }
+  .footer-bottom-area .grid-wrap .grid-wrapper.grid-copyright {
+    width: calc(100% - 30px);
+    order: 1; 
+  }
+}
+@media (max-width: 767px) {
+  .footer-bottom-area .grid-wrap {
+    {% if settings.enable_rtl %}
+    margin: -30px -12px 0px 0px;
+    {% else %}
+    margin: -30px 0px 0px -12px;
+    {% endif %}
+  }
+  .footer-bottom-area .grid-wrap .grid-wrapper{
+    {% if settings.enable_rtl %}
+    margin: 30px 12px 0px 0px;
+    {% else %}
+    margin: 30px 0px 0px 12px;
+    {% endif %}
+  }
+  .footer-bottom-area .grid-wrap .grid-wrapper.grid-logo,
+  .footer-bottom-area .grid-wrap .grid-wrapper.grid-payment {
+    width: calc(50% - 12px);
+  }
+  .footer-bottom-area .grid-wrap .grid-wrapper.grid-copyright {
+    width: calc(100% - 12px);
+  }
+}
+@media (max-width: 479px) {
+  .footer-bottom-area .grid-wrap .grid-wrapper.grid-logo,
+  .footer-bottom-area .grid-wrap .grid-wrapper.grid-copyright,
+  .footer-bottom-area .grid-wrap .grid-wrapper.grid-payment {
+    width: calc(100% - 12px);
+    text-align: center;
+    justify-content: center;
+  }
+  .footer-bottom-area .grid-wrap .grid-wrapper.grid-copyright {
+    order: unset;
+  }
+}
+</style>
+{% endif %}

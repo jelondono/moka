@@ -1,0 +1,406 @@
+<section class="slider-category">
+  <div class="cat-slider owl-carousel owl-theme" id="category-slider-{{ section.id }}">
+    {% for block in section.blocks %}
+    {% assign category_product = collections[block.settings.slider_category_handle] %}
+      <div class="item">
+        <div class="category-wrap">
+          <a href="{{ category_product.url }}" class="cat-url" style="background-image: url('{% if block.settings.testi_bgimg %}{{ block.settings.testi_bgimg | image_url }}{% else %}https://dummyimage.com/480x350/f7f7f7/999999{% endif %}');">
+            <div class="text-content">
+              <span class="cat-title">{{ category_product.title | default: "Categoria" }}</span>
+              <h2 class="big-title">
+                {% if section.settings.big_title_label != '' %}
+                <span class="title-1">{{ section.settings.big_title_label }}</span>
+                {% endif %}
+                {% if block.settings.big_title_text != '' %}
+                <span class="title-2">{{ block.settings.big_title_text }}</span>
+                {% endif %}
+              </h2>
+              {% if block.settings.cat_desc != '' %}
+              <p class="cat-desc">{{ block.settings.cat_desc }}</p>
+              {% endif %}
+            </div>
+            <div class="cat-btn">
+              <span><i class="feather-arrow-right"></i></span>
+            </div>
+          </a>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</section>
+<script type="text/javascript">
+  addEventListener('DOMContentLoaded', (event) => {
+    $(function(){
+      $('#category-slider-{{ section.id }}').owlCarousel({
+        {%- if settings.enable_rtl -%}
+        rtl: true,
+        {%- endif -%}
+        loop: false,
+        rewind: false,
+        items: 4,
+        margin: 0,
+        nav: false,
+        navText: ['<i class="ri-arrow-left-line"></i>','<i class="ri-arrow-right-line"></i>'],
+        dots: false,
+        responsive: {
+          0: {
+            items: 1,
+            margin: 0
+          },
+          320: {
+            items: 1,
+            margin: 0
+          },
+          540: {
+            items: 1,
+            margin: 0
+          },
+          768: {
+            items: 2,
+            margin: 0
+          },
+          979: {
+            items: 3,
+            margin: 0
+          },
+          1199: {
+            items: 3,
+            margin: 0
+          },
+          1499: {
+            items: 3,
+            margin: 0
+          },
+          1599: {
+            items: 4,
+            margin: 0
+          }
+        }
+      });
+    });
+  });
+</script>
+{% schema %}
+{
+  "name": "Category",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section Padding"
+    },
+    {
+      "type": "range",
+      "id": "section_padding_top",
+      "label": "Section Padding Top",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "section_padding_bottom",
+      "label": "Section Padding Bottom",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "paragraph",
+      "content": "tablet"
+    },
+    {
+      "type": "range",
+      "id": "section_padding_top_lg",
+      "label": "Section Padding Top",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "section_padding_bottom_lg",
+      "label": "Section Padding Bottom",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "paragraph",
+      "content": "Mobile"
+    },
+    {
+      "type": "range",
+      "id": "section_padding_top_xs",
+      "label": "Section Padding Top",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "section_padding_bottom_xs",
+      "label": "Section Padding Bottom",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "Section Background Color"
+    },
+    {
+      "type": "color",
+      "id": "blog_bgcolor",
+      "label": "Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Category Item BG Color"
+    },
+    {
+      "type": "color",
+      "id": "category_item_bg_color",
+      "label": "Background Color",
+      "default": "#fcf8f8"
+    },
+    {
+      "type": "header",
+      "content": "Big Title Label"
+    }
+  ],
+  "blocks": [
+    {
+      "name": "slider-category",
+      "type": "product_tab",
+      "settings": [
+        {
+          "type": "header",
+          "content": "Select Your Collection"
+        },
+        {
+          "type": "collection",
+          "id": "slider_category_handle",
+          "label": "Collection"
+        },
+        {
+          "type": "header",
+          "content": "Category Background Image"
+        },
+        {
+          "type": "image_picker",
+          "id": "testi_bgimg",
+          "label": "Backgorund Image",
+          "info": "Recommended Size: 480px x 350px"
+        },
+        {
+          "type": "header",
+          "content": "Big Title"
+        },
+        {
+          "type": "text",
+          "id": "big_title_text",
+          "label": "Title",
+          "default": "body"
+        },
+        {
+          "type": "textarea",
+          "id": "cat_desc",
+          "label": "Category Description",
+          "default": "   A cosmetic is any substance used to a clean, improve or change the complexion"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Category"
+    }
+  ]
+}
+{% endschema %}
+<style>
+.slider-category {
+  padding-top:{{ section.settings.section_padding_top }}px;
+  padding-bottom:{{ section.settings.section_padding_bottom }}px;
+  background-color: {{ section.settings.blog_bgcolor }};
+}
+@media (max-width: 1199px) {
+  .slider-category {
+    padding-top:{{ section.settings.section_padding_top_lg }}px;
+    padding-bottom:{{ section.settings.section_padding_bottom_lg }}px;
+  }
+}
+@media (max-width: 767px) {
+  .slider-category {
+    padding-top:{{ section.settings.section_padding_top_xs }}px;
+    padding-bottom:{{ section.settings.section_padding_bottom_xs }}px;
+  }
+}
+
+.slider-category .category-wrap {
+  text-align: center;
+}
+.slider-category .category-wrap a.cat-url {
+  position: relative;
+  padding: 100px 0px;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  z-index: 1;
+  -webkit-transition: all 0.3s ease-in-out 0s;
+  -o-transition: all 0.3s ease-in-out 0s;
+  transition: all 0.3s ease-in-out 0s;
+} 
+.slider-category .category-wrap a.cat-url::before {
+  background-color: {{ section.settings.category_item_bg_color }};
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+.slider-category .category-wrap a.cat-url:hover::before {
+  opacity: 0;
+  visibility: hidden;
+}
+.slider-category .category-wrap a.cat-url::after {
+  background-color: #000000;
+  content: "";
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  bottom: 0px;
+  left: 0px;
+  opacity: 0.2;
+  z-index: -1;
+}
+/* category text css */
+.slider-category .category-wrap a.cat-url .text-content {
+  z-index: 1;
+  position: relative;
+  max-width: 66.67%;
+  margin: 0 auto;
+}
+.slider-category .category-wrap a.cat-url:hover .text-content {
+  opacity: 0;
+  visibility: hidden;
+}
+.slider-category .category-wrap a.cat-url .text-content span.cat-title {
+  Color: var(--font-color-primary);
+  margin-bottom: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+.slider-category .category-wrap a.cat-url .text-content h2.big-title {
+  font-size: 40px;
+  font-weight: 300; 
+}
+.slider-category .category-wrap a.cat-url .text-content h2.big-title span.title-2 {
+  position: relative;
+  {% if settings.enable_rtl %}
+  padding-right: 12px;
+  margin-right: 12px;
+  {% else %}
+  padding-left: 12px;
+  margin-left: 12px;
+  {% endif %}
+}
+.slider-category .category-wrap a.cat-url .text-content h2.big-title span.title-2::before {
+  background-color: var(--font-color-primary);
+  content: '';
+  position: absolute;
+  bottom: 50%;
+  transform: translateY(50%);
+  {% if settings.enable_rtl %}
+  right: -5px;
+  {% else %}
+  left: -5px;
+  {% endif %}
+  width: 5px;
+  height: 5px;
+  border-radius: 100%;
+}
+.slider-category .category-wrap a.cat-url .text-content p.cat-desc {
+  margin-top: 13px;
+}
+ 
+/* category btn css */
+.slider-category .category-wrap a.cat-url .cat-btn {
+  position: absolute;
+  bottom: 50%;
+  transform: translateY(50%);
+  left: 0px;
+  right: 0px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+}
+.slider-category .category-wrap a.cat-url:hover .cat-btn {
+  opacity: 1;
+  visibility: visible;
+}
+.slider-category .category-wrap a.cat-url .cat-btn span { 
+  background-color: #ffffff;
+  color: var(--font-color-primary);
+  width: 70px;
+  height: 70px;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 100%;
+}
+.slider-category .category-wrap a.cat-url .cat-btn span:hover {
+  background-color: var(--font-color-primary);
+  color: #ffffff;
+}
+.slider-category .category-wrap a.cat-url::before,
+.slider-category .category-wrap a.cat-url:hover::before,
+.slider-category .category-wrap a.cat-url .text-content,
+.slider-category .category-wrap a.cat-url:hover .text-content,
+.slider-category .category-wrap a.cat-url .cat-btn,
+.slider-category .category-wrap a.cat-url:hover .cat-btn,
+.slider-category .category-wrap a.cat-url .cat-btn span,
+.slider-category .category-wrap a.cat-url .cat-btn span:hover {
+  -webkit-transition: all 0.3s ease-in-out 0s;
+  -o-transition: all 0.3s ease-in-out 0s;
+  transition: all 0.3s ease-in-out 0s;
+}
+@media (max-width: 1280px) {
+  .slider-category .category-wrap a.cat-url .text-content {
+    max-width: 75%;
+  }
+}
+@media (max-width: 1199px) {
+  .slider-category .category-wrap a.cat-url {
+    padding: 80px 0px;
+  }
+  .slider-category .category-wrap a.cat-url .text-content {
+    max-width: 90%;
+  }
+  .slider-category .category-wrap a.cat-url .text-content h2.big-title {
+    font-size: 30px;
+  }
+}
+@media (max-width: 767px) {
+  .slider-category .category-wrap a.cat-url {
+    padding: 60px 0px;
+  }
+}
+</style>

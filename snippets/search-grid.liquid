@@ -1,0 +1,34 @@
+{% if item.featured_image %}
+<div class="search-item single-product-wrap">
+  <div class="product-image">
+    <a href="{{ item.url | within: collection }}">
+      <img class="img-fluid" src="{{ item.featured_image.src | image_url }}" width="{{ item.featured_image.src.width }}" height="{{ item.featured_image.src.height }}" alt="{{ item.featured_image.src.alt }}" loading="lazy">
+    </a>
+  </div>
+  <div class="product-content">
+    <div class="product-title">
+      <a href="{{ item.url | within: collection }}">{{ item.title }}</a>
+    </div>
+    <div class="price-box">
+      <span class="new-price">{{ item.price | money }}</span>
+      {% if item.compare_at_price_max > item.price %}
+      <span class="old-price">{{ item.compare_at_price | money }}</span>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% else %}    
+<div class="search-blog-item">
+  <div class="search-blog-img">
+    <a href="{{ item.url }}">
+      <img class="img-fluid" src="{{ item.image | image_url }}" width="{{ item.image.width }}" height="{{ item.image.height }}" alt="{{ item.title | escape }}" loading="lazy"/>
+    </a>
+  </div>
+  <div class="search-blog-content">
+    <h6 class="search-blog-title">
+      <a href="{{ item.url }}">{{ item.title }}</a>
+    </h6>
+    <p>{{ item.content | strip_html | strip | truncate: 100 }}</p>
+  </div>
+</div>
+{% endif %}

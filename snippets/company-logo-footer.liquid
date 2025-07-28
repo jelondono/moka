@@ -1,0 +1,32 @@
+{%- if settings.logo_footer -%}
+<a href="{{ shop.url }}" class="theme-footer-logo">
+  {{ settings.logo_footer.src | image_url: width: 500 | image_tag:
+    loading: 'lazy',
+    width: settings.logo_footer.width,
+    height: settings.logo_footer.height,
+    class: "img-fluid",
+    alt: settings.logo_footer.alt | escape }}
+</a>
+{%- else -%}
+<a href="{{ shop.url }}" class="shop-footer-name">
+  <span>{{ shop.name }}</span>
+</a>
+{%- endif -%}
+<style>
+  /* logo css */
+  a.theme-footer-logo {
+    display: block;
+  }
+  a.theme-footer-logo img {
+    width: {{ settings.logo_footer_max_width }}px;
+  }
+  /* store css */
+  a.shop-footer-name {
+    display: block;
+  }
+  a.shop-footer-name span {
+    color: var(--font-color-secondary);
+    font-size: 16px;
+    font-weight: 600;
+  }
+</style>

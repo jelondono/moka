@@ -1,0 +1,844 @@
+<section class="banner-with-testimonial">
+  <div class="container-fluid">
+    <div class="banner-testimonial">
+      <ul class="banner-testi-ul">
+        <li class="banner-testi-li offer-banner">
+          <div class="banner-block">
+            <a href="{{ section.settings.banner_url }}" class="banner-img">
+              {%- if section.settings.banner_1_img -%}
+              {{ section.settings.banner_1_img | image_url: width: 1080 | image_tag:
+                loading: 'lazy',
+                width: section.settings.banner_1_img.width,
+                height: section.settings.banner_1_img.height,
+                class: "img-fluid",
+                alt: section.settings.banner_1_img.alt | escape }}
+              {%- else -%}
+              {%- capture placeholder -%}collection-{% cycle 1, 2, 3, 4, 5, 6 %}{%- endcapture -%}
+              {{ placeholder | placeholder_svg_tag: 'placeholder-svg' }}
+              {%- endif -%}
+            </a>
+            <div class="banner-content-block {% if section.settings.banner_1_text_position == 'left' %} banner-text-left{% elsif section.settings.banner_1_text_position == 'right' %} banner-text-right{% else %} banner-text-center{% endif %}{% if section.settings.banner_1_content_position == 'left' %} banner-content-left{% elsif section.settings.banner_1_content_position == 'right' %} banner-content-right{% else %} banner-content-center{% endif %}">
+              {% if section.settings.banner_1_subtitle != '' %}
+              <span class="subtitle" style="color: {{ section.settings.banner_1_subtitle_color }};">{{ section.settings.banner_1_subtitle }}</span>
+              {% endif %}
+              {% if section.settings.banner_1_title != '' %}
+              <h2 class="title" style="color: {{ section.settings.banner_1_title_color }};">{{ section.settings.banner_1_title }}</h2>
+              {% endif %}
+              {% if section.settings.banner_1_btn_text != '' %}
+              <a href="{{ section.settings.banner_1_url }}" class="banner-btn {% if section.settings.banner_1_button_style == 'btn-style1' %}btn-style{% elsif section.settings.banner_1_button_style == 'btn-style2' %}btn-style2{% elsif section.settings.banner_1_button_style == 'btn-style3' %}btn-style3{% else %}btn-style4{% endif %}">{{ section.settings.banner_1_btn_text }}</a>
+              {% endif %}
+            </div>
+          </div>
+        </li>
+        <li class="banner-testi-li testimonial">
+          <div class="testimonial-block">
+            <div class="swiper" id="testimonial-{{ block.id }}">
+              <div class="swiper-wrapper">
+                {% for block in section.blocks %}
+                <div class="swiper-slide">
+                  <div class="testi-main">
+                    <div class="testi-image">
+                      {%- if block.settings.testi_image -%}
+                      {{ block.settings.testi_image | image_url: width: 500 | image_tag:
+                        loading: 'lazy',
+                        width: block.settings.testi_image.width,
+                        height: block.settings.testi_image.height,
+                        class: "img-fluid",
+                        alt: block.settings.testi_image.alt | escape }}
+                      {%- else -%}
+                      {%- capture placeholder -%}collection-{% cycle 1, 2, 3, 4, 5, 6 %}{%- endcapture -%}
+                      {{ placeholder | placeholder_svg_tag: 'placeholder-svg' }}
+                      {%- endif -%} 
+                    </div>
+                    <div class="testi-content">
+                      {% if block.settings.testi_desc != '' %}
+                      <p class="desc">{{ block.settings.testi_desc }}</p>
+                      {% endif %}
+                      <span class="icon"><i class="ri-double-quotes-l"></i></span>
+                      <div class="testi-author">
+                        {% if block.settings.testi_author_name != '' %}
+                        <span class="author-name">{{ block.settings.testi_author_name }} ~ </span>
+                        {% endif %}
+                        {% if block.settings.testi_author_label != '' %}
+                        <span class="author-label">{{ block.settings.testi_author_label }}</span>
+                        {% endif %}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                {%- endfor -%}
+              </div>
+            </div>
+          </div>
+        </li>
+        <li class="banner-testi-li offer-banner">
+          <div class="banner-block">
+            <a href="{{ section.settings.banner_url }}" class="banner-img">
+              {%- if section.settings.banner_2_img -%}
+              {{ section.settings.banner_2_img | image_url: width: 1080 | image_tag:
+                loading: 'lazy',
+                width: section.settings.banner_2_img.width,
+                height: section.settings.banner_2_img.height,
+                class: "img-fluid",
+                alt: section.settings.banner_2_img.alt | escape }}
+              {%- else -%}
+              {%- capture placeholder -%}collection-{% cycle 1, 2, 3, 4, 5, 6 %}{%- endcapture -%}
+              {{ placeholder | placeholder_svg_tag: 'placeholder-svg' }}
+              {%- endif -%}</a>
+            <div class="banner-content-block {% if section.settings.banner_2_text_position == 'left' %} banner-text-left{% elsif section.settings.banner_2_text_position == 'right' %} banner-text-right{% else %} banner-text-center{% endif %}{% if section.settings.banner_2_content_position == 'left' %} banner-content-left{% elsif section.settings.banner_2_content_position == 'right' %} banner-content-right{% else %} banner-content-center{% endif %}">
+              {% if section.settings.banner_2_subtitle != '' %}
+              <span class="subtitle" style="color: {{ section.settings.banner_2_subtitle_color }};">{{ section.settings.banner_2_subtitle }}</span>
+              {% endif %}
+              {% if section.settings.banner_2_title != '' %}
+              <h2 class="title" style="color: {{ section.settings.banner_2_title_color }};">{{ section.settings.banner_2_title }}</h2>
+              {% endif %}
+              {% if section.settings.banner_2_btn_text != '' %}
+              <a href="{{ section.settings.banner_2_url }}" class="banner-btn {% if section.settings.banner_2_button_style == 'btn-style1' %}btn-style{% elsif section.settings.banner_2_button_style == 'btn-style2' %}btn-style2{% elsif section.settings.banner_2_button_style == 'btn-style3' %}btn-style3{% else %}btn-style4{% endif %}">{{ section.settings.banner_2_btn_text }}</a>
+              {% endif %}
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>
+<script type="text/javascript">
+  addEventListener('DOMContentLoaded', (event) => {
+    var swiper = new Swiper('.swiper#testimonial-{{ block.id }}', {
+      slidesPerView: 1,
+      grid: {
+        rows: 1,
+        fill: 'row' | 'column',
+      },
+      spaceBetween: 0,
+      observer: true,
+      observeParents: true,
+      watchSlidesProgress: true,
+      {%- if settings.enable_rtl -%}
+      rtl: true,
+      {%- endif -%}
+      navigation: {
+        nextEl: '.swiper-next-{{ section.id }}',
+        prevEl: '.swiper-prev-{{ section.id }}',
+      },
+      pagination: {
+        el: ".swiper-pagination-{{ section.id }}",
+        clickable: true
+      },
+      {% comment %} autoplay: {
+        delay: 5000,
+        disableOnInteraction: false,
+        pauseOnMouseEnter: true
+      }, {% endcomment %}
+      breakpoints: {
+        0: {
+          slidesPerView: 1,
+          grid: {
+            rows: 1,
+            fill: 'row' | 'column',
+          },
+          spaceBetween: 12
+        },
+        320: {
+          slidesPerView: 1,
+          grid: {
+            rows: 1,
+            fill: 'row' | 'column',
+          },
+          spaceBetween: 12
+        },
+        360: {
+          slidesPerView: 1,
+          grid: {
+            rows: 1,
+            fill: 'row' | 'column',
+          },
+          spaceBetween: 12
+        },
+        540: {
+          slidesPerView: 1,
+          grid: {
+            rows: 1,
+            fill: 'row' | 'column',
+          },
+          spaceBetween: 12
+        },
+        640: {
+          slidesPerView: 2,
+          grid: {
+            rows: 1,
+            fill: 'row' | 'column',
+          },
+          spaceBetween: 12
+        },
+        768: {
+          slidesPerView: 2,
+          grid: {
+            rows: 1,
+            fill: 'row' | 'column',
+          },
+          spaceBetween: 30
+        },
+        1024: {
+          slidesPerView: 2,
+          grid: {
+            rows: 1,
+            fill: 'row' | 'column',
+          },
+          spaceBetween: 30
+        },
+        1199: {
+          slidesPerView: 1,
+          grid: {
+            rows: 1,
+            fill: 'row' | 'column',
+          },
+          spaceBetween: 30
+        }
+      }
+    });
+  });
+</script>
+{% schema %}
+{
+  "name": "Banner With Testimonial",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section Padding"
+    },
+    {
+      "type": "paragraph",
+      "content": "Desktop / Laptop / tablet"
+    },
+    {
+      "type": "range",
+      "id": "section_padding_top",
+      "label": "Section Padding Top",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "section_padding_bottom",
+      "label": "Section Padding Bottom",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 100
+    },
+    {
+      "type": "paragraph",
+      "content": "Ipad pro / Ipad"
+    },
+    {
+      "type": "range",
+      "id": "section_padding_top_ip",
+      "label": "Section Padding Top",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "section_padding_bottom_ip",
+      "label": "Section Padding Bottom",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "paragraph",
+      "content": "Mobile"
+    },
+    {
+      "type": "range",
+      "id": "section_padding_top_xs",
+      "label": "Section Padding Top",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "section_padding_bottom_xs",
+      "label": "Section Padding Bottom",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "header",
+      "content": "Section background Color"
+    },
+    {
+      "type": "color",
+      "id": "section_bg_color",
+      "label": "Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Section Border"
+    },
+    {
+      "type": "range",
+      "id": "border",
+      "label": "Border",
+      "min": 0,
+      "max": 2,
+      "step": 1,
+      "unit": "px",
+      "default": 1
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border Color",
+      "default": "#C19D60"
+    },
+    {
+      "type": "checkbox",
+      "id": "border_enable",
+      "label": "Show Section Border",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "border_color_opacity",
+      "label": "Theme Border Color Opacity",
+      "min": 0,
+      "max": 1,
+      "step": 0.1,
+      "default": 0.3
+    },
+    {
+      "type": "header",
+      "content": "Banner 1"
+    },
+    {
+      "type": "image_picker",
+      "id": "banner_1_img",
+      "label": "Banner Image",
+      "info": "Recommended Size: 580x455px"
+    },
+    {
+      "type": "header",
+      "content": "Banner Text"
+    },
+    {
+      "type": "text",
+      "id": "banner_1_subtitle",
+      "label": "Subtitle",
+      "default": "Big discount"
+    },
+    {
+      "type": "color",
+      "id": "banner_1_subtitle_color",
+      "label": "Subtitle Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "text",
+      "id": "banner_1_title",
+      "label": "Title",
+      "default": "The cream cosmetic's"
+    },
+    {
+      "type": "color",
+      "id": "banner_1_title_color",
+      "label": "Title Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "text",
+      "id": "banner_1_btn_text",
+      "label": "Button Text",
+      "default": "Buy now"
+    },
+    {
+      "type": "url",
+      "id": "banner_1_url",
+      "label": "Banner url"
+    },
+    {
+      "type": "header",
+      "content": "Content Position"
+    },
+    {
+      "type": "radio",
+      "id": "banner_1_content_position",
+      "label": "Content Position",
+      "options": [
+        {
+          "label": "Content Left",
+          "value": "left"
+        },
+        {
+          "label": "Content Right",
+          "value": "right"
+        },
+        {
+          "label": "Content Center",
+          "value": "center"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "radio",
+      "id": "banner_1_text_position",
+      "label": "Text Position",
+      "options": [
+        {
+          "label": "Text Left",
+          "value": "left"
+        },
+        {
+          "label": "Text Right",
+          "value": "right"
+        },
+        {
+          "label": "Text Center",
+          "value": "center"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "header",
+      "content": "Button Style"
+    },
+    {
+      "type": "select",
+      "id": "banner_1_button_style",
+      "label": "Button Style",
+      "options": [
+        {
+          "label": "Button Style1",
+          "value": "btn-style1"
+        },
+        {
+          "label": "Button Style2",
+          "value": "btn-style2"
+        },
+        {
+          "label": "Button Style3",
+          "value": "btn-style3"
+        },
+        {
+          "label": "Button Style4",
+          "value": "btn-style4"
+        }
+      ],
+      "default": "btn-style1"
+    },
+    {
+      "type": "header",
+      "content": "Banner 2"
+    },
+    {
+      "type": "image_picker",
+      "id": "banner_2_img",
+      "label": "Banner Image",
+      "info": "Recommended Size: 580x455px"
+    },
+    {
+      "type": "header",
+      "content": "Banner Text"
+    },
+    {
+      "type": "text",
+      "id": "banner_2_subtitle",
+      "label": "Subtitle",
+      "default": "Big discount"
+    },
+    {
+      "type": "color",
+      "id": "banner_2_subtitle_color",
+      "label": "Subtitle Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "text",
+      "id": "banner_2_title",
+      "label": "Title",
+      "default": "The cream cosmetic's"
+    },
+    {
+      "type": "color",
+      "id": "banner_2_title_color",
+      "label": "Title Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "text",
+      "id": "banner_2_btn_text",
+      "label": "Button Text",
+      "default": "Buy now"
+    },
+    {
+      "type": "url",
+      "id": "banner_2_url",
+      "label": "Banner url"
+    },
+    {
+      "type": "header",
+      "content": "Content Position"
+    },
+    {
+      "type": "radio",
+      "id": "banner_2_content_position",
+      "label": "Content Position",
+      "options": [
+        {
+          "label": "Content Left",
+          "value": "left"
+        },
+        {
+          "label": "Content Right",
+          "value": "right"
+        },
+        {
+          "label": "Content Center",
+          "value": "center"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "radio",
+      "id": "banner_2_text_position",
+      "label": "Text Position",
+      "options": [
+        {
+          "label": "Text Left",
+          "value": "left"
+        },
+        {
+          "label": "Text Right",
+          "value": "right"
+        },
+        {
+          "label": "Text Center",
+          "value": "center"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "header",
+      "content": "Button Style"
+    },
+    {
+      "type": "select",
+      "id": "banner_2_button_style",
+      "label": "Button Style",
+      "options": [
+        {
+          "label": "Button Style1",
+          "value": "btn-style1"
+        },
+        {
+          "label": "Button Style2",
+          "value": "btn-style2"
+        },
+        {
+          "label": "Button Style3",
+          "value": "btn-style3"
+        },
+        {
+          "label": "Button Style4",
+          "value": "btn-style4"
+        }
+      ],
+      "default": "btn-style1"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "testimonial",
+      "name": "Testimonial",
+      "settings": [
+        {
+          "type": "header",
+          "content": "Testimonial Image"
+        },
+        {
+          "type": "image_picker",
+          "id": "testi_image",
+          "label": "Image",
+          "info": "Recommended Size: 100x100px"
+        },
+        {
+          "type": "header",
+          "content": "Testimonial Content"
+        },
+        {
+          "type": "textarea",
+          "id": "testi_desc",
+          "label": "Descriptions",
+          "default": "All the generators on the internet tend to repeat predefined chunks as necessary, making this the first true generator"
+        },
+        {
+          "type": "text",
+          "id": "testi_author_name",
+          "label": "Author Name",
+          "default": "Anne kwayted"
+        },
+        {
+          "type": "text",
+          "id": "testi_author_label",
+          "label": "Author Label",
+          "default": "Store customer"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Banner With Testimonial"
+    }
+  ]
+}
+{% endschema %}
+
+<style>
+.banner-with-testimonial {
+  padding-top: {{ section.settings.section_padding_top }}px;
+  padding-bottom: {{ section.settings.section_padding_bottom }}px;
+  background-color: {{ section.settings.section_bg_color }};
+  {% if section.settings.border_enable %}
+  border-top: {{ section.settings.border }}px solid {{ section.settings.border_color | color_modify: 'alpha', section.settings.border_color_opacity }};
+  {% endif %}
+}
+@media (max-width: 1199px) {
+  .banner-with-testimonial {
+    padding-top: {{ section.settings.section_padding_top_ip }}px;
+    padding-bottom: {{ section.settings.section_padding_bottom_ip }}px;
+  }
+}
+@media (max-width: 767px) {
+  .banner-with-testimonial {
+    padding-top: {{ section.settings.section_padding_top_xs }}px;
+    padding-bottom: {{ section.settings.section_padding_bottom_xs }}px;
+  }
+}
+
+/* main css */
+.banner-with-testimonial .banner-testimonial ul.banner-testi-ul {
+  display: flex;
+  flex-wrap:  wrap;
+  {% if settings.enable_rtl %}
+  margin-right: -30px;
+  {% else %}
+  margin-left: -30px;
+  {% endif %}
+  margin-top: -30px;
+}
+.banner-with-testimonial .banner-testimonial ul.banner-testi-ul li.banner-testi-li {
+  {% if settings.enable_rtl %}
+  margin-right: 30px;
+  {% else %}
+  margin-left: 30px;
+  {% endif %}
+  margin-top: 30px;
+}
+.banner-with-testimonial .banner-testimonial ul.banner-testi-ul li.banner-testi-li.offer-banner,
+.banner-with-testimonial .banner-testimonial ul.banner-testi-ul li.banner-testi-li.testimonial {
+  width: calc(33.33% - 30px);
+}
+@media (max-width: 1199px) {
+  .banner-with-testimonial .banner-testimonial ul.banner-testi-ul li.banner-testi-li.offer-banner {
+    width: calc(50% - 30px);
+  }
+  .banner-with-testimonial .banner-testimonial ul.banner-testi-ul li.banner-testi-li.testimonial {
+    width: calc(100% - 30px)
+    order: 1
+  }
+}
+@media (max-width: 767px) {
+  .banner-with-testimonial .banner-testimonial ul.banner-testi-ul {
+    {% if settings.enable_rtl %}
+    margin-right: -12px;
+    {% else %}
+    margin-left: -12px;
+    {% endif %}
+  }
+  .banner-with-testimonial .banner-testimonial ul.banner-testi-ul li.banner-testi-li {
+    {% if settings.enable_rtl %}
+    margin-right: 12px;
+    {% else %}
+    margin-left: 12px;
+    {% endif %}
+  }
+  .banner-with-testimonial .banner-testimonial ul.banner-testi-ul li.banner-testi-li.offer-banner {
+    width: calc(50% - 12px);
+  }
+  .banner-with-testimonial .banner-testimonial ul.banner-testi-ul li.banner-testi-li.testimonial {
+    width: calc(100% - 12px);
+  }
+}
+@media (max-width: 600px) {
+  .banner-with-testimonial .banner-testimonial ul.banner-testi-ul li.banner-testi-li.offer-banner {
+    width: calc(100% - 12px);
+  }
+  .banner-with-testimonial .banner-testimonial ul.banner-testi-ul li.banner-testi-li.testimonial {
+    order: none;;
+  }
+}
+/* banner css */
+.banner-with-testimonial .banner-testimonial ul.banner-testi-ul li.offer-banner .banner-block {
+  Position: relative;
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+.banner-with-testimonial .banner-testimonial ul.banner-testi-ul li.offer-banner .banner-block a.banner-img {
+  border-radius: var(--sti-border-radius);
+  overflow: hidden;
+  display: block;
+  height: 100%;
+}
+.banner-with-testimonial .banner-testimonial ul.banner-testi-ul li.offer-banner .banner-block a.banner-img svg {
+  width: 100%;
+}
+.banner-with-testimonial .banner-testimonial ul.banner-testi-ul li.offer-banner .banner-block a.banner-img img {
+  height: 100%;
+  object-fit: cover;
+}
+.banner-with-testimonial .banner-testimonial ul.banner-testi-ul li.offer-banner .banner-block .banner-content-block {
+  position: absolute;
+  width: 41.67%;
+}
+/* banner content position */
+.banner-with-testimonial .banner-testimonial ul.banner-testi-ul li.offer-banner .banner-block .banner-content-block.banner-content-left {
+  {%- if settings.enable_rtl -%}
+  right: 30px;
+  margin-left: auto;
+  {%- else -%}
+  left: 30px;
+  margin-right: auto;
+  {%- endif -%}
+}
+.banner-with-testimonial .banner-testimonial ul.banner-testi-ul li.offer-banner .banner-block .banner-content-block.banner-content-right {
+  {%- if settings.enable_rtl -%}
+  left: 30px;
+  margin-right: auto;
+  {%- else -%}
+  right: 30px;
+  margin-left: auto;
+  {%- endif -%}
+}
+.banner-with-testimonial .banner-testimonial ul.banner-testi-ul li.offer-banner .banner-block .banner-content-block.banner-content-center {
+  left: 30px;
+  right: 30px;
+  margin: 0 auto;
+}
+/* banner text position */
+.banner-with-testimonial .banner-testimonial ul.banner-testi-ul li.offer-banner .banner-block .banner-content-block.banner-text-left {
+  {%- if settings.enable_rtl -%}
+  text-align: right;
+  {%- else -%}
+  text-align: left;
+  {%- endif -%}
+}
+.banner-with-testimonial .banner-testimonial ul.banner-testi-ul li.offer-banner .banner-block .banner-content-block.banner-text-right {
+  {%- if settings.enable_rtl -%}
+  text-align: left;
+  {%- else -%}
+  text-align: right;
+  {%- endif -%}
+}
+.banner-with-testimonial .banner-testimonial ul.banner-testi-ul li.offer-banner .banner-block .banner-content-block.banner-text-center {
+  text-align: center;
+}
+
+/* text css */
+.banner-with-testimonial .banner-testimonial ul.banner-testi-ul li.offer-banner .banner-block .banner-content-block span.subtitle {
+  font-size: 18px;
+  margin-bottom: 18px;
+}
+.banner-with-testimonial .banner-testimonial ul.banner-testi-ul li.offer-banner .banner-block .banner-content-block h2.title {
+  font-size: 40px;
+  line-height: 1;
+}
+.banner-with-testimonial .banner-testimonial ul.banner-testi-ul li.offer-banner .banner-block .banner-content-block a.banner-btn {
+  margin-top: 25px;
+}
+@media (max-width: 1499px) {
+  .banner-with-testimonial .banner-testimonial ul.banner-testi-ul li.offer-banner .banner-block .banner-content-block h2.title {
+    font-size: 30px;
+  }
+}
+@media (max-width: 991px) {
+  .banner-with-testimonial .banner-testimonial ul.banner-testi-ul li.offer-banner .banner-block .banner-content-block h2.title {
+    font-size: 24px;
+  }
+}
+/* testimonial css */
+.banner-with-testimonial .banner-testimonial ul.banner-testi-ul li.testimonial {
+  background-color: #ffffff;
+  box-shadow: 0 0 15px rgb(0 0 0 / 15%);
+  border-radius: var(--sti-border-radius);
+}
+.banner-with-testimonial .banner-testimonial ul.banner-testi-ul li.testimonial .testimonial-block {
+  height: 100%;
+  padding: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+.banner-with-testimonial .banner-testimonial ul.banner-testi-ul li.testimonial .testimonial-block .testi-main {
+  width: 83.33%;
+  margin: 0 auto;
+}
+.banner-with-testimonial .banner-testimonial ul.banner-testi-ul li.testimonial .testimonial-block .testi-main .testi-image svg {
+  width: 100px;
+  height: 100px;
+}
+.banner-with-testimonial .banner-testimonial ul.banner-testi-ul li.testimonial .testimonial-block .testi-main .testi-image img {
+  border-radius: 100%;
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+}
+.banner-with-testimonial .banner-testimonial ul.banner-testi-ul li.testimonial .testimonial-block .testi-main .testi-content {
+  margin-top: 33px;
+}
+.banner-with-testimonial .banner-testimonial ul.banner-testi-ul li.testimonial .testimonial-block .testi-main .testi-content span.icon {
+  color: var(--font-color-primary);
+  font-size: 50px;
+  margin-top: 13px;
+  display: flex;
+  justify-content: center;
+  line-height: 1;
+}
+.banner-with-testimonial .banner-testimonial ul.banner-testi-ul li.testimonial .testimonial-block .testi-main .testi-content .testi-author {
+  margin-top: 15px;
+}
+.banner-with-testimonial .banner-testimonial ul.banner-testi-ul li.testimonial .testimonial-block .testi-main .testi-content .testi-author span.author-name {
+  color: var(--font-color-primary);
+  font-weight: 600;
+}
+.banner-with-testimonial .banner-testimonial ul.banner-testi-ul li.testimonial .testimonial-block .testi-main .testi-content .testi-author span.author-label {
+}
+@media (max-width: 1499px) {
+  .banner-with-testimonial .banner-testimonial ul.banner-testi-ul li.testimonial .testimonial-block .testi-main {
+    width: 100%;
+  }
+}
+</style>

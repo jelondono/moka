@@ -1,0 +1,601 @@
+{% if swatch == blank %}
+<div class="swatch error">
+  <p>You must include the snippet swatch.liquid with the name of a product option.</p> 
+  <p>Use: <code>{% raw %}{% include 'swatch' with 'name of your product option here' %}{% endraw %}</code></p>
+  <p>Example: <code>{% raw %}{% include 'swatch' with 'Color' %}{% endraw %}</code></p>
+</div>
+{% else %}
+
+{%- liquid 
+  assign found_option = false
+  assign is_color = true
+  assign option_index = 0 
+-%}
+
+{% for option in product.options %}
+  {% if option == swatch %}
+    {% assign found_option = true %}
+    {% assign option_index = forloop.index0 %}
+    <style>
+      label[for="product-select-option-{{ option_index }}"] { display: none; }
+      #product-select-option-{{ option_index }} { display: none; }
+      #product-select-option-{{ option_index }} + .custom-style-select-box { display: none !important; }
+    </style>
+    <script type="text/javascript">
+      window.addEventListener("DOMContentLoaded", function() {
+        setTimeout(function () {
+          $('.selector-wrapper:eq({{ option_index }})').hide();
+        },2000); 
+      });
+    </script>
+    {% assign downcased_option = swatch | downcase %}
+    {% if downcased_option contains 'color' or downcased_option contains 'colour' or downcased_option contains 'colours' or downcased_option contains 'tono' or downcased_option contains 'maquillaje' %}
+      {% assign is_color = true %}
+    {% endif %}
+  {% endif %}
+{% endfor %}
+
+{% unless found_option %}
+<div class="swatch error">
+  <p>You included the snippet swatch.liquid with the name of a product option — <code>'{{ swatch }}'</code> — that does not belong to your product.</p>
+  <p>Use <code>{% raw %}{% include 'swatch' with 'name of your product option here' %}{% endraw %}</code></p>
+  <p>Example: <code>{% raw %}{% include 'swatch' with 'Color' %}{% endraw %}</code></p>
+  <p><strong>This is case-sensitive!</strong> Do not put in <code>'color'</code> if your product option name is <code>'Color'</code>.</p>
+</div>
+{% else %}
+
+<div class="swatch clearfix {{ swatch }}" data-option-index="{{ option_index }}">
+  <div class="header">
+    <h6>
+      <span>{{ swatch }}:</span>
+      <span class="data-value" id="data-value"></span>
+    </h6>
+  </div>
+  <div class="variant-wrap">
+    <div class="variant-property">
+      {%- liquid assign values = '' -%}
+      {% for variant in product.variants %}
+      {%- liquid assign value = variant.options[option_index] -%}
+      {% unless values contains value %}
+      {%- liquid 
+        assign values = values | join: ','
+        assign values = values | append: ',' | append: value
+        assign values = values | split: ','
+      -%}
+      <div data-value="{{ value | escape }}" 
+           data-id="{{ variant.id }}" 
+           data-stocks="{{ variant.inventory_quantity }}" 
+           data-image="{{ variant.featured_image | image_url: width: 300 }}"
+           data-price="{{ variant.price | money }}"
+           class="swatch-element{% if is_color %} color{% endif %} {{ value | handle }} {% if forloop.first %}first-variant{% endif %} {% if variant.available %}available{% else %}soldout{% endif %}">
+        
+        <input id="swatch-{{ option_index }}-{{ value | handle }}" type="radio" name="option-{{ option_index }}" value="{{ value | escape }}" {% if forloop.first %}checked{% endif %}>
+        
+        {%- if is_color -%}
+        <label class="{{ swatch | downcase }} {{ value | handle }}" for="swatch-{{ option_index }}-{{ value | handle }}" data-bs-toggle="tooltip" tabindex="0" data-bs-placement="top" title="{{ value }}">
+          {% if variant.metafields.custom.color_hex %}
+            <span class="swatch-color" style="background-color: {{ variant.metafields.custom.color_hex }}"></span>
+          {% else %}
+            <span class="swatch-color" style="background-color: #CCCCCC"></span>
+          {% endif %}
+        </label>
+        {%- else -%}
+        <label for="swatch-{{ option_index }}-{{ value | handle }}" title="{{ value }}">
+          {{ value }}
+        </label>
+        {%- endif -%}
+        
+        <!-- Checkbox para comparar colores -->
+        {%- if is_color -%}
+        <div class="compare-checkbox">
+          <input type="checkbox" id="compare-{{ option_index }}-{{ value | handle }}" class="compare-color-input" data-variant-id="{{ variant.id }}" data-color-name="{{ value }}">
+          <label for="compare-{{ option_index }}-{{ value | handle }}" class="compare-label">
+            <span class="checkmark"></span>
+          </label>
+        </div>
+        {%- endif -%}
+      </div>
+      {% endunless %}
+      {% if variant.available %}
+      <script type="text/javascript">
+        window.addEventListener("DOMContentLoaded", function() {
+          $('.swatch[data-option-index="{{ option_index }}"] .{{ value | handle }}').removeClass('soldout').addClass('available').find(':radio').removeAttr('disabled');
+        }); 
+      </script>
+      {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+  
+  <!-- Botón Compare Color - Solo en página de producto -->
+  {%- if is_color and template contains 'product' -%}
+  <div class="compare-color-section">
+    <button type="button" class="compare-color-link" id="compareColorBtn">
+      <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="3"/>
+        <path d="M12 1v6M12 17v6M4.22 4.22l4.24 4.24M15.54 15.54l4.24 4.24M1 12h6M17 12h6M4.22 19.78l4.24-4.24M15.54 8.46l4.24-4.24"/>
+      </svg>
+      <span class="text">Compare Color</span>
+    </button>
+  </div>
+  {%- endif -%}
+</div>
+
+<!-- Modal de comparación - Solo en página de producto -->
+{%- if template contains 'product' -%}
+<div id="compareColorModal" class="compare-modal">
+  <div class="compare-modal-content">
+    <div class="compare-modal-header">
+      <h3>Compare Color</h3>
+      <button type="button" class="compare-modal-close">&times;</button>
+    </div>
+    <div class="compare-modal-body">
+      <!-- Lista de todos los colores disponibles para seleccionar -->
+      <div class="compare-colors-selection" id="compareColorsSelection">
+        {%- liquid assign values = '' -%}
+        {% for variant in product.variants %}
+        {%- liquid assign value = variant.options[option_index] -%}
+        {% unless values contains value %}
+        {%- liquid 
+          assign values = values | join: ','
+          assign values = values | append: ',' | append: value
+          assign values = values | split: ','
+        -%}
+        <div class="compare-color-option" data-variant-id="{{ variant.id }}" data-color-name="{{ value }}" data-image="{{ variant.featured_image | image_url: width: 300 }}" data-price="{{ variant.price | money }}">
+          <div class="compare-color-checkbox-wrapper">
+            <input type="checkbox" id="modal-compare-{{ variant.id }}" class="modal-compare-input">
+            <label for="modal-compare-{{ variant.id }}" class="modal-compare-label">
+              <div class="compare-option-content">
+                <div class="compare-option-color">
+                  {% if variant.metafields.custom.color_hex %}
+                    <span class="modal-swatch-color" style="background-color: {{ variant.metafields.custom.color_hex }}"></span>
+                  {% else %}
+                    <span class="modal-swatch-color" style="background-color: #CCCCCC"></span>
+                  {% endif %}
+                </div>
+                <div class="compare-option-info">
+                  <span class="compare-option-name">{{ value }}</span>
+                  <span class="compare-option-price">{{ variant.price | money }}</span>
+                </div>
+                <div class="compare-option-image">
+                  <img src="{{ variant.featured_image | image_url: width: 80, height: 80 }}" alt="{{ value }}" class="compare-option-img">
+                </div>
+              </div>
+            </label>
+          </div>
+        </div>
+        {% endunless %}
+        {% endfor %}
+      </div>
+      
+      <!-- Área de comparación seleccionada -->
+      <div class="compare-selected-section" id="compareSelectedSection" style="display: none;">
+        <h4>Selected Colors:</h4>
+        <div class="compare-selected-grid" id="compareSelectedGrid">
+          <!-- Los colores seleccionados aparecen aquí -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{%- endif -%}
+
+{% endunless %}
+
+<style>
+/* Estilos existentes */
+.swatch-color {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 2px solid #ddd;
+  display: block;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.swatch-element.color input:checked + label .swatch-color {
+  border-color: #333;
+  box-shadow: 0 0 0 2px rgba(0,0,0,0.1);
+}
+
+.swatch-element.color label {
+  padding: 0 !important;
+  height: auto !important;
+  width: auto !important;
+  background: none !important;
+  border: none !important;
+  position: relative;
+}
+
+/* Nuevos estilos para Compare Color */
+.swatch-element {
+  position: relative;
+  margin-bottom: 10px;
+}
+
+.compare-color-section {
+  margin-top: 15px;
+}
+
+.compare-color-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 14px;
+  color: #007bff;
+  text-decoration: none;
+}
+
+.compare-color-link:hover {
+  color: #0056b3;
+  text-decoration: underline;
+}
+
+.compare-color-link .icon {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+.compare-color-link .text {
+  font-weight: 400;
+}
+
+/* Modal styles */
+.compare-modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.5);
+  animation: fadeIn 0.3s ease;
+}
+
+.compare-modal.show {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.compare-modal-content {
+  background-color: white;
+  border-radius: 8px;
+  max-width: 90%;
+  max-height: 90%;
+  width: 800px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  animation: slideIn 0.3s ease;
+}
+
+.compare-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 30px;
+  border-bottom: 1px solid #eee;
+  background: #f8f9fa;
+}
+
+.compare-modal-header h3 {
+  margin: 0;
+  font-size: 20px;
+  color: #333;
+}
+
+.compare-modal-close {
+  background: none;
+  border: none;
+  font-size: 28px;
+  cursor: pointer;
+  color: #999;
+  padding: 0;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.compare-modal-close:hover {
+  color: #333;
+}
+
+.compare-modal-body {
+  padding: 30px;
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+/* Estilos para la selección de colores */
+.compare-colors-selection {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 15px;
+  margin-bottom: 30px;
+}
+
+.compare-color-option {
+  border: 2px solid #eee;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: all 0.2s ease;
+}
+
+.compare-color-option:hover {
+  border-color: #007bff;
+}
+
+.modal-compare-input {
+  display: none;
+}
+
+.modal-compare-input:checked + .modal-compare-label {
+  background: #f0f8ff;
+}
+
+.modal-compare-input:checked + .modal-compare-label .compare-option-content {
+  border-color: #007bff;
+}
+
+.modal-compare-label {
+  display: block;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.compare-option-content {
+  display: flex;
+  align-items: center;
+  padding: 15px;
+  gap: 15px;
+  border: 2px solid transparent;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.compare-option-color {
+  flex-shrink: 0;
+}
+
+.modal-swatch-color {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 2px solid #ddd;
+  display: block;
+}
+
+.compare-option-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.compare-option-name {
+  font-weight: 500;
+  color: #333;
+  font-size: 14px;
+}
+
+.compare-option-price {
+  color: #666;
+  font-size: 13px;
+}
+
+.compare-option-image {
+  flex-shrink: 0;
+}
+
+.compare-option-img {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+/* Sección de colores seleccionados */
+.compare-selected-section {
+  border-top: 1px solid #eee;
+  padding-top: 20px;
+}
+
+.compare-selected-section h4 {
+  margin: 0 0 15px 0;
+  color: #333;
+  font-size: 16px;
+}
+
+.compare-selected-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+}
+
+.compare-selected-item {
+  text-align: center;
+  padding: 20px;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  background: #f9f9f9;
+  transition: all 0.2s ease;
+}
+
+.compare-selected-item:hover {
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  transform: translateY(-2px);
+}
+
+.compare-selected-image {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin: 0 auto 15px;
+  display: block;
+}
+
+.compare-selected-name {
+  font-size: 16px;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 8px;
+}
+
+.compare-selected-price {
+  font-size: 14px;
+  color: #666;
+}
+
+.compare-selected-swatch {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  margin: 10px auto;
+  border: 2px solid #ddd;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideIn {
+  from { 
+    opacity: 0;
+    transform: translateY(-50px) scale(0.9);
+  }
+  to { 
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@media (max-width: 768px) {
+  .compare-colors-grid {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 20px;
+    min-width: 300px;
+  }
+  
+  .compare-modal-content {
+    max-width: 95%;
+    margin: 20px;
+  }
+  
+  .compare-modal-body {
+    padding: 20px;
+  }
+  
+  .compare-color-image {
+    width: 100px;
+    height: 100px;
+  }
+}
+</style>
+
+<script type="text/javascript">
+document.addEventListener('DOMContentLoaded', function() {
+  const compareBtn = document.getElementById('compareColorBtn');
+  const compareModal = document.getElementById('compareColorModal');
+  const modalClose = document.querySelector('.compare-modal-close');
+  const compareInputs = document.querySelectorAll('.modal-compare-input');
+  const compareSelectedSection = document.getElementById('compareSelectedSection');
+  const compareSelectedGrid = document.getElementById('compareSelectedGrid');
+  
+  let selectedColors = [];
+  
+  // Abrir modal al hacer click en Compare Color
+  compareBtn.addEventListener('click', function() {
+    compareModal.classList.add('show');
+    document.body.style.overflow = 'hidden';
+  });
+  
+  // Cerrar modal
+  modalClose.addEventListener('click', closeModal);
+  compareModal.addEventListener('click', function(e) {
+    if (e.target === compareModal) {
+      closeModal();
+    }
+  });
+  
+  function closeModal() {
+    compareModal.classList.remove('show');
+    document.body.style.overflow = '';
+  }
+  
+  // Manejar selección de colores en el modal
+  compareInputs.forEach(input => {
+    input.addEventListener('change', function() {
+      const colorOption = this.closest('.compare-color-option');
+      const variantId = colorOption.dataset.variantId;
+      const colorName = colorOption.dataset.colorName;
+      const image = colorOption.dataset.image;
+      const price = colorOption.dataset.price;
+      const colorHex = colorOption.querySelector('.modal-swatch-color').style.backgroundColor;
+      
+      if (this.checked) {
+        // Agregar color seleccionado
+        selectedColors.push({
+          id: variantId,
+          name: colorName,
+          hex: colorHex,
+          image: image,
+          price: price
+        });
+      } else {
+        // Remover color seleccionado
+        selectedColors = selectedColors.filter(color => color.id !== variantId);
+      }
+      
+      updateSelectedSection();
+    });
+  });
+  
+  // Actualizar sección de colores seleccionados
+  function updateSelectedSection() {
+    if (selectedColors.length > 0) {
+      compareSelectedSection.style.display = 'block';
+      compareSelectedGrid.innerHTML = '';
+      
+      selectedColors.forEach(color => {
+        const selectedItem = document.createElement('div');
+        selectedItem.className = 'compare-selected-item';
+        
+        // Usar imagen del producto si no hay imagen de variante
+        const imageUrl = color.image || '/assets/no-image.png';
+        
+        selectedItem.innerHTML = `
+          <img src="${imageUrl}" alt="${color.name}" class="compare-selected-image" onerror="this.src='/assets/no-image.png'">
+          <div class="compare-selected-swatch" style="background-color: ${color.hex}"></div>
+          <div class="compare-selected-name">${color.name}</div>
+          <div class="compare-selected-price">${color.price}</div>
+        `;
+        compareSelectedGrid.appendChild(selectedItem);
+      });
+    } else {
+      compareSelectedSection.style.display = 'none';
+    }
+  }
+  
+  // Cerrar con ESC
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && compareModal.classList.contains('show')) {
+      closeModal();
+    }
+  });
+});
+</script>
+
+{% endif %}

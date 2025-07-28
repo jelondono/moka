@@ -1,0 +1,437 @@
+<!-- header-area start -->
+<section class="header-kaj">
+    <div class="header-area">
+        <div class="header-top">
+            <div class="container-fluid">
+                <div class="header-top-bar">
+                    <div class="header-top-wrap search-map">
+                        <div class="search-wrap">
+                            {%- render 'search-bar' -%}
+                        </div>
+                        <div class="custom-text">
+                            <a href="javascript:void(0)" class="custom-url">
+                                {% if section.settings.custom_icon != '' %}
+                                <span class="icon"><i class="{{ section.settings.custom_icon }}"></i></span>
+                                {% endif %}
+                                {% if section.settings.custom_text != '' %}
+                                <span class="text">{{ section.settings.custom_text }}</span>
+                                {% endif %}
+                            </a>
+                        </div>
+                    </div>
+                    {% if section.settings.offer_text != '' %}
+                    <div class="header-top-wrap offer-text">
+                        {{ section.settings.offer_text }}
+                    </div>
+                    {% endif %}
+                    <div class="header-top-wrap right-block">
+                        {%- render 'header-icon', section: section -%}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container-fluid">
+            <div class="header-main-area">
+                <div class="header-main">
+                    <div class="header-element logo-wrap">
+                        {%- render 'company-logo' -%}
+                    </div>
+                    <div class="header-element main-menu-area">
+                        <nav class="main-navigation">
+                            <div class="megamenu-content">
+                                <ul class="main-menu">
+                                    {% assign header_main_menu = section.settings.header_main_menu %}
+                                    {% for link in linklists[header_main_menu].links %}
+                                    {% if linklists[header_main_menu].links != '' %}
+                                    {% render 'main-menu', link: link %}
+                                    {% endif %}
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </nav>
+                    </div>
+                    <div class="header-element info-wrap-block">
+                        <div class="mobile-right-block right-block">
+                            {%- render 'header-icon', section: section -%}
+                        </div>
+                        <ul class="info-wrap-ul info-lg">
+                            <li class="info-wrap-li">
+                                <a href="{{ section.settings.info_url_1 }}" class="info-wrap">
+                                    {% if section.settings.info_icon_1 != '' %}
+                                    <div class="info-icon">
+                                        <span class="icon"><i class="{{ section.settings.info_icon_1 }}"></i></span>
+                                    </div>
+                                    {% endif %}
+                                    <div class="info-text">
+                                        {% if section.settings.info_label_1 != '' %}
+                                        <span class="label">{{ section.settings.info_label_1 }}</span>
+                                        {% endif %}
+                                        {% if section.settings.info_text_1 != '' %}
+                                        <span class="text">{{ section.settings.info_text_1 }}</span>
+                                        {% endif %}
+                                    </div>
+                                </a>
+                            </li>
+                            <li class="info-wrap-li">
+                                <a href="{{ section.settings.info_url_2 }}" class="info-wrap">
+                                    {% if section.settings.info_icon_2 != '' %}
+                                    <div class="info-icon">
+                                        <span class="icon"><i class="{{ section.settings.info_icon_2 }}"></i></span>
+                                    </div>
+                                    {% endif %}
+                                    <div class="info-text">
+                                        {% if section.settings.info_label_2 != '' %}
+                                        <span class="label">{{ section.settings.info_label_2 }}</span>
+                                        {% endif %}
+                                        {% if section.settings.info_text_2 != '' %}
+                                        <span class="text">{{ section.settings.info_text_2 }}</span>
+                                        {% endif %}
+                                    </div>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="mobile-menu">
+        <div class="main-menu-area">
+            <nav class="main-navigation">
+                <div class="box-header">
+                    <button class="close-box" type="button"><i class="ri-close-line"></i></button>
+                </div>
+                <div class="megamenu-content">
+                    <ul class="main-menu">
+                        {%- liquid
+                        assign header_main_menu = section.settings.header_main_menu
+                        for link in linklists[header_main_menu].links
+                        if linklists[header_main_menu].links != ''
+                        render 'main-menu', link: link
+                        endif
+                        endfor
+                        -%}
+                    </ul>
+                </div>
+            </nav>
+            <div class="info-xs info-wrap-block">
+                <ul class="info-wrap-ul">
+                    <li class="info-wrap-li">
+                        <a href="{{ section.settings.info_url_1 }}" class="info-wrap">
+                            {% if section.settings.info_icon_1 != '' %}
+                            <div class="info-icon">
+                                <span class="icon"><i class="{{ section.settings.info_icon_1 }}"></i></span>
+                            </div>
+                            {% endif %}
+                            <div class="info-text">
+                                {% if section.settings.info_label_1 != '' %}
+                                <span class="label">{{ section.settings.info_label_1 }}</span>
+                                {% endif %}
+                                {% if section.settings.info_text_1 != '' %}
+                                <span class="text">{{ section.settings.info_text_1 }}</span>
+                                {% endif %}
+                            </div>
+                        </a>
+                    </li>
+                    <li class="info-wrap-li">
+                        <a href="{{ section.settings.info_url_2 }}" class="info-wrap">
+                            {% if section.settings.info_icon_2 != '' %}
+                            <div class="info-icon">
+                                <span class="icon"><i class="{{ section.settings.info_icon_2 }}"></i></span>
+                            </div>
+                            {% endif %}
+                            <div class="info-text">
+                                {% if section.settings.info_label_2 != '' %}
+                                <span class="label">{{ section.settings.info_label_2 }}</span>
+                                {% endif %}
+                                {% if section.settings.info_text_2 != '' %}
+                                <span class="text">{{ section.settings.info_text_2 }}</span>
+                                {% endif %}
+                            </div>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+{%- render 'search-popup-modal' -%}
+{% render 'mini-cart-drawer' %}
+{% schema %}
+{
+  "name": "Header",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Logo Notice"
+    },
+    {
+      "type": "paragraph",
+      "content": "For logo go to 'Theme Settings' click on 'Company Logo' & set both Header-Footer Logo"
+    },
+    {
+      "type": "header",
+      "content": "Header Sticky Option"
+    },
+    {
+      "type": "checkbox",
+      "id": "header_sticky_enable",
+      "label": "Show Header Sticky",
+      "default": true
+    },
+    {
+      "type": "paragraph",
+      "content": "This option available only for 'index', 'collection' & 'product' template respectively"
+    },
+    {
+      "type": "header",
+      "content": "Section Background Color"
+    },
+    {
+      "type": "color",
+      "id": "header_bg_color",
+      "label": "Background Color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "header",
+      "content": "Header Top"
+    },
+    {
+      "type": "header",
+      "content": "Custom Text"
+    },
+    {
+      "type": "text",
+      "id": "custom_icon",
+      "label": "Icon Class",
+      "default": "ri-map-pin-line"
+    },
+    {
+      "type": "text",
+      "id": "custom_text",
+      "label": "Text",
+      "default": "Ubicación de la tienda"
+    },
+    {
+      "type": "header",
+      "content": "Offer Text"
+    },
+    {
+      "type": "richtext",
+      "id": "offer_text",
+      "label": "Text"
+    },
+    {
+      "type": "header",
+      "content": "Right Block"
+    },
+    {
+      "type": "header",
+      "content": "Search title"
+    },
+    {
+      "type": "text",
+      "id": "search_title",
+      "label": "title",
+      "default": "Buscar"
+    },
+    {
+      "type": "header",
+      "content": "Account title"
+    },
+    {
+      "type": "text",
+      "id": "account_title",
+      "label": "title",
+      "default": "Cuenta"
+    },
+    {
+      "type": "header",
+      "content": "Wishlist title"
+    },
+    {
+      "type": "text",
+      "id": "wishlist_title",
+      "label": "title",
+      "default": "Lista de deseos"
+    },
+    {
+      "type": "header",
+      "content": "Cart title"
+    },
+    {
+      "type": "text",
+      "id": "cart_title",
+      "label": "title",
+      "default": "Carrito"
+    },
+    {
+      "type": "header",
+      "content": "Header Bottom"
+    },
+    {
+      "type": "header",
+      "content": "Main Menu"
+    },
+    {
+      "type": "link_list",
+      "id": "header_main_menu",
+      "label": "Select mainmenu"
+    },
+    {
+      "type": "header",
+      "content": "Information Block"
+    },
+    {
+      "type": "header",
+      "content": "Information 1"
+    },
+    {
+      "type": "text",
+      "id": "info_icon_1",
+      "label": "Icon Class",
+      "default": "feather-mail"
+    },
+    {
+      "type": "text",
+      "id": "info_label_1",
+      "label": "Label",
+      "default": "Enviar email"
+    },
+    {
+      "type": "text",
+      "id": "info_text_1",
+      "label": "Text",
+      "default": "demo@demo.com"
+    },
+    {
+      "type": "url",
+      "id": "info_url_1",
+      "label": "Icon Class"
+    },
+    {
+      "type": "header",
+      "content": "Information 2"
+    },
+    {
+      "type": "text",
+      "id": "info_icon_2",
+      "label": "Icon Class",
+      "default": "feather-headphones"
+    },
+    {
+      "type": "text",
+      "id": "info_label_2",
+      "label": "Label",
+      "default": "Número de atención"
+    },
+    {
+      "type": "text",
+      "id": "info_text_2",
+      "label": "Text",
+      "default": "(+0261) 2050 0500 0150"
+    },
+    {
+      "type": "url",
+      "id": "info_url_2",
+      "label": "Icon Class"
+    }
+  ]
+}
+{% endschema %}
+<style>
+    .header-area{
+        background-color: {{ section.settings.header_bg_color }};
+    }
+    {% if section.settings.header_sticky_enable %}
+    {% if template == 'index' or template == 'collection' or template == 'product' %}
+    /* sticky menu css */
+    .is-sticky{
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 3;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.15);
+    }
+    .header-area.is-sticky{
+        animation: smoothScroll 1s forwards;
+        border-bottom: none;
+    }
+
+    /* Header sticky más pequeño */
+    .header-area.is-sticky .header-top {
+        display: none;
+    }
+
+    .header-area.is-sticky .header-main-area {
+        padding: 12px 0;
+    }
+
+    .header-area.is-sticky .header-main {
+        min-height: 60px;
+    }
+
+    .header-area.is-sticky .logo-wrap img {
+        max-height: 100px;
+    }
+
+    .header-area.is-sticky .main-menu > li > a {
+        padding: 10px 15px;
+        font-size: 15px;
+    }
+
+    /* Solo ocultar información de contacto, mantener redes sociales */
+    .header-area.is-sticky .info-wrap-ul.info-lg {
+        display: none;
+    }
+
+    /* NUEVO: Mostrar específicamente las redes sociales */
+    .header-area.is-sticky .right-block {
+        display: flex !important;
+    }
+
+    .header-area.is-sticky .header-top-wrap.right-block {
+        display: flex !important;
+    }
+
+    .header-area.is-sticky .header-icon a {
+        font-size: 18px;
+    }
+
+    /* Compensar altura del header sticky */
+    body.sticky-header {
+        padding-top: 200px !important;
+    }
+
+    .header-area.is-sticky ~ * {
+        margin-top: 0;
+    }
+
+    .header-area.is-sticky {
+        margin-bottom: 0;
+    }
+
+    @keyframes smoothScroll {
+        0% {
+            transform: translateY(-200px);
+        }
+        100% {
+            transform: translateY(0px);
+        }
+    }
+    {% endif %}
+    {% endif %}
+</style>
+<script>
+window.addEventListener('scroll', function() {
+    if (window.scrollY > 50) {
+        document.body.classList.add('sticky-header');
+        document.querySelector('.header-kaj').classList.add('is-sticky');
+    } else {
+        document.body.classList.remove('sticky-header');
+        document.querySelector('.header-kaj').classList.remove('is-sticky');
+    }
+});
+</script>

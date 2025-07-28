@@ -1,0 +1,120 @@
+{%- if section.settings.topbar_notification_enable -%}
+<section class="top-notification-bar">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col">
+                <div class="notification-block">
+                    <ul class="notification-entry">
+                        <li class="notify-wrap">
+                            {%- if section.settings.rich_text1 -%}
+                            <div class="richtext">
+                                {{ section.settings.rich_text1 }}
+                            </div>
+                            {%- endif -%}
+                        </li>
+                    </ul>
+                    <button class="notification-close-btn"><i class="ri-close-line"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<script>
+    window.addEventListener("DOMContentLoaded", function() {
+        var nToggle = $('.notification-close-btn');
+        nToggle.on('click', function() {
+            $('.top-notification-bar').slideToggle();
+        });
+    });
+</script>
+{%- endif -%}
+{% schema %}
+{
+  "name": "Topbar notification",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Show topbar notification"
+    },
+    {
+      "type": "checkbox",
+      "id": "topbar_notification_enable",
+      "label": "Show topbar notification",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Section background color"
+    },
+    {
+      "type": "color",
+      "id": "topbar_notification_bg_color",
+      "label": "Section background color",
+      "default": "#fff"
+    },
+    {
+      "type": "color",
+      "id": "topbar_notification_txt_color",
+      "label": "Section text color",
+      "default": "#fff"
+    },
+    {
+      "type": "header",
+      "content": "link"
+    },
+    {
+      "type": "richtext",
+      "id": "rich_text1",
+      "label": "Text"
+    }
+  ]
+}
+{% endschema %}
+<style>
+.top-notification-bar {
+    position: relative;
+    background-color: {{ section.settings.topbar_notification_bg_color }};
+    z-index: 1;
+    padding: 10px 0;
+}
+.top-notification-bar .notification-block {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+/* text css */
+.top-notification-bar .notification-block ul li.notify-wrap {
+    width: 100%;
+    text-align: center;
+}
+.top-notification-bar .notification-block ul li.notify-wrap .richtext a,
+.top-notification-bar .notification-block ul li.notify-wrap .richtext p {
+    color: {{ section.settings.topbar_notification_txt_color }};
+    font-weight: 400;
+}
+.top-notification-bar .notification-block ul li.notify-wrap .richtext a:hover{
+    opacity: 0.7;
+}
+/* close btn css */
+.top-notification-bar .notification-block button.notification-close-btn {
+    color: {{ section.settings.topbar_notification_txt_color }};
+    font-size: 20px;
+    position: absolute;
+    {%- if settings.enable_rtl -%}
+    left: 0px;
+    {%- else -%}
+    right: 0px;
+    {%- endif -%}
+    bottom: 50%;
+    transform: translateY(50%);
+    display: flex;
+    line-height: 1;
+}
+@media (max-width: 479px) {
+    .top-notification-bar .notification-block button.notification-close-btn {
+        position: unset;
+        transform: unset;
+    }
+}
+</style>

@@ -1,0 +1,99 @@
+<ul class="shop-element">
+  <li class="side-wrap toggle-wrap">
+    <button class="navbar-toggle" type="button">
+      <span class="menu-icon">
+        <i class="feather-menu"></i>
+      </span>
+    </button>
+  </li>
+  {%- if settings.search_enable -%}
+  <li class="side-wrap search-wrap">
+    <a class="search-btn" data-bs-toggle="modal" href="#seachmodal">
+      <span class="search-icon"><i class="feather-search"></i></span>
+      <span class="search-title">{{ section.settings.search_title }}</span>
+    </a>
+  </li>
+  {%- endif -%}
+  <li class="side-wrap user-wrap">
+    <a class="acc-link-wrap" href="{{ routes.account_url }}">
+      <span class="acc-icon"><i class="feather-user"></i></span>
+      <span class="acc-title">{{ section.settings.account_title }}</span>
+    </a>
+  </li>
+  {%- if settings.wishlist_enable -%}
+  <li class="side-wrap wishlist-wrap">
+    <a class="header-wishlist-btn" href="/pages/wishlist" title="Wishlist">
+      <span class="wishlist-icon">
+        <i class="feather-heart"></i>
+      </span>
+      <span class="wishlist-title">{{ section.settings.wishlist_title }}</span>
+    </a>
+  </li>
+  {%- endif -%}
+  <li class="side-wrap cart-wrap">
+  <div class="shopping-cart">
+    <a class="cart-count" href="javascript:void(0);">
+      <span class="cart-icon">
+        <span class="cart-icon">
+          <i class="feather-shopping-bag"></i>
+        </span>
+      </span>
+      {% if section.settings.cart_title != '' %}
+      <span class="cart-title">{{ section.settings.cart_title }}</span>
+      {% endif %}
+      <span id="cart-total" class="total-price"> ({{ cart.total_price | money }})</span>
+    </a>
+  </li>
+</ul>
+{% style %}
+button.navbar-toggle,
+a.search-btn,
+a.header-wishlist-btn,
+a.acc-link-wrap,
+a.cart-count {
+  color: var(--font-color-paragraph);
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+button.navbar-toggle:hover,
+a.search-btn:hover,
+a.header-wishlist-btn:hover,
+a.acc-link-wrap:hover,
+a.cart-count:hover {
+  color: var(--font-color-primary);
+}
+button.navbar-toggle span.menu-icon,
+a.search-btn span.search-icon,
+a.acc-link-wrap span.acc-icon,
+a.header-wishlist-btn span.wishlist-icon,
+a.cart-count span.cart-icon {
+  font-size: 16px;
+  line-height: 1;
+  position: relative;
+}
+a.search-btn span.search-title,
+a.header-wishlist-btn span.wishlist-title,
+a.cart-count span.cart-title,
+a.acc-link-wrap .acc-title {
+  {% if settings.enable_rtl %}
+  margin-right: 10px;
+  {% else %}
+  margin-left: 10px;
+  {% endif %}
+  line-height: 1;
+}
+@media (max-width: 1360px) {
+  a.search-btn span.search-title,
+  a.header-wishlist-btn span.wishlist-title,
+  a.cart-count span.cart-title,
+  a.acc-link-wrap .acc-title{
+    display: none;
+  }
+}
+@media (max-width: 479px) {
+  a.cart-count span.total-price {
+    display: none;
+  }
+}
+{% endstyle %}

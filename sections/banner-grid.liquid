@@ -1,0 +1,344 @@
+<section class="banner-grid">
+    <div class="container">
+        <ul class="banner-wrap">
+            {% for block in section.blocks %}
+            <li class="banner-{{ block.id }}">
+                <div class="banner-block">
+                    <a href="{{ block.settings.banner_url }}" class="banner-img">
+                      {%- if block.settings.banner_img -%}
+                      {{ block.settings.banner_img | image_url: width: 1024 | image_tag:
+                        loading: 'lazy',
+                        width: block.settings.banner_img.width,
+                        height: block.settings.banner_img.height,
+                        class: "img-fluid",
+                        alt: block.settings.banner_img.alt | escape }}
+                      {%- else -%}
+                      {%- capture placeholder -%}collection-{% cycle 1, 2, 3, 4, 5, 6 %}{%- endcapture -%}
+                      {{ placeholder | placeholder_svg_tag: 'placeholder-svg' }}
+                      {%- endif -%}
+                      <div class="banner-content{% if block.settings.banner_content_position == 'left' %} content-left{% elsif block.settings.banner_content_position == 'right' %} content-right{% else %} content-center{% endif %}">
+                            {% if block.settings.banner_title != '' %}
+                            <h2 style="color: {{ block.settings.banner_title_color }};">
+                                <span>{{ block.settings.banner_title1 }}</span>
+                                {{ block.settings.banner_title }}
+                            </h2>
+                            {% endif %}
+                            {% if block.settings.banner_button_text != '' %}
+                            <span class="banner-button">{{ block.settings.banner_button_text }} <i class="feather-arrow-right"></i></span>
+                            {% endif %}
+                        </div>
+                    </a>
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</section>
+{% schema %}
+{
+  "name": "Banner Grid",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section Padding"
+    },
+    {
+      "type": "range",
+      "id": "section_padding_top",
+      "label": "Section Padding Top",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "section_padding_bottom",
+      "label": "Section Padding Bottom",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 100
+    },
+    {
+      "type": "paragraph",
+      "content": "Ipad Pro / Ipad"
+    },
+    {
+      "type": "range",
+      "id": "section_padding_top_ip",
+      "label": "Section Padding Top",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 70
+    },
+    {
+      "type": "range",
+      "id": "section_padding_bottom_ip",
+      "label": "Section Padding Bottom",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 70
+    },
+    {
+      "type": "paragraph",
+      "content": "Mobile"
+    },
+    {
+      "type": "range",
+      "id": "section_padding_top_xs",
+      "label": "Section Padding Top",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "section_padding_bottom_xs",
+      "label": "Section Padding Bottom",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 50
+    }
+  ],
+  "blocks": [
+    {
+      "type": "banner_grid2",
+      "name": "Banner block",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "banner_img",
+          "label": "Banner Image",
+          "info": "Recommended Size: 660x308px"
+        },
+        {
+          "type": "url",
+          "id": "banner_url",
+          "label": "Banner url"
+        },
+        {
+          "type": "text",
+          "id": "banner_title1",
+          "label": "Banner title",
+          "default": "20s mobile"
+        },
+        {
+          "type": "text",
+          "id": "banner_title",
+          "label": "Banner title",
+          "default": "Redmi note"
+        },
+        {
+          "type": "color",
+          "id": "banner_title_color",
+          "label": "Banner title color",
+          "default": "#fff"
+        },
+        {
+          "type": "text",
+          "id": "banner_button_text",
+          "label": "Button Text",
+          "default": "Shop now"
+        },
+        {
+          "type": "radio",
+          "id": "banner_content_position",
+          "label": "Content Position",
+          "options": [
+            {
+              "label": "Content Left",
+              "value": "left"
+            },
+            {
+              "label": "Content Right",
+              "value": "right"
+            }
+          ],
+          "default": "left"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Banner Grid"
+    }
+  ]
+}
+{% endschema %}
+<style>
+    .banner-grid {
+        padding-top: {{ section.settings.section_padding_top }}px;
+        padding-bottom: {{ section.settings.section_padding_bottom }}px;
+    }
+    @media(max-width: 1199px) {
+        .banner-grid {
+            padding-top: {{ section.settings.section_padding_top_ip }}px;
+            padding-bottom: {{ section.settings.section_padding_bottom_ip }}px;
+        }
+    }
+    @media(max-width: 767px) {
+        .banner-grid {
+            padding-top: {{ section.settings.section_padding_top_xs }}px;
+            padding-bottom: {{ section.settings.section_padding_bottom_xs }}px;
+        }
+    }
+
+    /*=====================================
+        banner css
+    ======================================*/
+
+    .banner-grid ul.banner-wrap {
+        position: relative;
+        display: -ms-flexbox;
+        display: flex;
+        -ms-flex-wrap: wrap;
+        flex-wrap: wrap;
+        {%- if settings.enable_rtl -%}
+        margin: -30px -30px 0px 0px;
+        {%- else -%}
+        margin: -30px 0px 0px -30px;
+        {%- endif -%}
+    }
+    .banner-grid ul.banner-wrap > li {
+        width: calc(50% - 30px);
+        {%- if settings.enable_rtl -%}
+        margin: 30px 30px 0px 0px;
+        {%- else -%}
+        margin: 30px 0px 0px 30px;
+        {%- endif -%}
+    }
+    @media (max-width: 767px) {
+        .banner-grid ul.banner-wrap {
+            {%- if settings.enable_rtl -%}
+            margin: -30px -15px 0px 0px;
+            {%- else -%}
+            margin: -30px 0px 0px -15px;
+            {%- endif -%}
+        }
+        .banner-grid ul.banner-wrap > li {
+            width: calc(100% - 15px);
+            {%- if settings.enable_rtl -%}
+            margin: 30px 15px 0px 0px;
+            {%- else -%}
+            margin: 30px 0px 0px 15px;
+            {%- endif -%}
+        }
+    }
+
+    /* banner info css */
+    .banner-grid .banner-block {
+        position: relative;
+    }
+    .banner-grid .banner-block a {
+        display: flex;
+        align-items: center;
+    }
+    .banner-grid .banner-block a img{
+        width: 100%;
+        border-radius: 0px;
+    }
+
+    /* banner content css */
+    .banner-grid .banner-block .banner-content {
+        position: absolute;
+        max-width: 50%;
+    }
+    .banner-grid .banner-block .banner-content.content-left{
+        left: 10%;
+    }
+    .banner-grid .banner-block .banner-content.content-right{
+        right: 10%;
+    }
+    .banner-grid .banner-block .banner-content h2 {
+        font-size: 38px;
+        font-weight: 600;
+    }
+    .banner-grid .banner-block .banner-content h2 span{
+        font-weight: 300;
+        display: block;
+    }
+    .banner-grid .banner-block .banner-content span.banner-button {
+        color: var(--font-color-primary);
+        margin-top: 30px;
+        font-size: 16px;
+        text-transform: uppercase;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+    }
+    .banner-grid .banner-block .banner-content span.banner-button i{
+        height: 45px;
+        width: 45px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid rgba(255,255,255,30%);
+        border-radius: 50%;
+        {% if settings.enable_rtl %}
+        margin-right: 15px;
+        {% else %}
+        margin-left: 15px;
+        {% endif %}
+    }
+    @media (max-width: 1599px) {
+        .banner-grid .banner-block .banner-content.content-left{
+            left: 30px;
+        }
+        .banner-grid .banner-block .banner-content.content-right{
+            right: 30px;
+        }
+        .banner-grid .banner-block .banner-content h2{
+            font-size: 22px;
+        }
+        .banner-grid .banner-block .banner-content span.banner-button{
+            font-size: 14px;
+        }
+        .banner-grid .banner-block .banner-content span.banner-button {
+            margin-top: 20px;
+        }
+        .banner-grid .banner-block .banner-content span.banner-button i{
+            height: 35px;
+            width: 35px;
+        }
+    }
+    @media (max-width: 1199px) {
+        .banner-grid .banner-block .banner-content h2 {
+            font-size: 20px;
+        }
+        .banner-grid .banner-block .banner-content span.banner-button {
+            margin-top: 15px;
+        }
+    }
+    @media (max-width: 991px) {
+
+    }
+    @media (max-width: 479px) {
+        .banner-grid .banner-block .banner-content{
+            max-width: 100%;
+        }
+        .banner-grid .banner-block .banner-content.content-left{
+            left: 15px;
+        }
+        .banner-grid .banner-block .banner-content.content-right{
+            right: 15px;
+        }
+        .banner-grid .banner-block .banner-content h2 {
+            font-size: 16px;
+        }
+        .banner-grid .banner-block .banner-content span.banner-button{
+            font-size: 12px;
+        }
+    }
+</style>

@@ -1,0 +1,59 @@
+<ul class="social-icon">
+  {% if settings.social_icon_1_name != blank %}
+  <li class="facebook">
+    <a href="{{ settings.social_icon_1_link }}">
+      <i class="{{ settings.social_icon_1_name }}"></i>
+    </a>
+  </li>        
+  {% endif %}
+
+  {% if settings.social_icon_2_name != blank %}
+  <li class="twitter">
+    <a href="{{ settings.social_icon_2_link }}">
+      <i class="{{ settings.social_icon_2_name }}"></i>
+    </a>
+  </li>        
+  {% endif %}
+
+  {% if settings.social_icon_3_name != blank %}
+  <li class="gplus">
+    <a href="{{ settings.social_icon_3_link }}">
+      <i class="{{ settings.social_icon_3_name }}"></i>
+    </a>
+  </li>        
+  {% endif %}
+
+  {% if settings.social_icon_4_name != blank %}
+  <li class="pinterest">
+    <a href="{{ settings.social_icon_4_link }}">
+      <i class="{{ settings.social_icon_4_name }}"></i>
+    </a>
+  </li>        
+  {% endif %}
+</ul>
+<style>
+  /* social icon css */
+  ul.social-icon{
+    line-height: 1;
+  }
+  ul.social-icon li{
+    display: inline-block;
+    {% if settings.enable_rtl %}
+    margin-right: 20px;
+    {% else %}
+    margin-left: 20px;
+    {% endif %}
+  }
+  ul.social-icon li:first-child{
+    {% if settings.enable_rtl %}
+    margin-right: 0px;
+    {% else %}
+    margin-left: 0px;
+    {% endif %}
+  }
+  ul.social-icon li a{
+    display: block;
+    font-size: 18px;
+    line-height: 0;
+  }
+</style>
