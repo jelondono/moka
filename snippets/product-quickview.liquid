@@ -109,9 +109,22 @@ addEventListener('DOMContentLoaded', (event) => {
 
       mainImage = product.featured_image;
       var shopifyimgurl = variant.featured_image ? variant.featured_image.src : product.featured_image;
-      var imgurl = "<img class=\"full-width img-fluid\" alt=\"\" src = \""+shopifyimgurl+"\" >";
-      jQuery(_parent+' .product-main-image__item .img_box_1').empty();
-      jQuery(_parent+' .product-main-image__item .img_box_1').append(imgurl);
+      
+      // Ensure we have a valid image URL
+      if (shopifyimgurl && shopifyimgurl !== null && shopifyimgurl !== '') {
+        // Add image size parameter for better loading
+        if (shopifyimgurl.indexOf('?') === -1) {
+          shopifyimgurl += '?v=' + new Date().getTime();
+        }
+        var imgurl = "<img class=\"full-width img-fluid\" alt=\"\" src=\"" + shopifyimgurl + "\" onload=\"this.style.opacity=1\" style=\"opacity:0;transition:opacity 0.3s\" >";
+        jQuery(_parent+' .product-main-image__item .img_box_1').empty();
+        jQuery(_parent+' .product-main-image__item .img_box_1').append(imgurl);
+      } else {
+        // Show placeholder if no image available
+        var placeholderUrl = "<div style=\"width:100%;height:300px;background:#f8f9fa;display:flex;align-items:center;justify-content:center;color:#6c757d;\">No image available</div>";
+        jQuery(_parent+' .product-main-image__item .img_box_1').empty();
+        jQuery(_parent+' .product-main-image__item .img_box_1').append(placeholderUrl);
+      }
 
       //price
       if(variant.price < variant.compare_at_price) {
@@ -231,12 +244,25 @@ addEventListener('DOMContentLoaded', (event) => {
     }
 
     var shopifyimgurl = variant.featured_image ? variant.featured_image.src : mainImage;
-    var imgurl = "<img src = \""+shopifyimgurl+"\" class=\"img-fluid\" alt=\"\" >";
-    if(jQuery(_parent+' .product-main-image__item .img_box_1').children().length > 0) {
-      var detach = jQuery(_parent+' .product-main-image__item .img_box_1 img').detach();
+    
+    // Ensure we have a valid image URL for variant change
+    if (shopifyimgurl && shopifyimgurl !== null && shopifyimgurl !== '') {
+      // Add cache busting parameter
+      if (shopifyimgurl.indexOf('?') === -1) {
+        shopifyimgurl += '?v=' + new Date().getTime();
+      }
+      var imgurl = "<img src=\"" + shopifyimgurl + "\" class=\"img-fluid\" alt=\"\" onload=\"this.style.opacity=1\" style=\"opacity:0;transition:opacity 0.3s\" >";
+      if(jQuery(_parent+' .product-main-image__item .img_box_1').children().length > 0) {
+        var detach = jQuery(_parent+' .product-main-image__item .img_box_1 img').detach();
+      }
+      jQuery(_parent+' .product-main-image__item .img_box_1').empty();
+      jQuery(_parent+' .product-main-image__item .img_box_1').append(imgurl);
+    } else {
+      // Show placeholder if no variant image available
+      var placeholderUrl = "<div style=\"width:100%;height:300px;background:#f8f9fa;display:flex;align-items:center;justify-content:center;color:#6c757d;\">No image available</div>";
+      jQuery(_parent+' .product-main-image__item .img_box_1').empty();
+      jQuery(_parent+' .product-main-image__item .img_box_1').append(placeholderUrl);
     }
-    jQuery(_parent+' .product-main-image__item .img_box_1').empty();
-    jQuery(_parent+' .product-main-image__item .img_box_1').append(imgurl);
     if (variant && variant.available) {
       jQuery(_parent + ' .addtocartqv').removeAttr('disabled');
       jQuery(_parent + ' .addtocartqv').text('{{ 'products.product.add_to_cart' | t }}');
@@ -304,6 +330,21 @@ addEventListener('DOMContentLoaded', (event) => {
       margin: 0px;
       padding: 15px;
     }
+    .productmodal .modal-dialog .modal-body{
+      flex-direction: column;
+    }
+    .productmodal .modal-dialog .modal-body .quick-view-img{
+      width: 100%;
+      padding: 0 15px 20px 15px;
+    }
+    .productmodal .modal-dialog .modal-body .quick-view-content{
+      width: 100%;
+      padding: 0 15px;
+      max-height: none;
+    }
+    .productmodal .modal-dialog .modal-body .quick-view-img .quick-view-tab-content .product-main-image__item .img_box_1{
+      min-height: 250px;
+    }
   }
 
   /* modal-header css */
@@ -365,9 +406,23 @@ addEventListener('DOMContentLoaded', (event) => {
     padding-left: 30px;
     {% endif %}
   }
+  .productmodal .modal-dialog .modal-body .quick-view-img .quick-view-tab-content .product-main-image__item .img_box_1{
+    width: 100%;
+    min-height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    overflow: hidden;
+  }
   .productmodal .modal-dialog .modal-body .quick-view-img .quick-view-tab-content .product-main-image__item .img_box_1 img{
     backface-visibility: hidden;
-    
+    width: 100%;
+    height: auto;
+    max-width: 100%;
+    object-fit: cover;
+    display: block;
   }
   .productmodal .modal-dialog .modal-body .quick-view-content{
     padding: 0px 30px;
