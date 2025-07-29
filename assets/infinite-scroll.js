@@ -5,6 +5,7 @@
 
 class InfiniteScroll {
   constructor() {
+    console.log('InfiniteScroll constructor called');
     this.currentPage = 1;
     this.totalPages = 1;
     this.isLoading = false;
@@ -13,16 +14,32 @@ class InfiniteScroll {
     this.loadMoreTrigger = document.querySelector('.load-more-trigger');
     this.paginationArea = document.querySelector('.paginatoin-area');
     
+    console.log('Elements found:', {
+      container: !!this.container,
+      loadingSpinner: !!this.loadingSpinner,
+      loadMoreTrigger: !!this.loadMoreTrigger,
+      paginationArea: !!this.paginationArea
+    });
+    
     this.init();
   }
 
   init() {
+    console.log('InfiniteScroll init() called');
+    
     if (!this.container || !this.loadMoreTrigger) {
+      console.log('Missing required elements, aborting init');
       return;
     }
 
     // Get pagination info from existing pagination
     this.extractPaginationInfo();
+    
+    console.log('Pagination info:', {
+      currentPage: this.currentPage,
+      totalPages: this.totalPages,
+      hasMorePages: this.hasMorePages()
+    });
     
     // Set up intersection observer for scroll detection
     this.setupIntersectionObserver();
@@ -30,15 +47,24 @@ class InfiniteScroll {
     // Hide traditional pagination
     if (this.paginationArea) {
       this.paginationArea.style.display = 'none';
+      console.log('Traditional pagination hidden');
     }
+    
+    console.log('InfiniteScroll initialization complete');
   }
 
   extractPaginationInfo() {
-    const paginationLinks = document.querySelectorAll('.pagination-box a');
+    console.log('Extracting pagination info...');
+    
+    const paginationLinks = document.querySelectorAll('.pagination-box .number a');
     const currentPageElement = document.querySelector('.pagination-box .active a');
+    
+    console.log('Found pagination links:', paginationLinks.length);
+    console.log('Current page element:', currentPageElement);
     
     if (currentPageElement) {
       this.currentPage = parseInt(currentPageElement.textContent) || 1;
+      console.log('Current page from element:', this.currentPage);
     }
     
     // Find the highest page number
@@ -49,14 +75,36 @@ class InfiniteScroll {
       }
     });
     
+    console.log('Total pages found:', this.totalPages);
+    
     // If no pagination found, check for next link
     const nextLink = document.querySelector('.pagination-box .next a');
     if (nextLink && this.totalPages <= this.currentPage) {
       this.totalPages = this.currentPage + 1;
+      console.log('Next link found, adjusted total pages to:', this.totalPages);
     }
+    
+    // Fallback: try to get pagination info from URL parameters
+     if (this.totalPages <= 1) {
+       const urlParams = new URLSearchParams(window.location.search);
+       const currentPageFromUrl = parseInt(urlParams.get('page')) || 1;
+       this.currentPage = currentPageFromUrl;
+       
+       // If we have a next link, assume there are more pages
+       if (nextLink) {
+         this.totalPages = this.currentPage + 1;
+         console.log('Using URL fallback - current page:', this.currentPage, 'total pages:', this.totalPages);
+       } else {
+         // If no pagination at all, check if we can load more by trying page 2
+         this.totalPages = 2; // Assume there might be a second page
+         console.log('No pagination found, assuming potential second page exists');
+       }
+     }
   }
 
   setupIntersectionObserver() {
+    console.log('Setting up intersection observer...');
+    
     const options = {
       root: null,
       rootMargin: '100px',
@@ -65,13 +113,21 @@ class InfiniteScroll {
 
     this.observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
+        console.log('Intersection observed:', {
+          isIntersecting: entry.isIntersecting,
+          isLoading: this.isLoading,
+          hasMorePages: this.hasMorePages()
+        });
+        
         if (entry.isIntersecting && !this.isLoading && this.hasMorePages()) {
+          console.log('Triggering loadMoreProducts from intersection');
           this.loadMoreProducts();
         }
       });
     }, options);
 
     this.observer.observe(this.loadMoreTrigger);
+    console.log('Intersection observer set up and observing trigger element');
   }
 
   hasMorePages() {
@@ -79,10 +135,14 @@ class InfiniteScroll {
   }
 
   async loadMoreProducts() {
+    console.log('loadMoreProducts called - isLoading:', this.isLoading, 'hasMorePages:', this.hasMorePages());
+    
     if (this.isLoading || !this.hasMorePages()) {
+      console.log('Aborting load - already loading or no more pages');
       return;
     }
 
+    console.log('Starting to load more products...');
     this.isLoading = true;
     this.showLoadingSpinner();
 
@@ -191,10 +251,54 @@ class InfiniteScroll {
 
 // Initialize infinite scroll when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
+  console.log('Infinite scroll script loaded');
+  
+  // Check if we're on a collection page
+  const productGrid = document.querySelector('#product-grid');
+  const loadMoreTrigger = document.querySelector('.load-more-trigger');
+  
+  console.log('Product grid found:', !!productGrid);
+  console.log('Load more trigger found:', !!loadMoreTrigger);
+  
   // Only initialize on collection pages
-  if (document.querySelector('#product-grid') && document.querySelector('.load-more-trigger')) {
+  if (productGrid && loadMoreTrigger) {
+    console.log('Initializing infinite scroll');
     window.infiniteScroll = new InfiniteScroll();
+  } else {
+    console.log('Infinite scroll not initialized - missing elements');
   }
+  
+  // Add a manual test button for debugging
+  if (window.location.search.includes('debug=true')) {
+    const debugButton = document.createElement('button');
+    debugButton.textContent = 'Test Load More';
+    debugButton.style.cssText = 'position: fixed; top: 10px; right: 10px; z-index: 9999; padding: 10px; background: red; color: white;';
+    debugButton.onclick = function() {
+      if (window.infiniteScroll) {
+        window.infiniteScroll.loadMoreProducts();
+      }
+    };
+    document.body.appendChild(debugButton);
+  }
+});
+
+// Add a simple scroll-based fallback
+let scrollTimeout;
+window.addEventListener('scroll', function() {
+  clearTimeout(scrollTimeout);
+  scrollTimeout = setTimeout(function() {
+    const scrollPosition = window.innerHeight + window.scrollY;
+    const documentHeight = document.documentElement.offsetHeight;
+    
+    // If we're within 200px of the bottom
+    if (scrollPosition >= documentHeight - 200) {
+      console.log('Near bottom of page, checking for infinite scroll');
+      if (window.infiniteScroll && window.infiniteScroll.hasMorePages() && !window.infiniteScroll.isLoading) {
+        console.log('Triggering load more from scroll fallback');
+        window.infiniteScroll.loadMoreProducts();
+      }
+    }
+  }, 100);
 });
 
 // Handle browser back/forward buttons

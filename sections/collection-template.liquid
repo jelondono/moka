@@ -67,9 +67,10 @@
                     </div>
                   </div>
                 </div>
-                {% if paginate.pages > 1 %}
                 <div class="paginatoin-area" style="display: none;">
-                  {%- render 'pagination' -%}
+                  {% if paginate.pages > 1 %}
+                    {%- render 'pagination' -%}
+                  {% endif %}
                 </div>
                 <div class="infinite-scroll-container">
                   <div class="loading-spinner" style="display: none; text-align: center; padding: 30px;">
@@ -80,7 +81,6 @@
                   </div>
                   <div class="load-more-trigger" style="height: 1px;"></div>
                 </div>
-                {% endif %}
               </div>
               {%- else -%}
               <div class="empty-product collection" id="product-grid" data-id="{{ section.id }}">
