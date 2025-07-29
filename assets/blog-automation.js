@@ -45,7 +45,7 @@ class BlogAutomation {
     }
 
     // Función principal para verificar feeds
-    async checkFeeds() {
+    async checkFeeds(forceCheck = false) {
         if (!this.config) {
             console.error('Configuration not loaded');
             return;
@@ -54,13 +54,17 @@ class BlogAutomation {
         const now = new Date();
         const lastCheckTime = this.lastCheck ? new Date(this.lastCheck) : null;
         
-        // Verificar si es tiempo de revisar feeds
-        if (lastCheckTime) {
+        // Verificar si es tiempo de revisar feeds (solo si no es verificación forzada)
+        if (!forceCheck && lastCheckTime) {
             const hoursSinceLastCheck = (now - lastCheckTime) / (1000 * 60 * 60);
             if (hoursSinceLastCheck < this.config.automation_settings.check_interval_hours) {
                 console.log('Not time to check feeds yet');
                 return;
             }
+        }
+        
+        if (forceCheck) {
+            console.log('Manual feed check initiated...');
         }
 
         console.log('Checking RSS feeds for new content...');
