@@ -1,0 +1,69 @@
+{
+  "rss_feeds": {
+    "beauty_feeds": [
+      {
+        "name": "Beauty Blog ES",
+        "url": "https://beautyblog.es/feed",
+        "category": "belleza-general",
+        "language": "es",
+        "active": true
+      },
+      {
+        "name": "Maquibella",
+        "url": "https://maquibella.com/feed",
+        "category": "maquillaje",
+        "language": "es",
+        "active": true
+      },
+      {
+        "name": "Allure Beauty",
+        "url": "https://www.allure.com/feed/rss",
+        "category": "belleza-internacional",
+        "language": "en",
+        "active": true
+      },
+      {
+        "name": "Byrdie Beauty",
+        "url": "https://www.byrdie.com/feed",
+        "category": "tendencias-belleza",
+        "language": "en",
+        "active": true
+      }
+    ],
+    "colombian_feeds": [
+      {
+        "name": "KienyKe Entretenimiento",
+        "url": "https://kienyke.com/feed",
+        "category": "entretenimiento-colombia",
+        "language": "es",
+        "active": true
+      }
+    ]
+  },
+  "automation_settings": {
+    "check_interval_hours": 6,
+    "max_posts_per_day": 3,
+    "auto_publish": false,
+    "require_approval": true,
+    "content_filters": {
+      "keywords_include": ["maquillaje", "belleza", "cosmética", "makeup", "beauty", "skincare", "colombia", "colombiano"],
+      "keywords_exclude": ["política", "violencia", "drogas"]
+    },
+    "content_processing": {
+      "translate_to_spanish": true,
+      "add_colombian_context": true,
+      "generate_featured_image": true
+    }
+  },
+  "blog_settings": {
+    "default_author": "Equipo Editorial",
+    "default_tags": ["belleza", "maquillaje", "tendencias"],
+    "category_mapping": {
+      "belleza-general": "Belleza",
+      "maquillaje": "Maquillaje",
+      "belleza-internacional": "Tendencias Internacionales",
+      "tendencias-belleza": "Tendencias",
+      "entretenimiento-colombia": "Colombia"
+    }
+  }
+}

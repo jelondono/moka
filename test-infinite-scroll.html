@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Infinite Scroll</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+        
+        #product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        
+        .st-col-item {
+            border: 1px solid #ddd;
+            padding: 20px;
+            text-align: center;
+            background: #f9f9f9;
+            border-radius: 8px;
+        }
+        
+        .pagination-box {
+            display: none; /* Hidden for testing */
+        }
+        
+        .pagination-box .active a {
+            font-weight: bold;
+        }
+        
+        .pagination-box .next a {
+            color: blue;
+        }
+        
+        /* Include the infinite scroll styles */
+        .infinite-scroll-container {
+            width: 100%;
+            margin-top: 20px;
+        }
+        
+        .loading-spinner {
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+        
+        .loading-spinner[style*="block"] {
+            opacity: 1;
+        }
+        
+        .custom-spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #333;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .spinner-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>Test Infinite Scroll - Moka</h1>
+    
+    <!-- Simulated pagination (hidden) -->
+    <div class="paginatoin-area" style="display: none;">
+        <ul class="pagination-box">
+            <li class="number active">
+                <a href="javascript:void(0)">1</a>
+            </li>
+            <li class="number">
+                <a href="?page=2">2</a>
+            </li>
+            <li class="number">
+                <a href="?page=3">3</a>
+            </li>
+            <li class="next np-icon">
+                <a href="?page=2" class="next">Next</a>
+            </li>
+        </ul>
+    </div>
+    
+    <!-- Product grid -->
+    <div id="product-grid">
+        <div class="st-col-item">
+            <h3>Producto 1</h3>
+            <p>Descripción del producto 1</p>
+        </div>
+        <div class="st-col-item">
+            <h3>Producto 2</h3>
+            <p>Descripción del producto 2</p>
+        </div>
+        <div class="st-col-item">
+            <h3>Producto 3</h3>
+            <p>Descripción del producto 3</p>
+        </div>
+        <div class="st-col-item">
+            <h3>Producto 4</h3>
+            <p>Descripción del producto 4</p>
+        </div>
+        <div class="st-col-item">
+            <h3>Producto 5</h3>
+            <p>Descripción del producto 5</p>
+        </div>
+        <div class="st-col-item">
+            <h3>Producto 6</h3>
+            <p>Descripción del producto 6</p>
+        </div>
+    </div>
+    
+    <!-- Infinite scroll container -->
+    <div class="infinite-scroll-container">
+        <div class="loading-spinner" style="display: none; text-align: center; padding: 30px;">
+            <div class="spinner-wrapper">
+                <div class="custom-spinner"></div>
+                <p style="margin-top: 15px; color: #666; font-size: 14px;">Cargando más productos...</p>
+            </div>
+        </div>
+        <div class="load-more-trigger" style="height: 1px; background: red; opacity: 0.1;"></div>
+    </div>
+    
+    <div style="height: 200px; background: #eee; margin-top: 20px; display: flex; align-items: center; justify-content: center;">
+        <p>Scroll hacia abajo para probar el infinite scroll</p>
+    </div>
+    
+    <!-- Include the infinite scroll script -->
+    <script src="assets/infinite-scroll.js"></script>
+    
+    <script>
+        // Mock fetch for testing
+        const originalFetch = window.fetch;
+        window.fetch = function(url) {
+            console.log('Mock fetch called with URL:', url);
+            
+            // Simulate a delay
+            return new Promise(resolve => {
+                setTimeout(() => {
+                    const mockHtml = `
+                        <div id="product-grid">
+                            <div class="st-col-item">
+                                <h3>Nuevo Producto A</h3>
+                                <p>Producto cargado dinámicamente</p>
+                            </div>
+                            <div class="st-col-item">
+                                <h3>Nuevo Producto B</h3>
+                                <p>Producto cargado dinámicamente</p>
+                            </div>
+                            <div class="st-col-item">
+                                <h3>Nuevo Producto C</h3>
+                                <p>Producto cargado dinámicamente</p>
+                            </div>
+                        </div>
+                    `;
+                    
+                    resolve({
+                        ok: true,
+                        text: () => Promise.resolve(mockHtml)
+                    });
+                }, 1000);
+            });
+        };
+    </script>
+</body>
+</html>

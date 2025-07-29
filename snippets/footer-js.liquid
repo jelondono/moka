@@ -135,3 +135,49 @@ window.addEventListener('load', (event) => {
 </script>
 
 {% render 'ajax-search-bar' %}
+
+{%- comment -%}
+  Blog Automation Script - Automatización de contenido de belleza y maquillaje
+{%- endcomment -%}
+{%- if template contains 'blog' or template contains 'article' -%}
+<script type="text/javascript" src="{{ 'blog-automation.js' | asset_url }}" defer></script>
+<script type="text/javascript">
+  // Configuración específica para automatización del blog
+  document.addEventListener('DOMContentLoaded', function() {
+    // Verificar si estamos en la página de administración del blog
+    if (window.location.search.includes('admin=true') || window.location.hash.includes('admin')) {
+      console.log('Blog automation admin mode enabled');
+      
+      // Mostrar notificación de modo administrador
+      if (window.blogAutomation) {
+        setTimeout(() => {
+          const notification = document.createElement('div');
+          notification.style.cssText = `
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: #007bff;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            z-index: 9999;
+            font-size: 14px;
+          `;
+          notification.innerHTML = '🤖 Modo administración del blog activado';
+          document.body.appendChild(notification);
+          
+          setTimeout(() => notification.remove(), 5000);
+        }, 1000);
+      }
+    }
+    
+    // Auto-verificar feeds cada hora si estamos en páginas del blog
+    if (window.blogAutomation && (window.location.pathname.includes('/blogs/') || window.location.pathname === '/blogs')) {
+      // Verificación inicial después de 10 segundos
+      setTimeout(() => {
+        window.blogAutomation.checkFeeds();
+      }, 10000);
+    }
+  });
+</script>
+{%- endif -%}

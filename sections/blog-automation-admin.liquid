@@ -1,0 +1,576 @@
+{% comment %}
+  Sección de administración para la automatización del blog
+  Permite gestionar feeds RSS, revisar borradores y configurar la automatización
+{% endcomment %}
+
+<div class="blog-automation-admin" id="blog-automation-admin">
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        <h2 class="section-title">{{ 'blog_automation.admin_title' | t | default: 'Administración de Blog Automático' }}</h2>
+        <p class="section-description">{{ 'blog_automation.admin_description' | t | default: 'Gestiona la automatización de contenido de belleza y maquillaje para tu blog.' }}</p>
+      </div>
+    </div>
+
+    <!-- Pestañas de navegación -->
+    <div class="row">
+      <div class="col-12">
+        <ul class="nav nav-tabs blog-automation-tabs" role="tablist">
+          <li class="nav-item">
+            <a class="nav-link active" id="drafts-tab" data-toggle="tab" href="#drafts" role="tab">
+              {{ 'blog_automation.drafts_tab' | t | default: 'Borradores' }}
+              <span class="badge badge-primary" id="drafts-count">0</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" id="feeds-tab" data-toggle="tab" href="#feeds" role="tab">
+              {{ 'blog_automation.feeds_tab' | t | default: 'Feeds RSS' }}
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" id="settings-tab" data-toggle="tab" href="#settings" role="tab">
+              {{ 'blog_automation.settings_tab' | t | default: 'Configuración' }}
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" id="stats-tab" data-toggle="tab" href="#stats" role="tab">
+              {{ 'blog_automation.stats_tab' | t | default: 'Estadísticas' }}
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Contenido de las pestañas -->
+    <div class="tab-content blog-automation-content">
+      
+      <!-- Pestaña de Borradores -->
+      <div class="tab-pane fade show active" id="drafts" role="tabpanel">
+        <div class="row">
+          <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+              <h3>{{ 'blog_automation.pending_drafts' | t | default: 'Borradores Pendientes' }}</h3>
+              <div>
+                <button class="btn btn-primary" onclick="blogAutomation.checkFeeds()">
+                  {{ 'blog_automation.check_feeds_now' | t | default: 'Verificar Feeds Ahora' }}
+                </button>
+                <button class="btn btn-secondary" onclick="refreshDrafts()">
+                  {{ 'blog_automation.refresh' | t | default: 'Actualizar' }}
+                </button>
+              </div>
+            </div>
+            
+            <div id="drafts-container" class="drafts-container">
+              <div class="text-center py-5">
+                <div class="spinner-border" role="status">
+                  <span class="sr-only">{{ 'blog_automation.loading' | t | default: 'Cargando...' }}</span>
+                </div>
+                <p class="mt-3">{{ 'blog_automation.loading_drafts' | t | default: 'Cargando borradores...' }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pestaña de Feeds RSS -->
+      <div class="tab-pane fade" id="feeds" role="tabpanel">
+        <div class="row">
+          <div class="col-12">
+            <h3>{{ 'blog_automation.rss_feeds' | t | default: 'Feeds RSS Configurados' }}</h3>
+            <div id="feeds-container" class="feeds-container">
+              <!-- Los feeds se cargarán dinámicamente -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pestaña de Configuración -->
+      <div class="tab-pane fade" id="settings" role="tabpanel">
+        <div class="row">
+          <div class="col-md-6">
+            <h3>{{ 'blog_automation.automation_settings' | t | default: 'Configuración de Automatización' }}</h3>
+            <form id="automation-settings-form">
+              <div class="form-group">
+                <label for="check-interval">{{ 'blog_automation.check_interval' | t | default: 'Intervalo de Verificación (horas)' }}</label>
+                <input type="number" class="form-control" id="check-interval" min="1" max="24" value="6">
+              </div>
+              
+              <div class="form-group">
+                <label for="max-posts-day">{{ 'blog_automation.max_posts_day' | t | default: 'Máximo Posts por Día' }}</label>
+                <input type="number" class="form-control" id="max-posts-day" min="1" max="10" value="3">
+              </div>
+              
+              <div class="form-check">
+                <input type="checkbox" class="form-check-input" id="auto-publish">
+                <label class="form-check-label" for="auto-publish">
+                  {{ 'blog_automation.auto_publish' | t | default: 'Publicar Automáticamente' }}
+                </label>
+              </div>
+              
+              <div class="form-check">
+                <input type="checkbox" class="form-check-input" id="require-approval" checked>
+                <label class="form-check-label" for="require-approval">
+                  {{ 'blog_automation.require_approval' | t | default: 'Requerir Aprobación Manual' }}
+                </label>
+              </div>
+              
+              <button type="submit" class="btn btn-primary mt-3">
+                {{ 'blog_automation.save_settings' | t | default: 'Guardar Configuración' }}
+              </button>
+            </form>
+          </div>
+          
+          <div class="col-md-6">
+            <h3>{{ 'blog_automation.content_filters' | t | default: 'Filtros de Contenido' }}</h3>
+            <div class="form-group">
+              <label for="keywords-include">{{ 'blog_automation.keywords_include' | t | default: 'Palabras Clave a Incluir' }}</label>
+              <textarea class="form-control" id="keywords-include" rows="3" placeholder="maquillaje, belleza, cosmética, makeup, beauty, skincare"></textarea>
+              <small class="form-text text-muted">{{ 'blog_automation.keywords_help' | t | default: 'Separar con comas' }}</small>
+            </div>
+            
+            <div class="form-group">
+              <label for="keywords-exclude">{{ 'blog_automation.keywords_exclude' | t | default: 'Palabras Clave a Excluir' }}</label>
+              <textarea class="form-control" id="keywords-exclude" rows="3" placeholder="política, violencia, drogas"></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pestaña de Estadísticas -->
+      <div class="tab-pane fade" id="stats" role="tabpanel">
+        <div class="row">
+          <div class="col-md-3">
+            <div class="stat-card">
+              <h4 id="total-processed">0</h4>
+              <p>{{ 'blog_automation.total_processed' | t | default: 'Artículos Procesados' }}</p>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="stat-card">
+              <h4 id="pending-drafts">0</h4>
+              <p>{{ 'blog_automation.pending_drafts_count' | t | default: 'Borradores Pendientes' }}</p>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="stat-card">
+              <h4 id="last-check">-</h4>
+              <p>{{ 'blog_automation.last_check' | t | default: 'Última Verificación' }}</p>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="stat-card">
+              <h4 id="active-feeds">0</h4>
+              <p>{{ 'blog_automation.active_feeds' | t | default: 'Feeds Activos' }}</p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="row mt-4">
+          <div class="col-12">
+            <h3>{{ 'blog_automation.recent_activity' | t | default: 'Actividad Reciente' }}</h3>
+            <div id="activity-log" class="activity-log">
+              <!-- El log de actividad se cargará dinámicamente -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+.blog-automation-admin {
+  padding: 40px 0;
+  background: #f8f9fa;
+}
+
+.blog-automation-tabs {
+  border-bottom: 2px solid #dee2e6;
+  margin-bottom: 30px;
+}
+
+.blog-automation-tabs .nav-link {
+  border: none;
+  color: #6c757d;
+  font-weight: 500;
+  padding: 15px 20px;
+}
+
+.blog-automation-tabs .nav-link.active {
+  color: #007bff;
+  border-bottom: 2px solid #007bff;
+  background: transparent;
+}
+
+.blog-automation-tabs .badge {
+  margin-left: 8px;
+}
+
+.drafts-container {
+  max-height: 600px;
+  overflow-y: auto;
+}
+
+.draft-item {
+  background: white;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 15px;
+  transition: all 0.3s ease;
+}
+
+.draft-item:hover {
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.draft-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.draft-meta {
+  font-size: 14px;
+  color: #6c757d;
+  margin-bottom: 15px;
+}
+
+.draft-excerpt {
+  color: #495057;
+  line-height: 1.6;
+  margin-bottom: 15px;
+}
+
+.draft-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.draft-actions .btn {
+  padding: 8px 16px;
+  font-size: 14px;
+}
+
+.feeds-container .feed-item {
+  background: white;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.feed-info h5 {
+  margin: 0 0 5px 0;
+  color: #333;
+}
+
+.feed-info p {
+  margin: 0;
+  color: #6c757d;
+  font-size: 14px;
+}
+
+.feed-status {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.status-indicator {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #28a745;
+}
+
+.status-indicator.inactive {
+  background: #dc3545;
+}
+
+.stat-card {
+  background: white;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  padding: 20px;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.stat-card h4 {
+  font-size: 32px;
+  font-weight: 700;
+  color: #007bff;
+  margin: 0 0 10px 0;
+}
+
+.stat-card p {
+  margin: 0;
+  color: #6c757d;
+  font-size: 14px;
+}
+
+.activity-log {
+  background: white;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  padding: 20px;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.activity-item {
+  padding: 10px 0;
+  border-bottom: 1px solid #f1f3f4;
+}
+
+.activity-item:last-child {
+  border-bottom: none;
+}
+
+.activity-time {
+  font-size: 12px;
+  color: #6c757d;
+}
+
+.activity-message {
+  color: #333;
+  margin-top: 5px;
+}
+
+@media (max-width: 768px) {
+  .blog-automation-tabs {
+    flex-direction: column;
+  }
+  
+  .draft-actions {
+    flex-direction: column;
+  }
+  
+  .feed-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+}
+</style>
+
+<script>
+// Funciones para la administración del blog
+function refreshDrafts() {
+  loadDrafts();
+}
+
+function loadDrafts() {
+  const draftsContainer = document.getElementById('drafts-container');
+  const drafts = JSON.parse(localStorage.getItem('blog_automation_drafts') || '[]');
+  
+  // Actualizar contador
+  document.getElementById('drafts-count').textContent = drafts.length;
+  document.getElementById('pending-drafts').textContent = drafts.length;
+  
+  if (drafts.length === 0) {
+    draftsContainer.innerHTML = `
+      <div class="text-center py-5">
+        <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
+        <h4 class="text-muted">{{ 'blog_automation.no_drafts' | t | default: 'No hay borradores pendientes' }}</h4>
+        <p class="text-muted">{{ 'blog_automation.no_drafts_description' | t | default: 'Los nuevos artículos aparecerán aquí cuando se detecten en los feeds RSS.' }}</p>
+      </div>
+    `;
+    return;
+  }
+  
+  const draftsHtml = drafts.map(draft => `
+    <div class="draft-item" data-draft-id="${draft.id}">
+      <div class="draft-title">${draft.title}</div>
+      <div class="draft-meta">
+        <span><i class="fas fa-rss"></i> ${draft.source_feed}</span> |
+        <span><i class="fas fa-calendar"></i> ${new Date(draft.created_at).toLocaleDateString()}</span> |
+        <span><i class="fas fa-tag"></i> ${draft.category}</span>
+      </div>
+      <div class="draft-excerpt">${draft.excerpt}</div>
+      <div class="draft-actions">
+        <button class="btn btn-primary btn-sm" onclick="previewDraft('${draft.id}')">
+          <i class="fas fa-eye"></i> {{ 'blog_automation.preview' | t | default: 'Vista Previa' }}
+        </button>
+        <button class="btn btn-success btn-sm" onclick="approveDraft('${draft.id}')">
+          <i class="fas fa-check"></i> {{ 'blog_automation.approve' | t | default: 'Aprobar' }}
+        </button>
+        <button class="btn btn-warning btn-sm" onclick="editDraft('${draft.id}')">
+          <i class="fas fa-edit"></i> {{ 'blog_automation.edit' | t | default: 'Editar' }}
+        </button>
+        <button class="btn btn-danger btn-sm" onclick="deleteDraft('${draft.id}')">
+          <i class="fas fa-trash"></i> {{ 'blog_automation.delete' | t | default: 'Eliminar' }}
+        </button>
+      </div>
+    </div>
+  `).join('');
+  
+  draftsContainer.innerHTML = draftsHtml;
+}
+
+function loadFeeds() {
+  if (!window.blogAutomation || !window.blogAutomation.config) {
+    setTimeout(loadFeeds, 1000);
+    return;
+  }
+  
+  const feedsContainer = document.getElementById('feeds-container');
+  const config = window.blogAutomation.config;
+  const allFeeds = [...config.rss_feeds.beauty_feeds, ...config.rss_feeds.colombian_feeds];
+  
+  const feedsHtml = allFeeds.map(feed => `
+    <div class="feed-item">
+      <div class="feed-info">
+        <h5>${feed.name}</h5>
+        <p>${feed.url}</p>
+        <small class="text-muted">Categoría: ${feed.category} | Idioma: ${feed.language}</small>
+      </div>
+      <div class="feed-status">
+        <div class="status-indicator ${feed.active ? '' : 'inactive'}"></div>
+        <span class="text-${feed.active ? 'success' : 'danger'}">
+          ${feed.active ? 'Activo' : 'Inactivo'}
+        </span>
+        <button class="btn btn-sm btn-outline-primary" onclick="testFeed('${feed.url}')">
+          <i class="fas fa-sync"></i> Probar
+        </button>
+      </div>
+    </div>
+  `).join('');
+  
+  feedsContainer.innerHTML = feedsHtml;
+  
+  // Actualizar contador de feeds activos
+  const activeFeeds = allFeeds.filter(feed => feed.active).length;
+  document.getElementById('active-feeds').textContent = activeFeeds;
+}
+
+function loadStats() {
+  const processedPosts = JSON.parse(localStorage.getItem('blog_automation_processed') || '[]');
+  const lastCheck = localStorage.getItem('blog_automation_last_check');
+  
+  document.getElementById('total-processed').textContent = processedPosts.length;
+  
+  if (lastCheck) {
+    const lastCheckDate = new Date(lastCheck);
+    const now = new Date();
+    const diffHours = Math.floor((now - lastCheckDate) / (1000 * 60 * 60));
+    
+    if (diffHours < 1) {
+      document.getElementById('last-check').textContent = 'Hace menos de 1h';
+    } else if (diffHours < 24) {
+      document.getElementById('last-check').textContent = `Hace ${diffHours}h`;
+    } else {
+      document.getElementById('last-check').textContent = lastCheckDate.toLocaleDateString();
+    }
+  }
+}
+
+function previewDraft(draftId) {
+  const drafts = JSON.parse(localStorage.getItem('blog_automation_drafts') || '[]');
+  const draft = drafts.find(d => d.id === draftId);
+  
+  if (draft) {
+    // Crear modal de vista previa
+    const modal = document.createElement('div');
+    modal.className = 'modal fade';
+    modal.innerHTML = `
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">${draft.title}</h5>
+            <button type="button" class="close" data-dismiss="modal">
+              <span>&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="mb-3">
+              <strong>Fuente:</strong> ${draft.source_feed}<br>
+              <strong>Categoría:</strong> ${draft.category}<br>
+              <strong>Tags:</strong> ${draft.tags.join(', ')}<br>
+              <strong>Autor:</strong> ${draft.author}
+            </div>
+            <div class="content-preview">
+              ${draft.content.replace(/\n/g, '<br>')}
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+            <button type="button" class="btn btn-success" onclick="approveDraft('${draftId}'); $(this).closest('.modal').modal('hide');">Aprobar</button>
+          </div>
+        </div>
+      </div>
+    `;
+    
+    document.body.appendChild(modal);
+    $(modal).modal('show');
+    
+    // Remover modal cuando se cierre
+    $(modal).on('hidden.bs.modal', function() {
+      modal.remove();
+    });
+  }
+}
+
+function approveDraft(draftId) {
+  const drafts = JSON.parse(localStorage.getItem('blog_automation_drafts') || '[]');
+  const draftIndex = drafts.findIndex(d => d.id === draftId);
+  
+  if (draftIndex !== -1) {
+    const draft = drafts[draftIndex];
+    
+    // Aquí normalmente enviarías el draft a Shopify para crear el post
+    console.log('Aprobando draft:', draft);
+    
+    // Simular aprobación
+    alert(`Artículo "${draft.title}" aprobado. En un entorno real, esto crearía un post en Shopify.`);
+    
+    // Remover de borradores
+    drafts.splice(draftIndex, 1);
+    localStorage.setItem('blog_automation_drafts', JSON.stringify(drafts));
+    
+    // Actualizar vista
+    loadDrafts();
+    loadStats();
+  }
+}
+
+function editDraft(draftId) {
+  // Implementar editor de borradores
+  alert('Función de edición en desarrollo. Por ahora puedes aprobar o eliminar el borrador.');
+}
+
+function deleteDraft(draftId) {
+  if (confirm('¿Estás seguro de que quieres eliminar este borrador?')) {
+    const drafts = JSON.parse(localStorage.getItem('blog_automation_drafts') || '[]');
+    const filteredDrafts = drafts.filter(d => d.id !== draftId);
+    localStorage.setItem('blog_automation_drafts', JSON.stringify(filteredDrafts));
+    
+    loadDrafts();
+    loadStats();
+  }
+}
+
+function testFeed(feedUrl) {
+  console.log('Probando feed:', feedUrl);
+  // Implementar prueba de feed
+  alert('Probando conectividad del feed...');
+}
+
+// Inicializar cuando el documento esté listo
+document.addEventListener('DOMContentLoaded', function() {
+  loadDrafts();
+  loadFeeds();
+  loadStats();
+  
+  // Actualizar cada 30 segundos
+  setInterval(() => {
+    loadDrafts();
+    loadStats();
+  }, 30000);
+});
+</script>
