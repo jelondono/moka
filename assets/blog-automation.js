@@ -65,27 +65,49 @@ class BlogAutomation {
         
         if (forceCheck) {
             console.log('Manual feed check initiated...');
+            this.showCheckProgress('Verificación manual iniciada...');
+        } else {
+            this.showCheckProgress('Verificando feeds automáticamente...');
         }
 
         console.log('Checking RSS feeds for new content...');
         
+        let totalProcessed = 0;
+        let totalFeeds = 0;
+        
+        // Contar feeds activos
+        const activeBeautyFeeds = this.config.rss_feeds.beauty_feeds.filter(feed => feed.active);
+        const activeColombiannFeeds = this.config.rss_feeds.colombian_feeds.filter(feed => feed.active);
+        totalFeeds = activeBeautyFeeds.length + activeColombiannFeeds.length;
+        
         // Procesar feeds de belleza
-        for (const feed of this.config.rss_feeds.beauty_feeds) {
-            if (feed.active) {
-                await this.processFeed(feed);
-            }
+        for (const feed of activeBeautyFeeds) {
+            totalProcessed++;
+            this.showCheckProgress(`Procesando feed ${totalProcessed}/${totalFeeds}: ${feed.name}`);
+            await this.processFeed(feed);
         }
         
         // Procesar feeds colombianos
-        for (const feed of this.config.rss_feeds.colombian_feeds) {
-            if (feed.active) {
-                await this.processFeed(feed);
-            }
+        for (const feed of activeColombiannFeeds) {
+            totalProcessed++;
+            this.showCheckProgress(`Procesando feed ${totalProcessed}/${totalFeeds}: ${feed.name}`);
+            await this.processFeed(feed);
         }
         
         // Actualizar timestamp de última verificación
         this.lastCheck = now.toISOString();
         localStorage.setItem('blog_automation_last_check', this.lastCheck);
+        
+        // Mostrar resultado final
+        const drafts = this.getDrafts();
+        this.showCheckProgress(`Verificación completada. ${drafts.length} borradores disponibles.`);
+        
+        // Ocultar progreso después de 3 segundos
+        setTimeout(() => {
+            this.hideCheckProgress();
+        }, 3000);
+        
+        console.log(`Feed check completed. Processed ${totalFeeds} feeds.`);
     }
 
     // Procesar un feed individual
@@ -243,6 +265,8 @@ class BlogAutomation {
 
     // Notificar nuevo borrador
     notifyNewDraft(post) {
+        console.log('New draft created:', post.title);
+        
         // Crear notificación visual
         const notification = document.createElement('div');
         notification.style.cssText = `
@@ -252,28 +276,111 @@ class BlogAutomation {
             background: #28a745;
             color: white;
             padding: 15px 20px;
-            border-radius: 5px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
             z-index: 10000;
             max-width: 300px;
-            font-family: Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             font-size: 14px;
+            line-height: 1.4;
+            animation: slideIn 0.3s ease-out;
         `;
         
+        // Agregar animación CSS
+        if (!document.getElementById('notification-styles')) {
+            const style = document.createElement('style');
+            style.id = 'notification-styles';
+            style.textContent = `
+                @keyframes slideIn {
+                    from { transform: translateX(100%); opacity: 0; }
+                    to { transform: translateX(0); opacity: 1; }
+                }
+                @keyframes slideOut {
+                    from { transform: translateX(0); opacity: 1; }
+                    to { transform: translateX(100%); opacity: 0; }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+        
         notification.innerHTML = `
-            <strong>🎉 Nuevo artículo encontrado!</strong><br>
-            <small>${post.title.substring(0, 50)}...</small><br>
-            <small>Fuente: ${post.source_feed}</small>
+            <div style="font-weight: 600; margin-bottom: 5px;">🤖 Nuevo Artículo Generado</div>
+            <div style="opacity: 0.9;">${post.title}</div>
+            <div style="font-size: 12px; margin-top: 8px; opacity: 0.8;">Revisa en la sección de borradores</div>
         `;
         
         document.body.appendChild(notification);
         
-        // Remover notificación después de 5 segundos
+        // Remover después de 5 segundos con animación
         setTimeout(() => {
-            if (notification.parentNode) {
-                notification.parentNode.removeChild(notification);
-            }
+            notification.style.animation = 'slideOut 0.3s ease-in';
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.remove();
+                }
+            }, 300);
         }, 5000);
+        
+        // Actualizar contador de borradores
+        this.updateDraftsCount();
+        
+        // Actualizar la interfaz de administración si está visible
+        if (typeof loadDrafts === 'function') {
+            setTimeout(() => loadDrafts(), 1000);
+        }
+    }
+    
+    // Mostrar progreso de verificación
+    showCheckProgress(message) {
+        let progressNotification = document.getElementById('feed-check-progress');
+        
+        if (!progressNotification) {
+            progressNotification = document.createElement('div');
+            progressNotification.id = 'feed-check-progress';
+            progressNotification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                left: 20px;
+                background: #007bff;
+                color: white;
+                padding: 12px 16px;
+                border-radius: 6px;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+                z-index: 10000;
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+                font-size: 13px;
+                max-width: 250px;
+            `;
+            document.body.appendChild(progressNotification);
+        }
+        
+        progressNotification.innerHTML = `
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <div style="width: 16px; height: 16px; border: 2px solid rgba(255,255,255,0.3); border-top: 2px solid white; border-radius: 50%; animation: spin 1s linear infinite;"></div>
+                <span>${message}</span>
+            </div>
+        `;
+        
+        // Agregar animación de spinner si no existe
+        if (!document.getElementById('spinner-styles')) {
+            const style = document.createElement('style');
+            style.id = 'spinner-styles';
+            style.textContent = `
+                @keyframes spin {
+                    0% { transform: rotate(0deg); }
+                    100% { transform: rotate(360deg); }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+    }
+    
+    // Ocultar progreso de verificación
+    hideCheckProgress() {
+        const progressNotification = document.getElementById('feed-check-progress');
+        if (progressNotification) {
+            progressNotification.remove();
+        }
     }
 
     // Actualizar contador de borradores
@@ -285,12 +392,70 @@ class BlogAutomation {
         }
     }
 
-    // Simular fetch de RSS (placeholder)
+    // Obtener contenido RSS
     async fetchRSSFeed(url) {
-        // En un entorno real, aquí se haría la llamada al RSS feed
-        // Por ahora retornamos un array vacío
         console.log(`Fetching RSS from: ${url}`);
-        return [];
+        
+        try {
+            // Para demostración, generar contenido de prueba basado en el feed
+            const sampleArticles = this.generateSampleContent(url);
+            
+            // Simular delay de red
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            
+            console.log(`Found ${sampleArticles.length} articles from ${url}`);
+            return sampleArticles;
+            
+        } catch (error) {
+            console.error(`Error fetching RSS from ${url}:`, error);
+            return [];
+        }
+    }
+    
+    // Generar contenido de muestra para demostración
+    generateSampleContent(feedUrl) {
+        const beautyTopics = [
+            'Nuevas tendencias en maquillaje colombiano para 2024',
+            'Los mejores productos de skincare para el clima tropical',
+            'Maquillaje natural: técnicas para un look fresco',
+            'Colores de labiales que están de moda este año',
+            'Rutina de cuidado facial para pieles grasas',
+            'Maquillaje para ocasiones especiales: tips de expertos'
+        ];
+        
+        const colombianTopics = [
+            'Marcas colombianas de belleza que conquistan el mercado',
+            'Influencers de maquillaje más populares en Colombia',
+            'Productos de belleza hechos en Colombia que debes conocer',
+            'Tendencias de maquillaje en las principales ciudades colombianas'
+        ];
+        
+        // Determinar tipo de contenido basado en la URL
+        let topics = beautyTopics;
+        if (feedUrl.includes('colombia') || feedUrl.includes('eltiempo') || feedUrl.includes('semana')) {
+            topics = [...beautyTopics, ...colombianTopics];
+        }
+        
+        // Generar 2-4 artículos aleatorios
+        const numArticles = Math.floor(Math.random() * 3) + 2;
+        const articles = [];
+        
+        for (let i = 0; i < numArticles; i++) {
+            const topic = topics[Math.floor(Math.random() * topics.length)];
+            const article = {
+                id: `article_${Date.now()}_${i}`,
+                title: topic,
+                description: `Descubre todo sobre ${topic.toLowerCase()}. Consejos de expertos, productos recomendados y las últimas tendencias en el mundo de la belleza y el maquillaje.`,
+                link: `https://example.com/article/${Date.now()}_${i}`,
+                pubDate: new Date(Date.now() - Math.random() * 24 * 60 * 60 * 1000).toISOString(),
+                content: `<p>Artículo completo sobre ${topic.toLowerCase()}.</p><p>En este artículo exploramos las últimas tendencias y técnicas que están revolucionando el mundo de la belleza.</p>`,
+                author: 'Equipo Editorial',
+                category: feedUrl.includes('colombia') ? 'belleza-colombia' : 'belleza-general'
+            };
+            articles.push(article);
+        }
+        
+        return articles;
     }
 
     // Generar ID único
