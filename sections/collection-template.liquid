@@ -68,8 +68,17 @@
                   </div>
                 </div>
                 {% if paginate.pages > 1 %}
-                <div class="paginatoin-area">
+                <div class="paginatoin-area" style="display: none;">
                   {%- render 'pagination' -%}
+                </div>
+                <div class="infinite-scroll-container">
+                  <div class="loading-spinner" style="display: none; text-align: center; padding: 30px;">
+                    <div class="spinner-wrapper">
+                      <div class="custom-spinner"></div>
+                      <p style="margin-top: 15px; color: #666; font-size: 14px;">Cargando más productos...</p>
+                    </div>
+                  </div>
+                  <div class="load-more-trigger" style="height: 1px;"></div>
                 </div>
                 {% endif %}
               </div>
@@ -95,6 +104,7 @@
         <div id="main-collection-filters" data-id="{{ section.id }}">
           {% render 'collection-sidebar', results: collection %}
           <script src="{{ 'collection-sidebar.js' | asset_url }}" defer="defer"></script>
+          <script src="{{ 'infinite-scroll.js' | asset_url }}" defer="defer"></script>
           {% if section.settings.sidebar_banner_enable %}
           <div class="sidebar-banner banner-hover{% if section.settings.sidebar_handle == 'without_sidebar' %} sidebar-without-banner{% endif %}">
             <a href="{{ section.settings.sidebar_banner_url }}" class="sidebar-img banner-img">
@@ -405,6 +415,104 @@ collection-template css
   .shop-product-wrap.grid-3 ul.product-view li.st-col-item{
     width: calc(100% - 15px);
     margin: 30px 0 0 15px;
+  }
+}
+</style>
+
+<style>
+/* Infinite Scroll Styles */
+.infinite-scroll-container {
+  width: 100%;
+  margin-top: 20px;
+}
+
+.loading-spinner {
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.loading-spinner[style*="block"] {
+  opacity: 1;
+}
+
+.custom-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid #f3f3f3;
+  border-top: 3px solid var(--font-color-primary, #333);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.spinner-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Smooth product loading animation */
+#product-grid .st-col-item {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeInUp 0.6s ease-out forwards;
+}
+
+#product-grid .st-col-item:nth-child(odd) {
+  animation-delay: 0.1s;
+}
+
+#product-grid .st-col-item:nth-child(even) {
+  animation-delay: 0.2s;
+}
+
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Error message styles */
+.infinite-scroll-error {
+  background-color: #f8d7da;
+  color: #721c24;
+  padding: 15px;
+  border-radius: 5px;
+  margin: 20px 0;
+  text-align: center;
+}
+
+.infinite-scroll-error a {
+  color: #721c24;
+  text-decoration: underline;
+  font-weight: 600;
+}
+
+.infinite-scroll-error a:hover {
+  color: #491217;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 767px) {
+  .infinite-scroll-container {
+    margin-top: 15px;
+  }
+  
+  .loading-spinner {
+    padding: 20px;
+  }
+  
+  .custom-spinner {
+    width: 30px;
+    height: 30px;
+    border-width: 2px;
   }
 }
 </style>
