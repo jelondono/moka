@@ -1,4 +1,12 @@
-
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "current": {
     "color_primary": "#ed7c65",
@@ -1289,6 +1297,7 @@
       },
       "1661863923c985dc6b": {
         "type": "blog-home",
+        "disabled": true,
         "settings": {
           "blog_padding_top": 100,
           "blog_padding_bottom": 100,
