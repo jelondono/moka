@@ -1391,6 +1391,7 @@
             "type": "product_tab",
             "settings": {
               "slider_category_handle": "skine-care",
+              "testi_bgimg": "shopify://shop_images/cuidado-capilar.png",
               "big_title_text": "Cabello",
               "cat_desc": "Shampoos, tratamientos y fórmulas expertas para una melena sana, suave y llena de vida."
             }
