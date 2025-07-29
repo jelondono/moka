@@ -1382,6 +1382,7 @@
             "type": "product_tab",
             "settings": {
               "slider_category_handle": "organic-beauty",
+              "testi_bgimg": "shopify://shop_images/mujer-mostrando-sus-hermosas-unas.jpg",
               "big_title_text": "Uñas",
               "cat_desc": "Descubre esmaltes, geles y herramientas que transforman cada manicure en una obra de arte. Porque tus manos merecen brillar con actitud."
             }
