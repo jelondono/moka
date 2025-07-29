@@ -13,16 +13,35 @@ class BlogAutomation {
 
     async init() {
         try {
-            // Cargar configuración desde assets
-            const response = await fetch('/assets/blog-automation.json');
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+            // Cargar configuración desde el objeto global
+            if (window.blogAutomationConfig) {
+                this.config = window.blogAutomationConfig;
+                console.log('Blog automation initialized', this.config);
+            } else {
+                // Fallback: cargar desde script
+                await this.loadConfigScript();
             }
-            this.config = await response.json();
-            console.log('Blog automation initialized', this.config);
         } catch (error) {
             console.error('Error loading blog automation config:', error);
         }
+    }
+
+    async loadConfigScript() {
+        return new Promise((resolve, reject) => {
+            const script = document.createElement('script');
+            script.src = '/assets/blog-automation-config.js';
+            script.onload = () => {
+                if (window.blogAutomationConfig) {
+                    this.config = window.blogAutomationConfig;
+                    console.log('Blog automation config loaded from script', this.config);
+                    resolve();
+                } else {
+                    reject(new Error('Configuration not found in script'));
+                }
+            };
+            script.onerror = () => reject(new Error('Failed to load config script'));
+            document.head.appendChild(script);
+        });
     }
 
     // Función principal para verificar feeds
