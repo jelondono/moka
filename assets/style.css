@@ -899,8 +899,46 @@ product css
     width: calc(33.33% - 30px);
     display: flex;
 }
+.shop-product-wrap.grid-3 ul.product-view li.st-col-item .single-product-wrap {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 400px;
+}
+.shop-product-wrap.grid-3 ul.product-view li.st-col-item .single-product-wrap .product-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
 .shop-product-wrap.grid-3 ul.product-view li.st-col-item.st-col {
     width: calc(25% - 30px);
+}
+.shop-product-wrap.grid-3 ul.product-view li.st-col-item.st-col .single-product-wrap {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 400px;
+}
+.shop-product-wrap.grid-3 ul.product-view li.st-col-item.st-col .single-product-wrap .product-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+/* Grid 2 styles */
+.shop-product-wrap.grid-2 ul.product-view li.st-col-item .single-product-wrap {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 400px;
+}
+.shop-product-wrap.grid-2 ul.product-view li.st-col-item .single-product-wrap .product-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 @media (max-width: 1199px) {
     .shop-product-wrap.grid-3 ul.product-view li.st-col-item {
@@ -922,6 +960,11 @@ product css
     .shop-product-wrap.grid-3 ul.product-view li.st-col-item.st-col {
         width: calc(50% - 12px);
     }
+    .shop-product-wrap.grid-3 ul.product-view li.st-col-item .single-product-wrap,
+    .shop-product-wrap.grid-3 ul.product-view li.st-col-item.st-col .single-product-wrap,
+    .shop-product-wrap.grid-2 ul.product-view li.st-col-item .single-product-wrap {
+        min-height: 350px;
+    }
 }
 @media (max-width: 320px) {
     .shop-product-wrap.grid-3 ul.product-view li.st-col-item {
@@ -929,6 +972,11 @@ product css
     }
     .shop-product-wrap.grid-3 ul.product-view li.st-col-item.st-col {
         width: calc(100% - 12px);
+    }
+    .shop-product-wrap.grid-3 ul.product-view li.st-col-item .single-product-wrap,
+    .shop-product-wrap.grid-3 ul.product-view li.st-col-item.st-col .single-product-wrap,
+    .shop-product-wrap.grid-2 ul.product-view li.st-col-item .single-product-wrap {
+        min-height: 300px;
     }
 }
 
