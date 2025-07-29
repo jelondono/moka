@@ -104,7 +104,17 @@
         <div id="main-collection-filters" data-id="{{ section.id }}">
           {% render 'collection-sidebar', results: collection %}
           <script src="{{ 'collection-sidebar.js' | asset_url }}" defer="defer"></script>
-          <script src="{{ 'infinite-scroll.js' | asset_url }}" defer="defer"></script>
+          <script>
+  // Pass Shopify pagination info to JavaScript
+  window.paginateInfo = {
+    pages: {{ paginate.pages | default: 1 }},
+    currentPage: {{ paginate.current_page | default: 1 }},
+    hasNext: {{ paginate.next | json }},
+    hasPrevious: {{ paginate.previous | json }}
+  };
+  console.log('Shopify pagination info:', window.paginateInfo);
+</script>
+<script src="{{ 'infinite-scroll.js' | asset_url }}" defer="defer"></script>
           {% if section.settings.sidebar_banner_enable %}
           <div class="sidebar-banner banner-hover{% if section.settings.sidebar_handle == 'without_sidebar' %} sidebar-without-banner{% endif %}">
             <a href="{{ section.settings.sidebar_banner_url }}" class="sidebar-img banner-img">

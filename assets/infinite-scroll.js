@@ -12,7 +12,7 @@ class InfiniteScroll {
     this.container = document.querySelector('#product-grid');
     this.loadingSpinner = document.querySelector('.loading-spinner');
     this.loadMoreTrigger = document.querySelector('.load-more-trigger');
-    this.paginationArea = document.querySelector('.paginatoin-area');
+    this.paginationArea = document.querySelector('.pagination-area, .paginatoin-area');
     
     console.log('Elements found:', {
       container: !!this.container,
@@ -56,8 +56,8 @@ class InfiniteScroll {
   extractPaginationInfo() {
     console.log('Extracting pagination info...');
     
-    const paginationLinks = document.querySelectorAll('.pagination-box .number a');
-    const currentPageElement = document.querySelector('.pagination-box .active a');
+    const paginationLinks = document.querySelectorAll('.pagination-box li.number a');
+    const currentPageElement = document.querySelector('.pagination-box li.active a');
     
     console.log('Found pagination links:', paginationLinks.length);
     console.log('Current page element:', currentPageElement);
@@ -67,7 +67,7 @@ class InfiniteScroll {
       console.log('Current page from element:', this.currentPage);
     }
     
-    // Find the highest page number
+    // Find the highest page number from all pagination links
     paginationLinks.forEach(link => {
       const pageNum = parseInt(link.textContent);
       if (pageNum && pageNum > this.totalPages) {
@@ -75,31 +75,37 @@ class InfiniteScroll {
       }
     });
     
-    console.log('Total pages found:', this.totalPages);
+    console.log('Total pages found from pagination:', this.totalPages);
     
     // If no pagination found, check for next link
-    const nextLink = document.querySelector('.pagination-box .next a');
+    const nextLink = document.querySelector('.pagination-box li.next a');
     if (nextLink && this.totalPages <= this.currentPage) {
       this.totalPages = this.currentPage + 1;
       console.log('Next link found, adjusted total pages to:', this.totalPages);
     }
     
+    // Additional check: if we still don't have enough pages, try to detect from Shopify's paginate object
+    if (this.totalPages <= this.currentPage && window.paginateInfo) {
+      this.totalPages = window.paginateInfo.pages || this.totalPages;
+      console.log('Using window.paginateInfo, total pages:', this.totalPages);
+    }
+    
     // Fallback: try to get pagination info from URL parameters
-     if (this.totalPages <= 1) {
-       const urlParams = new URLSearchParams(window.location.search);
-       const currentPageFromUrl = parseInt(urlParams.get('page')) || 1;
-       this.currentPage = currentPageFromUrl;
-       
-       // If we have a next link, assume there are more pages
-       if (nextLink) {
-         this.totalPages = this.currentPage + 1;
-         console.log('Using URL fallback - current page:', this.currentPage, 'total pages:', this.totalPages);
-       } else {
-         // If no pagination at all, check if we can load more by trying page 2
-         this.totalPages = 2; // Assume there might be a second page
-         console.log('No pagination found, assuming potential second page exists');
-       }
-     }
+      if (this.totalPages <= 1) {
+        const urlParams = new URLSearchParams(window.location.search);
+        const currentPageFromUrl = parseInt(urlParams.get('page')) || 1;
+        this.currentPage = currentPageFromUrl;
+        
+        // If we have a next link, assume there are more pages
+        if (nextLink) {
+          this.totalPages = this.currentPage + 1;
+          console.log('Using URL fallback - current page:', this.currentPage, 'total pages:', this.totalPages);
+        } else {
+          // If no pagination at all, assume there might be more pages and let the fetch determine the actual limit
+          this.totalPages = this.currentPage + 10; // Assume there might be up to 10 more pages
+          console.log('No pagination found, assuming potential pages exist up to:', this.totalPages);
+        }
+      }
   }
 
   setupIntersectionObserver() {
@@ -152,7 +158,13 @@ class InfiniteScroll {
       
       const response = await fetch(url);
       if (!response.ok) {
-        throw new Error('Network response was not ok');
+        if (response.status === 404) {
+          console.log('Page not found (404), reached end of collection');
+          this.totalPages = this.currentPage;
+          this.hideLoadMoreTrigger();
+          return;
+        }
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
       }
       
       const html = await response.text();
@@ -170,6 +182,13 @@ class InfiniteScroll {
         
         // Trigger any product-related scripts
         this.triggerProductScripts();
+        
+        console.log(`Successfully loaded page ${nextPage} with ${newProducts.length} products`);
+      } else {
+        // No products found, we've reached the end
+        console.log('No more products found, reached end of collection');
+        this.totalPages = this.currentPage; // Update total pages to current page
+        this.hideLoadMoreTrigger();
       }
       
     } catch (error) {
@@ -228,6 +247,13 @@ class InfiniteScroll {
   hideLoadingSpinner() {
     if (this.loadingSpinner) {
       this.loadingSpinner.style.display = 'none';
+    }
+  }
+
+  hideLoadMoreTrigger() {
+    if (this.loadMoreTrigger) {
+      this.loadMoreTrigger.style.display = 'none';
+      console.log('Load more trigger hidden - no more pages available');
     }
   }
 
