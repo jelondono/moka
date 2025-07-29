@@ -16,17 +16,17 @@
         "active": true
       },
       {
-        "name": "Allure Beauty",
-        "url": "https://www.allure.com/feed/rss",
-        "category": "belleza-internacional",
-        "language": "en",
+        "name": "Revista Fucsia - Belleza",
+        "url": "https://www.fucsia.co/rss/belleza.xml",
+        "category": "belleza-general",
+        "language": "es",
         "active": true
       },
       {
-        "name": "Byrdie Beauty",
-        "url": "https://www.byrdie.com/feed",
+        "name": "Vogue México - Belleza",
+        "url": "https://www.vogue.mx/rss/belleza",
         "category": "tendencias-belleza",
-        "language": "en",
+        "language": "es",
         "active": true
       }
     ],
@@ -35,6 +35,27 @@
         "name": "KienyKe Entretenimiento",
         "url": "https://kienyke.com/feed",
         "category": "entretenimiento-colombia",
+        "language": "es",
+        "active": true
+      },
+      {
+        "name": "El Tiempo - Vida y Estilo",
+        "url": "https://www.eltiempo.com/rss/vida.xml",
+        "category": "estilo-vida-colombia",
+        "language": "es",
+        "active": true
+      },
+      {
+        "name": "Semana - Vida Moderna",
+        "url": "https://www.semana.com/rss/vida-moderna.xml",
+        "category": "estilo-vida-colombia",
+        "language": "es",
+        "active": true
+      },
+      {
+        "name": "Cromos - Estilo de Vida",
+        "url": "https://www.cromos.com.co/rss/estilo-de-vida.xml",
+        "category": "estilo-vida-colombia",
         "language": "es",
         "active": true
       }
@@ -50,7 +71,7 @@
       "keywords_exclude": ["política", "violencia", "drogas"]
     },
     "content_processing": {
-      "translate_to_spanish": true,
+      "translate_to_spanish": false,
       "add_colombian_context": true,
       "generate_featured_image": true
     }

@@ -46,22 +46,21 @@ Este sistema automatiza la creación de contenido para el blog, enfocándose en 
 
 ## Feeds RSS Configurados
 
-### Belleza General
-- Allure Beauty News
-- Byrdie Beauty
-- Beauty Independent
-- Glamour Beauty
-
-### Contenido Colombiano
+### Fuentes Colombianas
 - El Tiempo - Vida y Estilo
 - Semana - Vida Moderna
 - RCN Radio - Estilo de Vida
+- Cromos - Estilo de Vida
+
+### Fuentes de Belleza en Español
+- Revista Fucsia - Belleza
+- Vogue México - Belleza
 
 ## Funcionalidades Automáticas
 
 ### Procesamiento de Contenido
 - **Filtrado**: Solo artículos relacionados con belleza, maquillaje, skincare
-- **Traducción**: Contenido en inglés se traduce automáticamente al español
+- **Contenido en Español**: Todas las fuentes están en español, sin necesidad de traducción
 - **Tags**: Generación automática basada en el contenido
 - **Contexto Colombiano**: Adaptación del contenido al mercado colombiano
 
@@ -98,9 +97,9 @@ Este sistema automatiza la creación de contenido para el blog, enfocándose en 
 - Verifica que el script se esté cargando correctamente
 - Revisa el almacenamiento local del navegador
 
-### Problemas de traducción
-- La traducción automática es básica y puede requerir edición manual
-- Revisa los borradores antes de aprobarlos
+### Calidad del contenido
+- Todo el contenido está en español desde la fuente original
+- Revisa los borradores antes de aprobarlos para asegurar relevancia
 
 ## Seguridad
 - El modo administrador requiere acceso a la URL específica

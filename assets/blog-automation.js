@@ -155,6 +155,15 @@ class BlogAutomation {
         content = this.stripHtml(content);
         excerpt = this.stripHtml(excerpt);
 
+        // Procesar texto en español
+        try {
+            title = await this.processSpanishText(title);
+            content = await this.processSpanishText(content);
+            excerpt = await this.processSpanishText(excerpt);
+        } catch (error) {
+            console.warn('Error procesando texto:', error);
+        }
+
         // Agregar contexto colombiano si está habilitado
         if (this.config.automation_settings.content_processing.add_colombian_context) {
             content = this.addColombianContext(content, feed);
@@ -169,6 +178,21 @@ class BlogAutomation {
             excerpt,
             tags
         };
+    }
+
+    // Función para procesar texto en español
+    processSpanishText(text) {
+        // Procesar y limpiar el texto en español
+        return new Promise((resolve) => {
+            setTimeout(() => {
+                // Limpiar caracteres especiales y normalizar
+                const cleanText = text
+                    .replace(/[\u00A0\u2000-\u200B\u2028-\u2029]/g, ' ') // Espacios especiales
+                    .replace(/\s+/g, ' ') // Múltiples espacios
+                    .trim();
+                resolve(cleanText);
+            }, 100);
+        });
     }
 
     // Limpiar HTML del contenido

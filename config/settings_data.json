@@ -1,12 +1,4 @@
-/*
- * ------------------------------------------------------------
- * IMPORTANT: The contents of this file are auto-generated.
- *
- * This file may be updated by the Shopify admin theme editor
- * or related systems. Please exercise caution as any changes
- * made to this file may be overwritten.
- * ------------------------------------------------------------
- */
+
 {
   "current": {
     "color_primary": "#ed7c65",
@@ -1306,14 +1298,14 @@
           "blog_padding_bottom_xs": 50,
           "blog_bgcolor": "rgba(0,0,0,0)",
           "blog_bgcolor_enable": true,
-          "section_sub_title": "",
+          "section_sub_title": "NOTICIAS DE BELLEZA",
           "section_title": "En tendencia 💋",
           "blog_home": "news",
-          "blog_home_limit_handle": "8",
-          "blog_view_btn": "",
-          "blog_view_btn_url": "",
+          "blog_home_limit_handle": "6",
+          "blog_view_btn": "Ver todas las noticias",
+          "blog_view_btn_url": "/blogs/news",
           "blog_button_style": "btn-style2",
-          "blog_view_btn_enable": false
+          "blog_view_btn_enable": true
         }
       },
       "8029ba1d-03af-4420-8e09-94259a0e968c": {
