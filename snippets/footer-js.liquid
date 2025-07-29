@@ -140,7 +140,7 @@ window.addEventListener('load', (event) => {
   Blog Automation Script - Automatización de contenido de belleza y maquillaje
 {%- endcomment -%}
 {%- if template contains 'blog' or template contains 'article' -%}
-<script type="text/javascript" src="{{ 'blog-automation.js' | asset_url }}" defer></script>
+<script type="text/javascript" src="{{ 'blog-automation.js.liquid' | asset_url }}" defer></script>
 <script type="text/javascript">
   // Configuración específica para automatización del blog
   document.addEventListener('DOMContentLoaded', function() {

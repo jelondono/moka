@@ -17,7 +17,7 @@ La URL `/blogs/news` está devolviendo un error 404, lo que indica que el blog '
 ### Paso 3: Configurar el Blog
 Si necesitas crear el blog:
 1. **Title**: "News" o "Noticias"
-2. **Handle**: Asegúrate de que sea "news" (esto creará la URL `/blogs/news`)
+2. **Handle**: Asegúrate de que sea "noticias" (esto creará la URL `/blogs/noticias`)
 3. **Comments**: Configura según prefieras
 4. **Template**: Selecciona el template por defecto o personalizado
 5. Haz clic en **"Save"**
