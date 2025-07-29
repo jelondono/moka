@@ -13,8 +13,11 @@ class BlogAutomation {
 
     async init() {
         try {
-            // Cargar configuración desde assets usando Liquid
-            const response = await fetch('{{ "blog-automation.json" | asset_url }}');
+            // Cargar configuración desde assets
+            const response = await fetch('/assets/blog-automation.json');
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
             this.config = await response.json();
             console.log('Blog automation initialized', this.config);
         } catch (error) {
