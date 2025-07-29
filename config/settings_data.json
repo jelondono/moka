@@ -1400,6 +1400,7 @@
             "type": "product_tab",
             "settings": {
               "slider_category_handle": "softly-beauty",
+              "testi_bgimg": "shopify://shop_images/skin-care.png",
               "big_title_text": "skin care",
               "cat_desc": "A cosmetic is any substance used to a clean, improve or change the complexion"
             }
