@@ -1300,10 +1300,10 @@
           "blog_bgcolor_enable": true,
           "section_sub_title": "NOTICIAS DE BELLEZA",
           "section_title": "En tendencia 💋",
-          "blog_home": "news",
+          "blog_home": "noticias",
           "blog_home_limit_handle": "6",
           "blog_view_btn": "Ver todas las noticias",
-          "blog_view_btn_url": "/blogs/news",
+          "blog_view_btn_url": "/blogs/noticias",
           "blog_button_style": "btn-style2",
           "blog_view_btn_enable": true
         }
