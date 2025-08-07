@@ -1334,7 +1334,7 @@
           "border_color_opacity": 0.1,
           "section_title": "Productos Populares",
           "category_special_product_view": "grid",
-          "category_special_product_limit_handle": "12",
+          "category_special_product_limit_handle": "6",
           "category_special_product_col": "3",
           "category_special_product_limit": "3",
           "special_label_product": "maquillaje-facial",
