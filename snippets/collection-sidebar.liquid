@@ -279,12 +279,15 @@
         return;
       }
 
+      var encodedValue = encodeURIComponent(filterValue);
+      encodedValue = encodedValue.replace(/%20/g, '+');
+
       switch (filterType) {
         case 'vendor':
-          handleListParam(params, 'filter.p.vendor', filterValue, target.checked);
+          handleListParam(params, 'filter.p.vendor', encodedValue, target.checked);
           break;
         case 'type':
-          handleListParam(params, 'filter.p.product_type', filterValue, target.checked);
+          handleListParam(params, 'filter.p.product_type', encodedValue, target.checked);
           break;
       }
 
