@@ -1476,6 +1476,13 @@
               "brand_url": "",
               "brand_image": "shopify://shop_images/ky_maquillate_linea_nuevkabaf.webp"
             }
+          },
+          "single_brand_jKWBeq": {
+            "type": "single_brand",
+            "settings": {
+              "brand_url": "",
+              "brand_image": "shopify://shop_images/productos-cosmeticos-en-medellin.webp"
+            }
           }
         },
         "block_order": [
@@ -1484,7 +1491,8 @@
           "449e6db7-ddcd-42d6-be5d-6f2d6eb6192e",
           "7d27bf61-d67b-4910-9128-1a63e4084b0e",
           "single_brand_X4JPTC",
-          "single_brand_bxXXHp"
+          "single_brand_bxXXHp",
+          "single_brand_jKWBeq"
         ],
         "settings": {
           "brand_padding_top": 100,
