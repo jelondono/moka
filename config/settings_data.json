@@ -1469,6 +1469,13 @@
               "brand_url": "",
               "brand_image": "shopify://shop_images/LOGO_BLOOMSHELL-BL_Mesa_de_trabajo_1.webp"
             }
+          },
+          "single_brand_bxXXHp": {
+            "type": "single_brand",
+            "settings": {
+              "brand_url": "",
+              "brand_image": "shopify://shop_images/ky_maquillate_linea_nuevkabaf.webp"
+            }
           }
         },
         "block_order": [
@@ -1476,7 +1483,8 @@
           "f2343815-d6d1-4a3e-b932-7ce799803432",
           "449e6db7-ddcd-42d6-be5d-6f2d6eb6192e",
           "7d27bf61-d67b-4910-9128-1a63e4084b0e",
-          "single_brand_X4JPTC"
+          "single_brand_X4JPTC",
+          "single_brand_bxXXHp"
         ],
         "settings": {
           "brand_padding_top": 100,
