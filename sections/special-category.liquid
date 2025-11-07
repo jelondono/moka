@@ -14,38 +14,47 @@
           </div>
           <div class="collection-wrap">
             {% assign category_product = collections[section.settings.special_label_product] %}
-            <div class="collection-slider swiper" id="pro-{{ section.id }}">
-              <div class="swiper-wrapper">
-                {% assign product_limit = section.settings.category_special_product_limit_handle %}
+            <div class="collection-grid">
+              {% assign product_limit = section.settings.category_special_product_limit_handle %}
+              {% assign products_per_row = section.settings.collection_columns | default: 4 %}
+              <div class="collection-grid-row">
                 {% for product in category_product.products limit: product_limit %}
-                <div class="swiper-slide">
-                  {%- liquid
-                    if section.settings.category_special_product_view == 'grid'
-                    render 'product-grid-item', product: product
-                    elsif section.settings.category_special_product_view == 'list'
-                    render 'product-grid-list', product: product
-                    endif
-                   -%}
-                </div>
-                {% else %}
-                {% for i in (1..product_limit) %}
-                <div class="swiper-slide">
-                  <div class="single-product-wrap">
-                    <div class="product-image">
-                      {%- capture placeholder -%}collection-{% cycle 1, 2, 3, 4, 5, 6 %}{%- endcapture -%}
-                      {{ placeholder | placeholder_svg_tag: 'placeholder-svg' }}
+                  {%- if forloop.index == 1 or forloop.index0 % products_per_row == 0 -%}
+                  <div class="collection-grid-row-inner">
+                  {%- endif -%}
+                    <div class="collection-grid-item">
+                      {%- liquid
+                        if section.settings.category_special_product_view == 'grid'
+                        render 'product-grid-item', product: product
+                        elsif section.settings.category_special_product_view == 'list'
+                        render 'product-grid-list', product: product
+                        endif
+                      -%}
                     </div>
-                    <div class="product-content">
-                        <div class="product-title">
-                          <h6><a href="javascript:void(0)">{{ 'homepage.sections.product_title' | t }}</a></h6>
+                  {%- if forloop.index == product_limit or forloop.index % products_per_row == 0 -%}
+                  </div>
+                  {%- endif -%}
+                {% else %}
+                  <div class="collection-grid-row-inner">
+                  {% for i in (1..product_limit) %}
+                    <div class="collection-grid-item">
+                      <div class="single-product-wrap">
+                        <div class="product-image">
+                          {%- capture placeholder -%}collection-{% cycle 1, 2, 3, 4, 5, 6 %}{%- endcapture -%}
+                          {{ placeholder | placeholder_svg_tag: 'placeholder-svg' }}
                         </div>
-                        <div class="price-box">
-                        <span class="new-price">{{ 'homepage.sections.product_price' | t }}</span>
+                        <div class="product-content">
+                          <div class="product-title">
+                            <h6><a href="javascript:void(0)">{{ 'homepage.sections.product_title' | t }}</a></h6>
+                          </div>
+                          <div class="price-box">
+                            <span class="new-price">{{ 'homepage.sections.product_price' | t }}</span>
+                          </div>
+                        </div>
                       </div>
                     </div>
+                  {% endfor %}
                   </div>
-                </div>
-                {% endfor %}
                 {% endfor %}
               </div>
               {% if section.settings.category_special_button_enable %}
@@ -54,136 +63,12 @@
               </div>
               {% endif %}
             </div>
-            <div class="swiper-buttons">
-              <button class="swiper-prev swiper-prev-{{ section.id }}"><i class="fa fa-angle-left"></i></button>
-              <button class="swiper-next swiper-next-{{ section.id }}"><i class="fa fa-angle-right"></i></button>
-            </div>
-            <div class="swiper-dots">
-              <div class="swiper-pagination swiper-pagination-{{ section.id }}"></div>
-            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
 </section>
-<script type="text/javascript">
-addEventListener('DOMContentLoaded', (event) => {
-    var swiper = new Swiper('.swiper#pro-{{ section.id }}', {
-      slidesPerView: {{ section.settings.category_special_product_limit }},
-      grid: {
-        rows: {{ section.settings.category_special_product_col }},
-        fill: 'row' | 'column',
-      },
-      spaceBetween: 30,
-      observer: true,
-      observeParents: true,
-      watchSlidesProgress: true,
-      {%- if settings.enable_rtl -%}
-      rtl: true,
-      {%- endif -%}
-      navigation: {
-        nextEl: '.swiper-next-{{ section.id }}',
-        prevEl: '.swiper-prev-{{ section.id }}',
-      },
-      pagination: {
-        el: ".swiper-pagination-{{ section.id }}",
-        clickable: true
-      },
-      {% comment %} autoplay: {
-        delay: 5000,
-        disableOnInteraction: false,
-        pauseOnMouseEnter: true
-      }, {% endcomment %}
-      breakpoints: {
-        0: {
-          slidesPerView: 1,
-          grid: {
-            rows: {{ section.settings.category_special_product_col }},
-            fill: 'row' | 'column',
-          },
-          spaceBetween: 12
-        },
-        320: {
-          slidesPerView: 1,
-          grid: {
-            rows: {{ section.settings.category_special_product_col }},
-            fill: 'row' | 'column',
-          },
-          spaceBetween: 12
-        },
-        360: {
-          {% if section.settings.category_special_product_view == 'list' %}
-          slidesPerView: 1,
-          {% elsif section.settings.category_special_product_view == 'grid' %}
-          slidesPerView: 2,
-          {% endif %}
-          grid: {
-            rows: {{ section.settings.category_special_product_col }},
-            fill: 'row' | 'column',
-          },
-          spaceBetween: 12
-        },
-        540: {
-          slidesPerView: 2,
-          grid: {
-            rows: {{ section.settings.category_special_product_col }},
-            fill: 'row' | 'column',
-          },
-          spaceBetween: 12
-        },
-        540: {
-          slidesPerView: 2,
-          grid: {
-            rows: {{ section.settings.category_special_product_col }},
-            fill: 'row' | 'column',
-          },
-          spaceBetween: 12
-        },
-        640: {
-          slidesPerView: 2,
-          grid: {
-            rows: {{ section.settings.category_special_product_col }},
-            fill: 'row' | 'column',
-          },
-          spaceBetween: 12
-        },
-        768: {
-          slidesPerView: 2,
-          grid: {
-            rows: {{ section.settings.category_special_product_col }},
-            fill: 'row' | 'column',
-          },
-          spaceBetween: 30
-        },
-        1024: {
-          slidesPerView: 3,
-          grid: {
-            rows: {{ section.settings.category_special_product_col }},
-            fill: 'row' | 'column',
-          },
-          spaceBetween: 30
-        },
-        1199: {
-          slidesPerView: 3,
-          grid: {
-            rows: {{ section.settings.category_special_product_col }},
-            fill: 'row' | 'column',
-          },
-          spaceBetween: 30
-        },
-        1399: {
-          slidesPerView: {{ section.settings.category_special_product_limit }},
-          grid: {
-            rows: {{ section.settings.category_special_product_col }},
-            fill: 'row' | 'column',
-          },
-          spaceBetween: 30
-        }
-      }
-    });
-  });
-</script>
 {% schema %}
 {
   "name": "Special Category",
