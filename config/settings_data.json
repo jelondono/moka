@@ -1564,6 +1564,7 @@
           "d94a605f-6932-4a42-bb75-3aecf36b0faf",
           "a6685437-7b0b-4279-9b70-7c956cd3bbb7"
         ],
+        "disabled": true,
         "settings": {
           "section_padding_top": 100,
           "section_padding_bottom": 100,
