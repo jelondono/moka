@@ -54,21 +54,37 @@
               <div class="catalog-panel__columns">
                 {% for column in category.links %}
                   {% assign column_handle = column.title | handleize %}
-                  {% assign brand_menu = linklists[column_handle] %}
-                  {% if brand_menu == blank and menus != blank %}
-                    {% assign brand_menu = menus[column_handle] %}
+                  {% assign brand_menu_items = blank %}
+                  {% if linklists[category_handle | append: '-' | append: column_handle] %}
+                    {% assign brand_menu_items = linklists[category_handle | append: '-' | append: column_handle].links %}
                   {% endif %}
-                  <div class="catalog-panel__column{% if brand_menu and brand_menu.links.size > 0 %} catalog-panel__column--has-sub{% endif %}">
+                  {% if brand_menu_items == blank and linklists[column_handle] %}
+                    {% assign brand_menu_items = linklists[column_handle].links %}
+                  {% endif %}
+                  {% if brand_menu_items == blank and menus != blank and menus[category_handle | append: '-' | append: column_handle] %}
+                    {% assign brand_menu_items = menus[category_handle | append: '-' | append: column_handle].items %}
+                  {% endif %}
+                  {% if brand_menu_items == blank and menus != blank and menus[column_handle] %}
+                    {% assign brand_menu_items = menus[column_handle].items %}
+                  {% endif %}
+                  {% if brand_menu_items == blank and column.links and column.links.size > 0 %}
+                    {% assign brand_menu_items = column.links %}
+                  {% endif %}
+                  <div class="catalog-panel__column{% if brand_menu_items and brand_menu_items.size > 0 %} catalog-panel__column--has-sub{% endif %}">
                     <div class="catalog-panel__column-header">
                       <span class="catalog-panel__column-title">{{ column.title }}</span>
                       {% if column.url != blank %}
                       <a class="catalog-panel__column-all" href="{{ column.url }}">Ver todo</a>
                       {% endif %}
                     </div>
-                    {% if brand_menu and brand_menu.links.size > 0 %}
+                    {% if brand_menu_items and brand_menu_items.size > 0 %}
                     <ul class="catalog-panel__list">
-                      {% for item in brand_menu.links %}
-                      <li><a href="{{ item.url }}">{{ item.title }}</a></li>
+                      {% for item in brand_menu_items %}
+                      {% liquid
+                        assign item_title = item.title | default: item.name
+                        assign item_url = item.url | default: item.link
+                      %}
+                      <li><a href="{{ item_url }}">{{ item_title }}</a></li>
                       {% endfor %}
                     </ul>
                     {% endif %}
