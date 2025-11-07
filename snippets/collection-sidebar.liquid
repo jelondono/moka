@@ -10,30 +10,6 @@
 <div class="shop-sidebar-inner{% if section.settings.sidebar_handle == 'without_sidebar' %} shop-sidebar-without{% endif %}">
 <div class="shop-sidebar-wrap filter-sidebar{% if section.settings.sidebar_handle == 'without_sidebar' %} filter-sidebar-without{% endif %}">
   <button class="close-filter-sidebar{% if section.settings.sidebar_handle == 'without_sidebar' %} close-filter-without{% endif %}" type="button"><i class="feather-x"></i></button>
-  {%- if section.settings.collection_categories_enable -%}
-  <div class="shop-sidebar sidebar-wedget shop-collection">
-    {%- if section.settings.collection_categories_title != '' -%}
-    <h6 class="title">{{ section.settings.collection_categories_title }}</h6>
-    <a class="title" data-bs-toggle="collapse" href="#collapse-{{ settings.categories_title }}">{{ section.settings.collection_categories_title }}</a>
-    {%- endif -%}
-    <div class="collapse filter-element" id="collapse-{{ section.settings.collection_categories_title }}">
-      <ul class="scrollbar type-scroll">
-        {% for c in collections %}
-        {%- if c.products_count >= 1 -%}
-        <li {% if collection and collection.handle == c.handle %}class="active"{% endif %}>
-          <a href="{{ c.url }}" class="cust-checkbox-label" title="{{ c.title }}">
-            <span class="filter-name">{{ c.title }}</span>
-            <span class="count-check">({{ c.products_count }})</span>
-            <span class="cust-check"></span>
-          </a>
-        </li>
-        {%- endif -%}
-        {% endfor %}
-      </ul>
-    </div>
-  </div>
-  {%- endif -%}
-
   {%- liquid
     assign custom_type_filter = blank
     assign custom_vendor_filter = blank
