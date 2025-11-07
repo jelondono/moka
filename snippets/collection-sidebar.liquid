@@ -301,3 +301,17 @@
   </div>
 </div>
 {% render 'collection-sidebar-css' %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  var facetsForm = document.getElementById('FacetFiltersForm');
+  if (!facetsForm) return;
+
+  facetsForm.addEventListener('change', function(event) {
+    var input = event.target;
+    if (!input.classList.contains('cust-checkbox')) return;
+    var listItem = input.closest('li');
+    if (!listItem) return;
+    listItem.classList.toggle('active', input.checked);
+  });
+});
+</script>
