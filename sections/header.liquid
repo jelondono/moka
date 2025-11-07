@@ -572,15 +572,23 @@
     }
     .catalog-panel__columns {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px,1fr));
-        gap: 28px 36px;
-        align-items: start;
+        grid-auto-flow: column;
+        grid-auto-columns: minmax(200px, 1fr);
+        gap: 0;
+        align-items: stretch;
     }
     .catalog-panel__column {
         display: flex;
         flex-direction: column;
         gap: 12px;
         min-width: 0;
+        padding: 0 20px;
+    }
+    .catalog-panel__column:first-child {
+        padding-left: 0;
+    }
+    .catalog-panel__column:last-child {
+        padding-right: 0;
     }
     .catalog-panel__column-header {
         display: flex;
