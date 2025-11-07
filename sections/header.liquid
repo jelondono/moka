@@ -441,6 +441,158 @@
     }
     {% endif %}
     {% endif %}
+
+    .main-menu > li.menu-link--catalog {
+        position: static;
+    }
+    .menu-link--catalog .catalog-megamenu {
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 100%;
+        background-color: #ffffff;
+        box-shadow: 0 20px 45px rgba(0,0,0,0.12);
+        padding: 30px 0;
+        display: none;
+        z-index: 5;
+    }
+    .menu-link--catalog.is-open .catalog-megamenu,
+    .main-menu > li.menu-link--catalog:hover .catalog-megamenu,
+    .main-menu > li.menu-link--catalog:focus-within .catalog-megamenu {
+        display: block;
+    }
+    .catalog-megamenu__inner {
+        display: flex;
+        gap: 30px;
+        max-width: 1180px;
+        margin: 0 auto;
+    }
+    .catalog-megamenu__categories {
+        width: 260px;
+        border-right: 1px solid rgba(0,0,0,0.08);
+        padding: 10px 0 10px 30px;
+    }
+    .catalog-category-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+    .catalog-category-item button {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: transparent;
+        border: none;
+        padding: 10px 16px;
+        border-radius: 12px;
+        font-weight: 600;
+        font-size: 15px;
+        color: var(--color_secondary);
+        transition: all 0.2s ease;
+        cursor: pointer;
+    }
+    .catalog-category-item.active button,
+    .catalog-category-item button:hover {
+        background-color: rgba(0,0,0,0.05);
+        color: var(--color_primary);
+    }
+    .catalog-megamenu__panels {
+        flex: 1;
+        padding: 10px 30px 10px 10px;
+        min-height: 260px;
+    }
+    .catalog-panel {
+        display: none;
+        animation: fadeIn 0.25s ease;
+    }
+    .catalog-panel.active {
+        display: block;
+    }
+    .catalog-panel__header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 18px;
+    }
+    .catalog-panel__title {
+        margin: 0;
+        font-size: 20px;
+        font-weight: 700;
+    }
+    .catalog-panel__see-all {
+        font-size: 14px;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        font-weight: 600;
+        color: var(--color_secondary);
+    }
+    .catalog-panel__see-all:hover {
+        color: var(--color_primary);
+    }
+    .catalog-panel__columns {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        gap: 20px 30px;
+    }
+    .catalog-panel__column-title {
+        font-size: 14px;
+        text-transform: uppercase;
+        font-weight: 700;
+        margin-bottom: 12px;
+    }
+    .catalog-panel__list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: grid;
+        gap: 8px;
+    }
+    .catalog-panel__list a,
+    .catalog-panel__single,
+    .catalog-panel__single-list a {
+        color: var(--color_secondary);
+        font-size: 14px;
+    }
+    .catalog-panel__list a:hover,
+    .catalog-panel__single:hover,
+    .catalog-panel__single-list a:hover {
+        color: var(--color_primary);
+    }
+    .catalog-panel__single-list {
+        padding: 10px 0;
+    }
+    .catalog-panel__single {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+    }
+    .catalog-mobile-submenu {
+        display: none;
+    }
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    @media (max-width: 1199px) {
+        .catalog-megamenu__inner {
+            max-width: calc(100% - 40px);
+        }
+    }
+    @media (max-width: 991px) {
+        .menu-link--catalog .catalog-megamenu {
+            display: none !important;
+        }
+        .catalog-mobile-submenu {
+            display: block;
+        }
+    }
 </style>
 <script>
 window.addEventListener('scroll', function() {
@@ -451,5 +603,62 @@ window.addEventListener('scroll', function() {
         document.body.classList.remove('sticky-header');
         document.querySelector('.header-kaj').classList.remove('is-sticky');
     }
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.menu-link--catalog').forEach(function(item) {
+        const megaMenu = item.querySelector('.catalog-megamenu');
+        if (!megaMenu) {
+            return;
+        }
+
+        const buttons = megaMenu.querySelectorAll('.catalog-category-trigger');
+        const panels = megaMenu.querySelectorAll('.catalog-panel');
+
+        function setActive(targetId) {
+            buttons.forEach(function(btn) {
+                btn.parentElement.classList.remove('active');
+                if (btn.dataset.catalogTarget === targetId) {
+                    btn.parentElement.classList.add('active');
+                }
+            });
+            panels.forEach(function(panel) {
+                panel.classList.toggle('active', panel.dataset.catalogPanel === targetId);
+            });
+        }
+
+        buttons.forEach(function(button) {
+            const targetId = button.dataset.catalogTarget;
+            ['mouseenter', 'focus'].forEach(function(evt) {
+                button.addEventListener(evt, function() {
+                    if (window.innerWidth > 991) {
+                        setActive(targetId);
+                    }
+                });
+            });
+            button.addEventListener('click', function(event) {
+                if (window.innerWidth > 991) {
+                    event.preventDefault();
+                    setActive(targetId);
+                }
+            });
+        });
+
+        item.addEventListener('mouseenter', function() {
+            if (window.innerWidth > 991) {
+                item.classList.add('is-open');
+            }
+        });
+        item.addEventListener('mouseleave', function() {
+            if (window.innerWidth > 991) {
+                item.classList.remove('is-open');
+            }
+        });
+        item.addEventListener('focusout', function(event) {
+            if (window.innerWidth > 991 && !item.contains(event.relatedTarget)) {
+                item.classList.remove('is-open');
+            }
+        });
+    });
 });
 </script>

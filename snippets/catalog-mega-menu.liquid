@@ -1,0 +1,86 @@
+{% liquid
+  assign category_links = child_links
+  if category_links == blank
+    assign category_links = linklists[link.title | handleize].links
+  endif
+%}
+<li class="menu-link menu-link--catalog parant">
+  <a href="{{ link.url }}" class="link-title {% if link.current %}active{% endif %}" {% if link.current %}aria-current="page"{% endif %}>
+    <span class="sp-link-title">{{ link.title }}</span>
+    <i class="ri-arrow-down-s-line"></i>
+  </a>
+  <a href="#main-collapse-{{ link.title | handleize }}" data-bs-toggle="collapse" class="link-title link-title-lg">
+    <span class="sp-link-title">{{ link.title }}</span>
+    <i class="ri-arrow-down-s-line"></i>
+  </a>
+
+  {% if category_links != blank %}
+  <div class="catalog-megamenu">
+    <div class="catalog-megamenu__inner">
+      <div class="catalog-megamenu__categories">
+        <ul class="catalog-category-list">
+          {% for category in category_links %}
+            {% assign target_id = 'catalog-panel-' | append: link.title | handleize | append: '-' | append: forloop.index %}
+            <li class="catalog-category-item{% if forloop.first %} active{% endif %}">
+              <button type="button" class="catalog-category-trigger" data-catalog-target="{{ target_id }}">
+                <span>{{ category.title }}</span>
+                {% if category.links and category.links.size > 0 %}
+                <i class="ri-arrow-right-s-line"></i>
+                {% endif %}
+              </button>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+      <div class="catalog-megamenu__panels">
+        {% for category in category_links %}
+          {% assign target_id = 'catalog-panel-' | append: link.title | handleize | append: '-' | append: forloop.index %}
+          <div class="catalog-panel{% if forloop.first %} active{% endif %}" data-catalog-panel="{{ target_id }}">
+            <div class="catalog-panel__header">
+              <h4 class="catalog-panel__title">{{ category.title }}</h4>
+              <a class="catalog-panel__see-all" href="{{ category.url }}">Ver todo {{ category.title | downcase }}</a>
+            </div>
+            <div class="catalog-panel__body">
+              {% if category.links and category.links.size > 0 %}
+              <div class="catalog-panel__columns">
+                {% for column in category.links %}
+                  <div class="catalog-panel__column">
+                    <h5 class="catalog-panel__column-title">{{ column.title }}</h5>
+                    {% if column.links and column.links.size > 0 %}
+                    <ul class="catalog-panel__list">
+                      {% for item in column.links %}
+                      <li><a href="{{ item.url }}">{{ item.title }}</a></li>
+                      {% endfor %}
+                    </ul>
+                    {% else %}
+                    <a class="catalog-panel__single" href="{{ column.url }}">Ver todo {{ column.title | downcase }}</a>
+                    {% endif %}
+                  </div>
+                {% endfor %}
+              </div>
+              {% else %}
+              <div class="catalog-panel__single-list">
+                <a class="catalog-panel__single" href="{{ category.url }}">Ver todos los productos</a>
+              </div>
+              {% endif %}
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
+  <ul class="dropdown-submenu collapse catalog-mobile-submenu" id="main-collapse-{{ link.title | handleize }}">
+    <div class="container p-0 ul">
+      {% for category in category_links %}
+      <li class="submenu-li parant">
+        <a href="{{ category.url }}" class="sublink-title">
+          <span class="sp-link-title">{{ category.title }}</span>
+        </a>
+      </li>
+      {% endfor %}
+    </div>
+  </ul>
+</li>
+

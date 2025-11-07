@@ -1,5 +1,10 @@
 {% assign child_list_handle = link.title | handleize %}
-{% if linklists[child_list_handle].links != '' %}
+{% assign child_links = linklists[child_list_handle].links %}
+{% assign normalized_title = link.title | strip | downcase %}
+{% if child_links != blank %}
+  {% if normalized_title == 'catalogo' or normalized_title == 'catálogo' %}
+    {% render 'catalog-mega-menu', link: link, child_links: child_links %}
+  {% else %}
 <li class="menu-link parant">
   <a href="{{ link.url }}" class="link-title {% if link.current %}active{% endif %}" {% if link.current %}aria-current="page"{% endif %}>
     <span class="sp-link-title">{{ link.title }}</span>
@@ -11,7 +16,7 @@
   </a>
   <ul class="dropdown-submenu collapse" id="main-collapse-{{ link.title | handleize }}">
     <div class="container p-0 ul">
-      {% for childlink in linklists[child_list_handle].links %}
+      {% for childlink in child_links %}
       {% assign grand_childlink_handle = childlink.title | handle %}
       {% if linklists[grand_childlink_handle] and linklists[grand_childlink_handle].links.size > 0 %}
       <li class="megamenu-li parant">
@@ -58,6 +63,7 @@
     </div>
   </ul>
 </li>
+  {% endif %}
 {% else %}
 <li class="menu-link">
   <a href="{{ link.url }}" class="link-title {% if link.current %}active{% endif %}" {% if link.current %}aria-current="page"{% endif %}>
