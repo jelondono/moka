@@ -35,12 +35,12 @@
 <script type="text/javascript">
   addEventListener('DOMContentLoaded', (event) => {
     var swiper = new Swiper('.swiper#brand-logo', {
-      slidesPerView: 4,
+      slidesPerView: 5,
       grid: {
         rows: 1,
-        fill: 'row' | 'column',
+        fill: 'row'
       },
-      spaceBetween: 30,
+      spaceBetween: 24,
       observer: true,
       observeParents: true,
       watchSlidesProgress: true,
@@ -51,10 +51,6 @@
         nextEl: '.swiper-next-{{ section.id }}',
         prevEl: '.swiper-prev-{{ section.id }}',
       },
-      pagination: {
-        el: ".swiper-pagination-{{ section.id }}",
-        clickable: true
-      },
       autoplay: {
         delay: 5000,
         disableOnInteraction: false,
@@ -62,84 +58,24 @@
       },
       breakpoints: {
         0: {
-          slidesPerView: 1,
-          grid: {
-            rows: 1,
-            fill: 'row' | 'column',
-          },
-          spaceBetween: 12
-        },
-        320: {
-          slidesPerView: 1,
-          grid: {
-            rows: 1,
-            fill: 'row' | 'column',
-          },
-          spaceBetween: 12
-        },
-        360: {
           slidesPerView: 2,
-          grid: {
-            rows: 1,
-            fill: 'row' | 'column',
-          },
           spaceBetween: 12
         },
-        540: {
-          slidesPerView: 2,
-          grid: {
-            rows: 1,
-            fill: 'row' | 'column',
-          },
-          spaceBetween: 12
-        },
-        540: {
-          slidesPerView: 2,
-          grid: {
-            rows: 1,
-            fill: 'row' | 'column',
-          },
-          spaceBetween: 12
-        },
-        640: {
+        480: {
           slidesPerView: 3,
-          grid: {
-            rows: 1,
-            fill: 'row' | 'column',
-          },
-          spaceBetween: 12
+          spaceBetween: 16
         },
         768: {
-          slidesPerView: 3,
-          grid: {
-            rows: 1,
-            fill: 'row' | 'column',
-          },
-          spaceBetween: 30
+          slidesPerView: 4,
+          spaceBetween: 20
         },
         1024: {
-          slidesPerView: 4,
-          grid: {
-            rows: 1,
-            fill: 'row' | 'column',
-          },
-          spaceBetween: 30
+          slidesPerView: 5,
+          spaceBetween: 24
         },
-        1199: {
-          slidesPerView: 4,
-          grid: {
-            rows: 1,
-            fill: 'row' | 'column',
-          },
-          spaceBetween: 30
-        },
-        1399: {
-          slidesPerView: 4,
-          grid: {
-            rows: 1,
-            fill: 'row' | 'column',
-          },
-          spaceBetween: 30
+        1440: {
+          slidesPerView: 6,
+          spaceBetween: 28
         }
       }
     });
@@ -165,7 +101,7 @@
       "max": 100,
       "step": 5,
       "unit": "px",
-      "default": 100
+      "default": 80
     },
     {
       "type": "range",
@@ -175,7 +111,7 @@
       "max": 100,
       "step": 5,
       "unit": "px",
-      "default": 100
+      "default": 80
     },
     {
       "type": "paragraph",
@@ -213,7 +149,7 @@
       "max": 100,
       "step": 5,
       "unit": "px",
-      "default": 40
+      "default": 30
     },
     {
       "type": "range",
@@ -223,7 +159,43 @@
       "max": 100,
       "step": 5,
       "unit": "px",
-      "default": 40
+      "default": 30
+    },
+    {
+      "type": "header",
+      "content": "Logo styling"
+    },
+    {
+      "type": "range",
+      "id": "logo_max_height",
+      "label": "Logo max height",
+      "unit": "px",
+      "min": 40,
+      "max": 160,
+      "step": 5,
+      "default": 80
+    },
+    {
+      "type": "color",
+      "id": "logo_card_background",
+      "label": "Logo background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "logo_card_radius",
+      "label": "Logo corner radius",
+      "unit": "px",
+      "min": 0,
+      "max": 32,
+      "step": 2,
+      "default": 16
+    },
+    {
+      "type": "checkbox",
+      "id": "logo_show_shadow",
+      "label": "Show card shadow",
+      "default": true
     },
     {
       "type": "header",
@@ -276,6 +248,10 @@
 }
 {% endschema %}
 <style>
+  {% assign logo_max_height = section.settings.logo_max_height | default: 80 %}
+  {% assign logo_card_radius = section.settings.logo_card_radius | default: 16 %}
+  {% assign logo_card_background = section.settings.logo_card_background | default: '#ffffff' %}
+
   .our-brand-logo {
     padding-top:{{ section.settings.brand_padding_top }}px;
     padding-bottom:{{ section.settings.brand_padding_bottom }}px;
@@ -283,8 +259,8 @@
     {% if section.settings.section_bg_enable %}
     background-image: url({% if section.settings.section_bg_img %}{{ section.settings.section_bg_img | image_url: 'master' }}{% else %}https://dummyimage.com/1920x500/f7f7f7/999999{% endif %});
     background-repeat: no-repeat;
-    background-position: bottom center;
-    background-size: contain;
+    background-position: center;
+    background-size: cover;
     {% endif %}
   }
   @media (max-width: 1199px){
@@ -295,29 +271,85 @@
   }
   @media (max-width: 767px){
     .our-brand-logo {
-      padding-top:{{ section.settings.brand_padding_top_lg }}px;
+      padding-top:{{ section.settings.brand_padding_top_xs }}px;
       padding-bottom:{{ section.settings.brand_padding_bottom_xs }}px;
     }
   }
   .our-brand-logo .branlogo-wrap{
     margin: 0 auto;
+    max-width: 1120px;
   }
-  .our-brand-logo .brand-logo .brand-img{
-    text-align: center;
+  .our-brand-logo .brand-logo {
+    padding: 0 8px;
+  }
+  .our-brand-logo .brand-logo .swiper-wrapper {
+    align-items: center;
+  }
+  .our-brand-logo .brand-logo .swiper-slide {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 4px;
+    height: calc({{ logo_max_height }}px + 40px);
+  }
+  .our-brand-logo .brand-logo .brand-img {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 180px;
+    padding: 16px 24px;
+    min-height: calc({{ logo_max_height }}px + 8px);
+    background-color: {{ logo_card_background }};
+    border-radius: {{ logo_card_radius }}px;
+    {% if section.settings.logo_show_shadow %}
+    box-shadow: 0 18px 45px rgba(17, 24, 39, 0.08);
+    {% else %}
+    box-shadow: none;
+    {% endif %}
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  .our-brand-logo .brand-logo .brand-img:hover {
+    transform: translateY(-4px);
+    {% if section.settings.logo_show_shadow %}
+    box-shadow: 0 24px 50px rgba(17, 24, 39, 0.12);
+    {% endif %}
+  }
+  .our-brand-logo .brand-logo .brand-img img,
+  .our-brand-logo .brand-logo .brand-img svg {
+    max-height: {{ logo_max_height }}px;
+    width: auto;
+    max-width: 100%;
+    object-fit: contain;
   }
   .our-brand-logo .brand-logo a img {
-    opacity: .3;
+    opacity: .65;
+    filter: grayscale(10%);
   }
   .our-brand-logo .brand-logo a svg {
     width: 100%;
   }
   .our-brand-logo .brand-logo a:hover img {
     opacity: 1;
+    filter: none;
   }
   .our-brand-logo .brand-logo a img,
   .our-brand-logo .brand-logo a:hover img {
     -webkit-transition: all 0.3s ease-in-out 0s;
     -o-transition: all 0.3s ease-in-out 0s;
     transition: all 0.3s ease-in-out 0s;
+  }
+  @media (max-width: 767px){
+    .our-brand-logo .brand-logo {
+      padding: 0;
+    }
+    .our-brand-logo .brand-logo .brand-img {
+      padding: 12px 18px;
+      max-width: 160px;
+      min-height: calc({{ logo_max_height }}px + 4px);
+    }
+    .our-brand-logo .brand-logo .swiper-slide {
+      height: calc({{ logo_max_height }}px + 32px);
+    }
   }
 </style>
