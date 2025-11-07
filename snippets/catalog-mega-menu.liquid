@@ -52,6 +52,9 @@
                 {% for column in category.links %}
                   {% assign column_handle = column.title | handleize %}
                   {% assign brand_menu = linklists[column_handle] %}
+                  {% if brand_menu == blank and menus != blank %}
+                    {% assign brand_menu = menus[column_handle] %}
+                  {% endif %}
                   <div class="catalog-panel__column{% if brand_menu and brand_menu.links.size > 0 %} catalog-panel__column--has-sub{% endif %}">
                     <div class="catalog-panel__column-header">
                       <span class="catalog-panel__column-title">{{ column.title }}</span>
