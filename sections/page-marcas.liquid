@@ -70,11 +70,13 @@
       {% endunless %}
     {% endfor %}
 
+    {% assign letters_array = letter_tracker | split: '|' %}
+
     <div class="brands-directory-body">
       <div class="brand-index">
         <span class="brand-index-label">{{ section.settings.index_label }}</span>
         <div class="brand-index-links">
-          {% for letter in letter_tracker | split: '|' %}
+          {% for letter in letters_array %}
             {% if letter != '' %}
               {% if letter == '#' %}
                 {% assign letter_text = section.settings.other_label | default: 'Otros' %}
