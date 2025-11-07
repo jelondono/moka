@@ -22,7 +22,7 @@
         <ul class="catalog-category-list">
           {% for category in category_links %}
             {% assign target_id = 'catalog-panel-' | append: link.title | handleize | append: '-' | append: forloop.index %}
-            <li class="catalog-category-item{% if forloop.first %} active{% endif %}">
+            <li class="catalog-category-item{% if forloop.first %} active{% endif %}{% if category.links and category.links.size > 0 %} has-children{% endif %}">
               <button type="button" class="catalog-category-trigger" data-catalog-target="{{ target_id }}">
                 <span>{{ category.title }}</span>
                 {% if category.links and category.links.size > 0 %}
@@ -36,6 +36,7 @@
       <div class="catalog-megamenu__panels">
         {% for category in category_links %}
           {% assign target_id = 'catalog-panel-' | append: link.title | handleize | append: '-' | append: forloop.index %}
+          {% assign category_handle = category.title | handleize %}
           <div class="catalog-panel{% if forloop.first %} active{% endif %}" data-catalog-panel="{{ target_id }}">
             <div class="catalog-panel__header">
               <h4 class="catalog-panel__title">{{ category.title }}</h4>
@@ -45,9 +46,17 @@
               {% if category.links and category.links.size > 0 %}
               <div class="catalog-panel__columns">
                 {% for column in category.links %}
-                  <div class="catalog-panel__column">
+                  {% assign column_handle = column.title | handleize %}
+                  {% assign brand_menu = linklists[column_handle] %}
+                  <div class="catalog-panel__column{% if brand_menu and brand_menu.links.size > 0 %} catalog-panel__column--has-sub{% endif %}">
                     <h5 class="catalog-panel__column-title">{{ column.title }}</h5>
-                    {% if column.links and column.links.size > 0 %}
+                    {% if brand_menu and brand_menu.links.size > 0 %}
+                    <ul class="catalog-panel__list">
+                      {% for brand in brand_menu.links %}
+                      <li><a href="{{ brand.url }}">{{ brand.title }}</a></li>
+                      {% endfor %}
+                    </ul>
+                    {% elsif column.links and column.links.size > 0 %}
                     <ul class="catalog-panel__list">
                       {% for item in column.links %}
                       <li><a href="{{ item.url }}">{{ item.title }}</a></li>
