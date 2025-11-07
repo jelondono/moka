@@ -78,6 +78,35 @@
           </ul>
         </div>
       </div>
+      {% elsif section.settings.collection_types_enable and results.all_types.size > 0 %}
+      <div class="shop-sidebar sidebar-wedget facets__disclosure js-filter custom-filter" data-index="custom-product-type">
+        {% if section.settings.collection_types_title != '' %}
+        <h6 class="title">{{ section.settings.collection_types_title }}</h6>
+        <a class="title" data-bs-toggle="collapse" href="#collapse-types">{{ section.settings.collection_types_title }}</a>
+        {% endif %}
+        <div class="collapse filter-element show" id="collapse-types">
+          <ul class="scrollbar type-scroll">
+            {% for type in results.all_types %}
+            {% if type != blank %}
+            {% assign is_active_type = false %}
+            {% if results.current_type and results.current_type contains type %}
+              {% assign is_active_type = true %}
+            {% endif %}
+            <li class="facet-type-item{% if is_active_type %} active{% endif %}">
+              <label class="cust-checkbox-label" title="{{ type }}">
+                <input type="checkbox" class="cust-checkbox"
+                  name="filter.p.product_type"
+                  value="{{ type }}"
+                  {% if is_active_type %}checked{% endif %}>
+                <span class="filter-name">{{ type }}</span>
+                <span class="cust-check"></span>
+              </label>
+            </li>
+            {% endif %}
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
       {% endif %}
 
       {% if section.settings.collection_vendors_enable and custom_vendor_filter and custom_vendor_filter.values.size > 0 %}
@@ -101,6 +130,35 @@
                 <span class="cust-check"></span>
               </label>
             </li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+      {% elsif section.settings.collection_vendors_enable and results.all_vendors.size > 0 %}
+      <div class="shop-sidebar sidebar-wedget facets__disclosure js-filter custom-filter" data-index="custom-vendor">
+        {% if section.settings.collection_vendors_title != '' %}
+        <h6 class="title">{{ section.settings.collection_vendors_title }}</h6>
+        <a class="title" data-bs-toggle="collapse" href="#collapse-vendors">{{ section.settings.collection_vendors_title }}</a>
+        {% endif %}
+        <div class="collapse filter-element show" id="collapse-vendors">
+          <ul class="scrollbar brands-scroll">
+            {% for vendor in results.all_vendors %}
+            {% if vendor != blank %}
+            {% assign is_active_vendor = false %}
+            {% if results.current_vendor and results.current_vendor contains vendor %}
+              {% assign is_active_vendor = true %}
+            {% endif %}
+            <li class="facet-vendor-item{% if is_active_vendor %} active{% endif %}">
+              <label class="cust-checkbox-label" title="{{ vendor }}">
+                <input type="checkbox" class="cust-checkbox"
+                  name="filter.p.vendor"
+                  value="{{ vendor }}"
+                  {% if is_active_vendor %}checked{% endif %}>
+                <span class="filter-name">{{ vendor }}</span>
+                <span class="cust-check"></span>
+              </label>
+            </li>
+            {% endif %}
             {% endfor %}
           </ul>
         </div>
