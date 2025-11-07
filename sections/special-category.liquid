@@ -14,49 +14,45 @@
           </div>
           <div class="collection-wrap">
             {% assign category_product = collections[section.settings.special_label_product] %}
+            {% assign columns_desktop = section.settings.collection_columns | default: 4 | plus: 0 %}
+            {% assign columns_tablet = section.settings.collection_columns_tablet | default: 2 | plus: 0 %}
+            {% assign columns_mobile = section.settings.collection_columns_mobile | default: 1 | plus: 0 %}
+            {% assign rows = section.settings.collection_rows | default: 2 | plus: 0 %}
+            {% assign product_limit = section.settings.category_special_product_limit_handle | plus: 0 %}
+            {% if product_limit <= 0 %}
+              {% assign product_limit = columns_desktop | times: rows %}
+            {% endif %}
             <div class="collection-grid">
-              {% assign product_limit = section.settings.category_special_product_limit_handle %}
-              {% assign products_per_row = section.settings.collection_columns | default: 4 %}
-              <div class="collection-grid-row">
-                {% for product in category_product.products limit: product_limit %}
-                  {%- if forloop.index == 1 or forloop.index0 % products_per_row == 0 -%}
-                  <div class="collection-grid-row-inner">
-                  {%- endif -%}
-                    <div class="collection-grid-item">
-                      {%- liquid
-                        if section.settings.category_special_product_view == 'grid'
-                        render 'product-grid-item', product: product
-                        elsif section.settings.category_special_product_view == 'list'
-                        render 'product-grid-list', product: product
-                        endif
-                      -%}
+              {% for product in category_product.products limit: product_limit %}
+                <div class="collection-grid-item">
+                  {%- liquid
+                    if section.settings.category_special_product_view == 'grid'
+                    render 'product-grid-item', product: product
+                    elsif section.settings.category_special_product_view == 'list'
+                    render 'product-grid-list', product: product
+                    endif
+                  -%}
+                </div>
+              {% else %}
+                {% for i in (1..product_limit) %}
+                <div class="collection-grid-item">
+                  <div class="single-product-wrap">
+                    <div class="product-image">
+                      {%- capture placeholder -%}collection-{% cycle 1, 2, 3, 4, 5, 6 %}{%- endcapture -%}
+                      {{ placeholder | placeholder_svg_tag: 'placeholder-svg' }}
                     </div>
-                  {%- if forloop.index == product_limit or forloop.index % products_per_row == 0 -%}
-                  </div>
-                  {%- endif -%}
-                {% else %}
-                  <div class="collection-grid-row-inner">
-                  {% for i in (1..product_limit) %}
-                    <div class="collection-grid-item">
-                      <div class="single-product-wrap">
-                        <div class="product-image">
-                          {%- capture placeholder -%}collection-{% cycle 1, 2, 3, 4, 5, 6 %}{%- endcapture -%}
-                          {{ placeholder | placeholder_svg_tag: 'placeholder-svg' }}
-                        </div>
-                        <div class="product-content">
-                          <div class="product-title">
-                            <h6><a href="javascript:void(0)">{{ 'homepage.sections.product_title' | t }}</a></h6>
-                          </div>
-                          <div class="price-box">
-                            <span class="new-price">{{ 'homepage.sections.product_price' | t }}</span>
-                          </div>
-                        </div>
+                    <div class="product-content">
+                      <div class="product-title">
+                        <h6><a href="javascript:void(0)">{{ 'homepage.sections.product_title' | t }}</a></h6>
+                      </div>
+                      <div class="price-box">
+                        <span class="new-price">{{ 'homepage.sections.product_price' | t }}</span>
                       </div>
                     </div>
-                  {% endfor %}
                   </div>
+                </div>
                 {% endfor %}
-              </div>
+              {% endfor %}
               {% if section.settings.category_special_button_enable %}
               <div class="collection-button">
                 <a href="{{ category_product.url }}" class="btn {% if section.settings.category_special_button_style == 'btn-style1' %}btn-style{% elsif section.settings.category_special_button_style == 'btn-style2' %}btn-style2{% else %}btn-style3{% endif %}">{{ section.settings.category_special_button_text }}</a>
@@ -231,10 +227,53 @@
       "default": "list"
     },
     {
+      "type": "select",
+      "id": "collection_columns",
+      "label": "Columns per Row (Desktop)",
+      "options": [
+        { "label": "2", "value": "2" },
+        { "label": "3", "value": "3" },
+        { "label": "4", "value": "4" }
+      ],
+      "default": "4"
+    },
+    {
+      "type": "select",
+      "id": "collection_columns_tablet",
+      "label": "Columns per Row (Tablet)",
+      "options": [
+        { "label": "1", "value": "1" },
+        { "label": "2", "value": "2" },
+        { "label": "3", "value": "3" }
+      ],
+      "default": "2"
+    },
+    {
+      "type": "select",
+      "id": "collection_columns_mobile",
+      "label": "Columns per Row (Mobile)",
+      "options": [
+        { "label": "1", "value": "1" },
+        { "label": "2", "value": "2" }
+      ],
+      "default": "1"
+    },
+    {
+      "type": "select",
+      "id": "collection_rows",
+      "label": "Rows per Section",
+      "options": [
+        { "label": "1", "value": "1" },
+        { "label": "2", "value": "2" },
+        { "label": "3", "value": "3" }
+      ],
+      "default": "2"
+    },
+    {
       "type": "text",
       "id": "category_special_product_limit_handle",
       "label": "Product Limit",
-      "default": "12"
+      "default": "8"
     },
     {
       "type": "select",
@@ -396,8 +435,31 @@
   }
   {% endif %}
 
-  /* slider button css */
-  .collection-category-{{ section.id }} .collection-wrap .swiper-buttons{
-    display: none;
+  .collection-category-{{ section.id }} .collection-wrap .collection-grid {
+    display: grid;
+    width: 100%;
+    grid-template-columns: repeat({{ section.settings.collection_columns | default: 4 }}, minmax(0, 1fr));
+    gap: 30px;
+  }
+  .collection-category-{{ section.id }} .collection-wrap .collection-grid-item {
+    height: 100%;
+  }
+  @media (max-width: 1199px) {
+    .collection-category-{{ section.id }} .collection-wrap .collection-grid {
+      grid-template-columns: repeat({{ section.settings.collection_columns_tablet | default: 2 }}, minmax(0, 1fr));
+      gap: 24px;
+    }
+  }
+  @media (max-width: 991px) {
+    .collection-category-{{ section.id }} .collection-wrap .collection-grid {
+      grid-template-columns: repeat({{ section.settings.collection_columns_tablet | default: 2 }}, minmax(0, 1fr));
+      gap: 20px;
+    }
+  }
+  @media (max-width: 575px) {
+    .collection-category-{{ section.id }} .collection-wrap .collection-grid {
+      grid-template-columns: repeat({{ section.settings.collection_columns_mobile | default: 1 }}, minmax(0, 1fr));
+      gap: 18px;
+    }
   }
 </style>
