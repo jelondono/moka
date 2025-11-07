@@ -571,24 +571,16 @@
         border-color: currentColor;
     }
     .catalog-panel__columns {
-        display: grid;
-        grid-auto-flow: column;
-        grid-auto-columns: minmax(200px, 1fr);
-        gap: 0;
-        align-items: stretch;
+        display: flex;
+        gap: 32px;
+        align-items: flex-start;
+        flex-wrap: nowrap;
     }
     .catalog-panel__column {
         display: flex;
         flex-direction: column;
         gap: 12px;
-        min-width: 0;
-        padding: 0 20px;
-    }
-    .catalog-panel__column:first-child {
-        padding-left: 0;
-    }
-    .catalog-panel__column:last-child {
-        padding-right: 0;
+        min-width: 180px;
     }
     .catalog-panel__column-header {
         display: flex;
