@@ -39,8 +39,12 @@
           {% assign category_handle = category.title | handleize %}
           <div class="catalog-panel{% if forloop.first %} active{% endif %}" data-catalog-panel="{{ target_id }}">
             <div class="catalog-panel__header">
-              <h4 class="catalog-panel__title">{{ category.title }}</h4>
-              <a class="catalog-panel__see-all" href="{{ category.url }}">Ver todo {{ category.title | downcase }}</a>
+              <div class="catalog-panel__title">
+                <div class="catalog-panel__title-text">{{ category.title }}</div>
+                {%- if category.url != blank -%}
+                <a class="catalog-panel__see-all" href="{{ category.url }}">Ver todo {{ category.title | downcase }}</a>
+                {%- endif -%}
+              </div>
             </div>
             <div class="catalog-panel__body">
               {% if category.links and category.links.size > 0 %}
@@ -49,9 +53,14 @@
                   {% assign column_handle = column.title | handleize %}
                   {% assign brand_menu = linklists[column_handle] %}
                   <div class="catalog-panel__column{% if brand_menu and brand_menu.links.size > 0 %} catalog-panel__column--has-sub{% endif %}">
-                    <h5 class="catalog-panel__column-title">{{ column.title }}</h5>
+                    <div class="catalog-panel__column-header">
+                      <span class="catalog-panel__column-title">{{ column.title }}</span>
+                      {% if column.url != blank %}
+                      <a class="catalog-panel__column-all" href="{{ column.url }}">Ver todo</a>
+                      {% endif %}
+                    </div>
                     {% if brand_menu and brand_menu.links.size > 0 %}
-                    <ul class="catalog-panel__list">
+                    <ul class="catalog-panel__list catalog-panel__list--brands">
                       {% for brand in brand_menu.links %}
                       <li><a href="{{ brand.url }}">{{ brand.title }}</a></li>
                       {% endfor %}
