@@ -44,6 +44,17 @@
                                     {% for link in linklists[header_main_menu].links %}
                                     {% if linklists[header_main_menu].links != '' %}
                                     {% render 'main-menu', link: link %}
+                                    {% assign normalized_title = link.title | strip | downcase %}
+                                    {% if normalized_title == 'catalogo' or normalized_title == 'catálogo' %}
+                                    <li class="menu-link menu-link-brand">
+                                        <a href="/pages/marcas" class="link-title">
+                                            <span class="sp-link-title">Marcas</span>
+                                        </a>
+                                        <a href="/pages/marcas" class="link-title link-title-lg">
+                                            <span class="sp-link-title">Marcas</span>
+                                        </a>
+                                    </li>
+                                    {% endif %}
                                     {% endif %}
                                     {% endfor %}
                                 </ul>
@@ -108,6 +119,13 @@
                         for link in linklists[header_main_menu].links
                         if linklists[header_main_menu].links != ''
                         render 'main-menu', link: link
+                        assign normalized_title = link.title | strip | downcase
+                        if normalized_title == 'catalogo' or normalized_title == 'catálogo'
+                        echo '<li class="menu-link menu-link-brand">'
+                        echo '<a href="/pages/marcas" class="link-title"><span class="sp-link-title">Marcas</span></a>'
+                        echo '<a href="/pages/marcas" class="link-title link-title-lg"><span class="sp-link-title">Marcas</span></a>'
+                        echo '</li>'
+                        endif
                         endif
                         endfor
                         -%}

@@ -198,6 +198,70 @@
   </div>
   {% endif %}
 
+  {% if section.settings.brand_directory_enable %}
+  <div class="blog-sidebar blog-brands">
+    <h6 class="blog-sidebar-title">{{ settings.brand_directory_title }}</h6>
+    {% assign vendor_list = shop.vendors | sort %}
+    {% if vendor_list.size > 0 %}
+      {% assign letter_tracker = '|' %}
+      {% for vendor in vendor_list %}
+        {% assign first_char = vendor | slice: 0 | upcase %}
+        {% unless first_char >= 'A' and first_char <= 'Z' %}
+          {% assign first_char = '#' %}
+        {% endunless %}
+        {% assign letter_token = '|' | append: first_char | append: '|' %}
+        {% unless letter_tracker contains letter_token %}
+          {% assign letter_tracker = letter_tracker | append: first_char | append: '|' %}
+        {% endunless %}
+      {% endfor %}
+      {% assign letter_array = letter_tracker | split: '|' %}
+      <div class="brand-directory-index">
+        {% for letter in letter_array %}
+          {% if letter != '' %}
+            {% if letter == '#' %}
+              {% assign letter_text = settings.brand_directory_other_label | default: 'Otros' %}
+            {% else %}
+              {% assign letter_text = letter %}
+            {% endif %}
+            <a class="brand-index-link" href="#brand-letter-{{ letter_text | handle }}">{{ letter_text }}</a>
+          {% endif %}
+        {% endfor %}
+      </div>
+      <div class="brand-directory-list">
+        {% assign current_letter = '' %}
+        {% for vendor in vendor_list %}
+          {% assign first_char = vendor | slice: 0 | upcase %}
+          {% unless first_char >= 'A' and first_char <= 'Z' %}
+            {% assign first_char = '#' %}
+          {% endunless %}
+          {% if first_char != current_letter %}
+            {% unless current_letter == '' %}
+                </ul>
+              </div>
+            {% endunless %}
+            {% if first_char == '#' %}
+              {% assign group_title = settings.brand_directory_other_label | default: 'Otros' %}
+            {% else %}
+              {% assign group_title = first_char %}
+            {% endif %}
+            <div class="brand-group" id="brand-letter-{{ group_title | handle }}">
+              <h6 class="brand-group-title">{{ group_title }}</h6>
+              <ul class="brand-group-list">
+            {% assign current_letter = first_char %}
+          {% endif %}
+          <li><a href="/collections/vendors?q={{ vendor | url_encode }}">{{ vendor }}</a></li>
+          {% if forloop.last %}
+              </ul>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+    {% else %}
+      <p class="brand-directory-empty">{{ settings.brand_directory_empty_label }}</p>
+    {% endif %}
+  </div>
+  {% endif %}
+
   {% if section.settings.tags_enable and blog.all_tags.size > 0 %}
   <div class="blog-sidebar blog-tags">
     <h6 class="blog-sidebar-title">{{ settings.blog_tags_title }}</h6>
@@ -346,6 +410,81 @@
   .blog-sidebar-wrap .blog-sidebar .sidbar-inner .recent-blog-content span{
     margin-top: 11px;
     line-height: 1;
+  }
+  {% endif %}
+
+  {% if section.settings.brand_directory_enable %}
+  .blog-sidebar-wrap .blog-sidebar.blog-brands {
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: var(--sti-border);
+  }
+  .blog-sidebar-wrap .blog-sidebar.blog-brands:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+  }
+  .blog-sidebar-wrap .brand-directory-index {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 15px;
+  }
+  .blog-sidebar-wrap .brand-directory-index .brand-index-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 32px;
+    padding: 4px 10px;
+    border: 1px solid var(--font-color-primary);
+    border-radius: var(--sti-border-radius);
+    color: var(--font-color-primary);
+    font-size: 13px;
+    line-height: 1.2;
+    transition: all 0.2s ease;
+  }
+  .blog-sidebar-wrap .brand-directory-index .brand-index-link:hover {
+    background-color: var(--font-color-primary);
+    color: #fff;
+  }
+  .blog-sidebar-wrap .brand-directory-list {
+    margin-top: 18px;
+  }
+  .blog-sidebar-wrap .brand-directory-list .brand-group {
+    margin-top: 18px;
+  }
+  .blog-sidebar-wrap .brand-directory-list .brand-group:first-child {
+    margin-top: 0;
+  }
+  .blog-sidebar-wrap .brand-directory-list .brand-group-title {
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .blog-sidebar-wrap .brand-directory-list .brand-group-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 14px;
+    margin: 0;
+    {% if settings.enable_rtl %}
+    padding-right: 15px;
+    {% else %}
+    padding-left: 15px;
+    {% endif %}
+  }
+  .blog-sidebar-wrap .brand-directory-list .brand-group-list li {
+    list-style: none;
+  }
+  .blog-sidebar-wrap .brand-directory-list .brand-group-list a {
+    color: var(--font-color-secondary);
+  }
+  .blog-sidebar-wrap .brand-directory-list .brand-group-list a:hover {
+    color: var(--font-color-primary);
+  }
+  .blog-sidebar-wrap .brand-directory-empty {
+    margin-top: 15px;
+    color: var(--font-color-secondary);
   }
   {% endif %}
 
