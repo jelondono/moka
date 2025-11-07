@@ -10,8 +10,17 @@
 {
   "sections": {
     "main": {
-      "type": "default-page",
-      "settings": {}
+      "type": "page-marcas",
+      "settings": {
+        "heading": "Marcas",
+        "description": "Descubre todas las marcas disponibles en nuestra tienda.",
+        "featured_heading": "Marcas destacadas",
+        "index_label": "Buscar por letra",
+        "other_label": "Otros",
+        "empty_label": "No hay marcas disponibles por el momento."
+      },
+      "blocks": {},
+      "block_order": []
     }
   },
   "order": [
