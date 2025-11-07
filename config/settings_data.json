@@ -1335,9 +1335,9 @@
           "section_title": "Productos Populares",
           "category_special_product_view": "grid",
           "category_special_product_limit_handle": "6",
-          "category_special_product_col": "2",
+          "category_special_product_col": "3",
           "category_special_product_limit": "4",
-          "special_label_product": "maquillaje-facial",
+          "special_label_product": "frontpage",
           "category_special_button_text": "",
           "category_special_button_style": "btn-style2",
           "category_special_button_enable": false
@@ -1449,11 +1449,23 @@
               "brand_image": "shopify://shop_images/atenea-176688.png"
             }
           },
+          "single_brand_MLDhVr": {
+            "type": "single_brand",
+            "settings": {
+              "brand_url": ""
+            }
+          },
           "449e6db7-ddcd-42d6-be5d-6f2d6eb6192e": {
             "type": "single_brand",
             "settings": {
               "brand_url": "",
               "brand_image": "shopify://shop_images/LOGO-GIRLY-NUEVO.png"
+            }
+          },
+          "single_brand_bzc4Vy": {
+            "type": "single_brand",
+            "settings": {
+              "brand_url": ""
             }
           },
           "7d27bf61-d67b-4910-9128-1a63e4084b0e": {
@@ -1462,13 +1474,23 @@
               "brand_url": "",
               "brand_image": "shopify://shop_images/LOGO_2x_315x_3acfb699-208e-4906-9e7d-b1ee3703a891.avif"
             }
+          },
+          "single_brand_X4JPTC": {
+            "type": "single_brand",
+            "settings": {
+              "brand_url": "",
+              "brand_image": "shopify://shop_images/7e29eb0146486a9e025c6ac1df06f66b_tplv-tiktokx-cropcenter_1080_1080.jpg"
+            }
           }
         },
         "block_order": [
           "ddfd1d3b-6576-44ba-86be-47f70ce17b27",
           "f2343815-d6d1-4a3e-b932-7ce799803432",
+          "single_brand_MLDhVr",
           "449e6db7-ddcd-42d6-be5d-6f2d6eb6192e",
-          "7d27bf61-d67b-4910-9128-1a63e4084b0e"
+          "single_brand_bzc4Vy",
+          "7d27bf61-d67b-4910-9128-1a63e4084b0e",
+          "single_brand_X4JPTC"
         ],
         "settings": {
           "brand_padding_top": 100,
