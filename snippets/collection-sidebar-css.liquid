@@ -258,8 +258,8 @@
   overflow: hidden;
 }
 .shop-sidebar .filter-element ul.scrollbar li .cust-checkbox-label span.count-check {
-  font-size: 12px;
-  color: rgba(0,0,0,0.4);
+  font-size: 13px;
+  color: rgba(0, 0, 0, 0.4);
   margin-left: 8px;
 }
 .shop-sidebar .filter-element ul.scrollbar li .cust-checkbox-label span.count-check:empty {
@@ -270,11 +270,8 @@
   position: absolute;
   opacity: 0;
   cursor: pointer;
-  height: 100%;
-  width: 100%;
-  top: 0;
-  left: 0;
-  z-index: 1;
+  height: 0;
+  width: 0;
 }
 .shop-sidebar .filter-element ul.scrollbar li .cust-checkbox-label .cust-check {
   position: absolute;
@@ -283,30 +280,27 @@
   {% else %}
   left: 0;
   {% endif %}
-  width: 18px;
-  height: 18px;
+  width: 21px;
+  height: 21px;
   background-color: #fff;
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1.5px solid rgba(0,0,0,0.15);
-  border-radius: 4px;
+  border: var(--sti-border);
+  border-radius: 0px;
   overflow: hidden;
-  transition: all 0.25s ease;
 }
 .shop-sidebar .filter-element ul.scrollbar li .cust-checkbox-label .cust-check::after {
   display: none;
   content: "\e92b";
   font-family: feather!important;
-  color: #fff;
-  font-size: 10px;
+  color: var(--font-color-secondary);
+  font-size: 12px;
 }
 .shop-sidebar .filter-element ul.scrollbar li.active .cust-checkbox-label .cust-check,
 .shop-sidebar .filter-element ul.scrollbar li:hover .cust-checkbox-label .cust-check,
 .shop-sidebar .filter-element ul.scrollbar li .cust-checkbox-label input.cust-checkbox:checked ~ span.cust-check {
-  background: var(--color_primary);
-  border-color: var(--color_primary);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+  box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.15);
 }
 .shop-sidebar .filter-element ul.scrollbar li.active .cust-checkbox-label span.cust-check::after,
 .shop-sidebar .filter-element ul.scrollbar li:hover .cust-checkbox-label span.cust-check::after,

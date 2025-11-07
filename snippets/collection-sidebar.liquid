@@ -21,11 +21,6 @@
         {% for c in collections %}
         {%- if c.products_count >= 1 -%}
         <li {% if collection and collection.handle == c.handle %}class="active"{% endif %}>
-          {%- if collection and collection.handle == c.handle -%}
-          <input type="checkbox" checked="checked" name="{{ c.title }}" class="cust-checkbox">
-          {%- else -%}
-          <input type="checkbox" class="cust-checkbox" name="{{ c.title }}">
-          {%- endif -%}
           <a href="{{ c.url }}" class="cust-checkbox-label" title="{{ c.title }}">
             <span class="filter-name">{{ c.title }}</span>
             <span class="count-check">({{ c.products_count }})</span>
@@ -260,54 +255,32 @@
 {% render 'collection-sidebar-css' %}
 <script>
   document.addEventListener('DOMContentLoaded', function() {
-    var wrapper = document.getElementById('FacetFiltersForm');
-    if (!wrapper) return;
+    var filterCheckboxes = document.querySelectorAll('[data-filter-checkbox]');
+    if (!filterCheckboxes.length) return;
 
-    wrapper.addEventListener('change', function(event) {
-      var target = event.target;
-      if (!target.matches('[data-filter-checkbox]')) {
-        return;
-      }
+    filterCheckboxes.forEach(function(checkbox) {
+      checkbox.addEventListener('change', applyFilters);
+    });
 
+    function applyFilters() {
       var url = new URL(window.location.href);
       var params = url.searchParams;
 
-      var filterType = target.getAttribute('data-filter-target');
-      var filterValue = target.getAttribute('data-filter-value');
+      params.delete('filter.p.vendor');
+      params.delete('filter.p.product_type');
 
-      if (!filterType || !filterValue) {
-        return;
-      }
+      document.querySelectorAll('[data-filter-target="vendor"]:checked').forEach(function(input) {
+        params.append('filter.p.vendor', input.value);
+      });
 
-      switch (filterType) {
-        case 'vendor':
-          handleListParam(params, 'filter.p.vendor', filterValue, target.checked);
-          break;
-        case 'type':
-          handleListParam(params, 'filter.p.product_type', filterValue, target.checked);
-          break;
-      }
+      document.querySelectorAll('[data-filter-target="type"]:checked').forEach(function(input) {
+        params.append('filter.p.product_type', input.value);
+      });
 
       params.delete('page');
 
-      window.location.search = params.toString();
-    });
-
-    function handleListParam(params, key, value, shouldAdd) {
-      var currentValues = params.getAll(key);
-      if (shouldAdd) {
-        if (!currentValues.includes(value)) {
-          params.append(key, value);
-        }
-      } else {
-        params.delete(key);
-        currentValues = currentValues.filter(function(item) {
-          return item !== value;
-        });
-        currentValues.forEach(function(item) {
-          params.append(key, item);
-        });
-      }
+      url.search = params.toString();
+      window.location.href = url.toString();
     }
   });
 </script>
