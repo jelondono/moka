@@ -1,18 +1,20 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "main": {
-      "type": "page-marcas",
-      "settings": {
-        "heading": "Marcas",
-        "featured_heading": "Marcas destacadas",
-        "index_label": "Buscar por letra",
-        "other_label": "Otros",
-        "empty_label": "No hay marcas disponibles por el momento."
-      }
+      "type": "default-page",
+      "settings": {}
     }
   },
   "order": [
     "main"
   ]
 }
-
