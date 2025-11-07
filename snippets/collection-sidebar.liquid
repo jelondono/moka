@@ -34,84 +34,17 @@
   </div>
   {%- endif -%}
 
-  {%- assign selected_vendor_values = '' -%}
-  {%- assign selected_type_values = '' -%}
-  {%- for filter in results.filters -%}
-    {%- if filter.param_name == 'filter.p.vendor' -%}
-      {%- assign selected_vendor_values = filter.active_values | map: 'value' -%}
-    {%- elsif filter.param_name == 'filter.p.product_type' -%}
-      {%- assign selected_type_values = filter.active_values | map: 'value' -%}
-    {%- endif -%}
-  {%- endfor -%}
-
-  {%- if section.settings.collection_types_enable and results.all_types.size > 0 -%}
-  <div class="shop-sidebar sidebar-wedget">
-    {%- if section.settings.collection_types_title != '' -%}
-    <h6 class="title">{{ section.settings.collection_types_title }}</h6>
-    <a class="title" data-bs-toggle="collapse" href="#collapse-types">{{ section.settings.collection_types_title }}</a>
-    {%- endif -%}
-    <div class="collapse filter-element show" id="collapse-types">
-      <ul class="scrollbar type-scroll">
-        {% for type in results.all_types %}
-        {% if type != blank %}
-        {% assign type_encoded = type | url_encode %}
-        {% assign type_checked = false %}
-        {% if selected_type_values and selected_type_values contains type_encoded %}
-          {% assign type_checked = true %}
-        {% endif %}
-        <li class="facet-type-item{% if type_checked %} active{% endif %}">
-          <label class="cust-checkbox-label" title="{{ type }}">
-            <input type="checkbox" class="cust-checkbox" {% if type_checked %}checked{% endif %}
-              data-filter-checkbox
-              data-filter-target="type"
-              data-filter-value="{{ type_encoded }}"
-              value="{{ type_encoded }}">
-            <span class="filter-name">{{ type }}</span>
-            <span class="count-check"></span>
-            <span class="cust-check"></span>
-          </label>
-        </li>
-        {% endif %}
-        {% endfor %}
-      </ul>
-    </div>
-  </div>
-  {%- endif -%}
-
-  {%- if section.settings.collection_vendors_enable and results.all_vendors.size > 0 -%}
-  <div class="shop-sidebar sidebar-wedget">
-    {%- if section.settings.collection_vendors_title != '' -%}
-    <h6 class="title">{{ section.settings.collection_vendors_title }}</h6>
-    <a class="title" data-bs-toggle="collapse" href="#collapse-vendors">{{ section.settings.collection_vendors_title }}</a>
-    {%- endif -%}
-    <div class="collapse filter-element show" id="collapse-vendors">
-      <ul class="scrollbar brands-scroll">
-        {% for vendor in results.all_vendors %}
-        {% if vendor != blank %}
-        {% assign vendor_encoded = vendor | url_encode %}
-        {% assign vendor_checked = false %}
-        {% if selected_vendor_values and selected_vendor_values contains vendor_encoded %}
-          {% assign vendor_checked = true %}
-        {% endif %}
-        <li class="facet-vendor-item{% if vendor_checked %} active{% endif %}">
-          <label class="cust-checkbox-label" title="{{ vendor }}">
-            <input type="checkbox" class="cust-checkbox"
-              data-filter-checkbox
-              data-filter-target="vendor"
-              data-filter-value="{{ vendor_encoded }}"
-              value="{{ vendor_encoded }}"
-              {% if vendor_checked %}checked{% endif %}>
-            <span class="filter-name">{{ vendor }}</span>
-            <span class="count-check"></span>
-            <span class="cust-check"></span>
-          </label>
-        </li>
-        {% endif %}
-        {% endfor %}
-      </ul>
-    </div>
-  </div>
-  {%- endif -%}
+  {%- liquid
+    assign custom_type_filter = blank
+    assign custom_vendor_filter = blank
+    for filter in results.filters
+      if filter.param_name == 'filter.p.product_type'
+        assign custom_type_filter = filter
+      elsif filter.param_name == 'filter.p.vendor'
+        assign custom_vendor_filter = filter
+      endif
+    endfor
+  -%}
 
   <facet-filters-form class="facets">
     <form id="FacetFiltersForm" class="facets__form">
@@ -119,6 +52,61 @@
       <input type="hidden" name="q" value="{{ results.terms | escape }}">
       <input name="options[prefix]" type="hidden" value="last">
       {%- endif -%}
+
+      {% if section.settings.collection_types_enable and custom_type_filter and custom_type_filter.values.size > 0 %}
+      <div class="shop-sidebar sidebar-wedget facets__disclosure js-filter custom-filter" data-index="custom-product-type">
+        {% if section.settings.collection_types_title != '' %}
+        <h6 class="title">{{ section.settings.collection_types_title }}</h6>
+        <a class="title" data-bs-toggle="collapse" href="#collapse-types">{{ section.settings.collection_types_title }}</a>
+        {% endif %}
+        <div class="collapse filter-element show" id="collapse-types">
+          <ul class="scrollbar type-scroll">
+            {% for value in custom_type_filter.values %}
+            <li class="facet-type-item{% if value.active %} active{% endif %}{% if value.count == 0 and value.active == false %} disabled{% endif %}">
+              <label class="cust-checkbox-label" title="{{ value.label }}">
+                <input type="checkbox" class="cust-checkbox"
+                  name="{{ value.param_name }}"
+                  value="{{ value.value }}"
+                  {% if value.active %}checked{% endif %}
+                  {% if value.count == 0 and value.active == false %}disabled{% endif %}>
+                <span class="filter-name">{{ value.label }}</span>
+                <span class="count-check">({{ value.count }})</span>
+                <span class="cust-check"></span>
+              </label>
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+      {% endif %}
+
+      {% if section.settings.collection_vendors_enable and custom_vendor_filter and custom_vendor_filter.values.size > 0 %}
+      <div class="shop-sidebar sidebar-wedget facets__disclosure js-filter custom-filter" data-index="custom-vendor">
+        {% if section.settings.collection_vendors_title != '' %}
+        <h6 class="title">{{ section.settings.collection_vendors_title }}</h6>
+        <a class="title" data-bs-toggle="collapse" href="#collapse-vendors">{{ section.settings.collection_vendors_title }}</a>
+        {% endif %}
+        <div class="collapse filter-element show" id="collapse-vendors">
+          <ul class="scrollbar brands-scroll">
+            {% for value in custom_vendor_filter.values %}
+            <li class="facet-vendor-item{% if value.active %} active{% endif %}{% if value.count == 0 and value.active == false %} disabled{% endif %}">
+              <label class="cust-checkbox-label" title="{{ value.label }}">
+                <input type="checkbox" class="cust-checkbox"
+                  name="{{ value.param_name }}"
+                  value="{{ value.value }}"
+                  {% if value.active %}checked{% endif %}
+                  {% if value.count == 0 and value.active == false %}disabled{% endif %}>
+                <span class="filter-name">{{ value.label }}</span>
+                <span class="count-check">({{ value.count }})</span>
+                <span class="cust-check"></span>
+              </label>
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+      {% endif %}
+
       <div id="FacetsWrapperDesktop" class="facets__wrapper">
         {%- unless results.filters == empty -%}
         <div class="shop-sidebar sidebar-filter">
@@ -183,6 +171,7 @@
         {%- assign total_active_values = total_active_values | plus: filter.active_values.size -%}
         {% case filter.type %}
         {% when 'list' %}
+        {% unless filter.param_name == 'filter.p.vendor' or filter.param_name == 'filter.p.product_type' %}
         <div class="shop-sidebar sidebar-wedget disclosure-has-popup facets__disclosure js-filter {{ filter.label | escape | downcase }}" data-index="{{ forloop.index }}">
           <h6 class="title">{{ filter.label | escape }}</h6>
           <a class="title" data-bs-toggle="collapse" href="#collapse-{{ i }}">{{ filter.label | escape }}</a>
@@ -207,6 +196,7 @@
             </ul>
           </div>
         </div>
+        {% endunless %}
         {% when 'price_range' %}
         <div class="shop-sidebar sidebar-wedget disclosure-has-popup facets__disclosure js-filter" data-index="{{ forloop.index }}">
           <h6 class="title">{{ filter.label | escape }}</h6>
@@ -253,34 +243,3 @@
   </div>
 </div>
 {% render 'collection-sidebar-css' %}
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
-    var filterCheckboxes = document.querySelectorAll('[data-filter-checkbox]');
-    if (!filterCheckboxes.length) return;
-
-    filterCheckboxes.forEach(function(checkbox) {
-      checkbox.addEventListener('change', applyFilters);
-    });
-
-    function applyFilters() {
-      var url = new URL(window.location.href);
-      var params = url.searchParams;
-
-      params.delete('filter.p.vendor');
-      params.delete('filter.p.product_type');
-
-      document.querySelectorAll('[data-filter-target="vendor"]:checked').forEach(function(input) {
-        params.append('filter.p.vendor', input.value);
-      });
-
-      document.querySelectorAll('[data-filter-target="type"]:checked').forEach(function(input) {
-        params.append('filter.p.product_type', input.value);
-      });
-
-      params.delete('page');
-
-      url.search = params.toString();
-      window.location.href = url.toString();
-    }
-  });
-</script>
