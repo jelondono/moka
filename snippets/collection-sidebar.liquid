@@ -61,7 +61,7 @@
         {% if type != blank %}
         {% assign type_encoded = type | url_encode %}
         {% assign type_checked = false %}
-        {% if selected_type_values and selected_type_values contains type %}
+        {% if selected_type_values and selected_type_values contains type_encoded %}
           {% assign type_checked = true %}
         {% endif %}
         <li class="facet-type-item{% if type_checked %} active{% endif %}">
@@ -69,8 +69,8 @@
             <input type="checkbox" class="cust-checkbox" {% if type_checked %}checked{% endif %}
               data-filter-checkbox
               data-filter-target="type"
-              data-filter-value="{{ type }}"
-              value="{{ type }}">
+              data-filter-value="{{ type_encoded }}"
+              value="{{ type_encoded }}">
             <span class="filter-name">{{ type }}</span>
             <span class="count-check"></span>
             <span class="cust-check"></span>
@@ -95,7 +95,7 @@
         {% if vendor != blank %}
         {% assign vendor_encoded = vendor | url_encode %}
         {% assign vendor_checked = false %}
-        {% if selected_vendor_values and selected_vendor_values contains vendor %}
+        {% if selected_vendor_values and selected_vendor_values contains vendor_encoded %}
           {% assign vendor_checked = true %}
         {% endif %}
         <li class="facet-vendor-item{% if vendor_checked %} active{% endif %}">
@@ -103,8 +103,8 @@
             <input type="checkbox" class="cust-checkbox"
               data-filter-checkbox
               data-filter-target="vendor"
-              data-filter-value="{{ vendor }}"
-              value="{{ vendor }}"
+              data-filter-value="{{ vendor_encoded }}"
+              value="{{ vendor_encoded }}"
               {% if vendor_checked %}checked{% endif %}>
             <span class="filter-name">{{ vendor }}</span>
             <span class="count-check"></span>
@@ -279,15 +279,12 @@
         return;
       }
 
-      var encodedValue = encodeURIComponent(filterValue);
-      encodedValue = encodedValue.replace(/%20/g, '+');
-
       switch (filterType) {
         case 'vendor':
-          handleListParam(params, 'filter.p.vendor', encodedValue, target.checked);
+          handleListParam(params, 'filter.p.vendor', filterValue, target.checked);
           break;
         case 'type':
-          handleListParam(params, 'filter.p.product_type', encodedValue, target.checked);
+          handleListParam(params, 'filter.p.product_type', filterValue, target.checked);
           break;
       }
 
