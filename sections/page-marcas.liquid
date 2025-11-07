@@ -58,7 +58,7 @@
 
     {% assign vendors = shop.vendors | sort %}
     {% if vendors.size > 0 %}
-    {% assign letter_tracker = '' %}
+    {% assign letter_tracker = '|' %}
     {% for vendor in vendors %}
       {% assign letter = vendor | slice: 0 | upcase %}
       {% unless letter >= 'A' and letter <= 'Z' %}
@@ -66,11 +66,11 @@
       {% endunless %}
       {% assign token = '|' | append: letter | append: '|' %}
       {% unless letter_tracker contains token %}
-        {% assign letter_tracker = letter_tracker | append: letter | append: '|' %}
+        {% assign letter_tracker = letter_tracker | append: token %}
       {% endunless %}
     {% endfor %}
 
-    {% assign letters_array = letter_tracker | split: '|' %}
+    {% assign letters_array = letter_tracker | split: '|' | uniq %}
 
     <div class="brands-directory-body">
       <div class="brand-index">
