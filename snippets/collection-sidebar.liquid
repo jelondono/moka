@@ -38,6 +38,60 @@
     </div>
   </div>
   {%- endif -%}
+
+  {%- if section.settings.collection_types_enable and results.all_types.size > 0 -%}
+  <div class="shop-sidebar sidebar-wedget">
+    {%- if section.settings.collection_types_title != '' -%}
+    <h6 class="title">{{ section.settings.collection_types_title }}</h6>
+    <a class="title" data-bs-toggle="collapse" href="#collapse-types">{{ section.settings.collection_types_title }}</a>
+    {%- endif -%}
+    <div class="collapse filter-element show" id="collapse-types">
+      <ul class="scrollbar">
+        {% for type in results.all_types %}
+        {% if type != blank %}
+        {% assign type_handle = type | handle %}
+        {% assign type_separator = '?' %}
+        {% if results.url contains '?' %}
+          {% assign type_separator = '&' %}
+        {% endif %}
+        <li class="facet-type-item{% if results.current_type == type %} active{% endif %}">
+          <a href="{{ results.url }}{{ type_separator }}filter.p.product_type={{ type | url_encode }}" class="cust-checkbox-label" title="{{ type }}">
+            <span class="filter-name">{{ type }}</span>
+          </a>
+        </li>
+        {% endif %}
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+  {%- endif -%}
+
+  {%- if section.settings.collection_vendors_enable and results.all_vendors.size > 0 -%}
+  <div class="shop-sidebar sidebar-wedget">
+    {%- if section.settings.collection_vendors_title != '' -%}
+    <h6 class="title">{{ section.settings.collection_vendors_title }}</h6>
+    <a class="title" data-bs-toggle="collapse" href="#collapse-vendors">{{ section.settings.collection_vendors_title }}</a>
+    {%- endif -%}
+    <div class="collapse filter-element show" id="collapse-vendors">
+      <ul class="scrollbar">
+        {% for vendor in results.all_vendors %}
+        {% if vendor != blank %}
+        {% assign vendor_separator = '?' %}
+        {% if results.url contains '?' %}
+          {% assign vendor_separator = '&' %}
+        {% endif %}
+        <li class="facet-vendor-item{% if results.current_vendor == vendor %} active{% endif %}">
+          <a href="{{ results.url }}{{ vendor_separator }}filter.p.vendor={{ vendor | url_encode }}" class="cust-checkbox-label" title="{{ vendor }}">
+            <span class="filter-name">{{ vendor }}</span>
+          </a>
+        </li>
+        {% endif %}
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+  {%- endif -%}
+
   <facet-filters-form class="facets">
     <form id="FacetFiltersForm" class="facets__form">
       {%- if results.terms -%}
