@@ -1,7 +1,8 @@
 {% liquid
   assign category_links = child_links
   if category_links == blank
-    assign category_links = linklists[link.title | handleize].links
+    assign category_handle = link.title | handleize
+    assign category_links = linklists[category_handle].links
   endif
 %}
 <li class="menu-link menu-link--catalog parant">
