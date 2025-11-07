@@ -55,14 +55,15 @@
                 {% for column in category.links %}
                   {% assign column_handle = column.title | handleize %}
                   {% assign brand_menu_items = blank %}
-                  {% if linklists[category_handle | append: '-' | append: column_handle] %}
-                    {% assign brand_menu_items = linklists[category_handle | append: '-' | append: column_handle].links %}
+                  {% assign combined_handle = category_handle | append: '-' | append: column_handle %}
+                  {% if linklists[combined_handle] %}
+                    {% assign brand_menu_items = linklists[combined_handle].links %}
                   {% endif %}
                   {% if brand_menu_items == blank and linklists[column_handle] %}
                     {% assign brand_menu_items = linklists[column_handle].links %}
                   {% endif %}
-                  {% if brand_menu_items == blank and menus != blank and menus[category_handle | append: '-' | append: column_handle] %}
-                    {% assign brand_menu_items = menus[category_handle | append: '-' | append: column_handle].items %}
+                  {% if brand_menu_items == blank and menus != blank and menus[combined_handle] %}
+                    {% assign brand_menu_items = menus[combined_handle].items %}
                   {% endif %}
                   {% if brand_menu_items == blank and menus != blank and menus[column_handle] %}
                     {% assign brand_menu_items = menus[column_handle].items %}
