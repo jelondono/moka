@@ -55,7 +55,10 @@
         {% if results.url contains '?' %}
           {% assign type_separator = '&' %}
         {% endif %}
-        {% assign type_checked = results.current_type == type %}
+        {% assign type_checked = false %}
+        {% if results.current_type and results.current_type == type %}
+          {% assign type_checked = true %}
+        {% endif %}
         <li class="facet-type-item{% if type_checked %} active{% endif %}">
           <label class="cust-checkbox-label" title="{{ type }}">
             <input type="checkbox" class="cust-checkbox" {% if type_checked %}checked{% endif %}
@@ -87,7 +90,10 @@
         {% if results.url contains '?' %}
           {% assign vendor_separator = '&' %}
         {% endif %}
-        {% assign vendor_checked = results.current_vendor == vendor %}
+        {% assign vendor_checked = false %}
+        {% if results.current_vendor and results.current_vendor == vendor %}
+          {% assign vendor_checked = true %}
+        {% endif %}
         <li class="facet-vendor-item{% if vendor_checked %} active{% endif %}">
           <label class="cust-checkbox-label" title="{{ vendor }}">
             <input type="checkbox" class="cust-checkbox"
