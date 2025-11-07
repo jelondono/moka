@@ -272,27 +272,30 @@
   {% else %}
   left: 0;
   {% endif %}
-  width: 21px;
-  height: 21px;
+  width: 18px;
+  height: 18px;
   background-color: #fff;
   display: flex;
   align-items: center;
   justify-content: center;
-  border: var(--sti-border);
-  border-radius: 0px;
+  border: 1.5px solid rgba(0,0,0,0.15);
+  border-radius: 4px;
   overflow: hidden;
+  transition: all 0.25s ease;
 }
 .shop-sidebar .filter-element ul.scrollbar li .cust-checkbox-label .cust-check::after {
   display: none;
   content: "\e92b";
   font-family: feather!important;
-  color: var(--font-color-secondary);
-  font-size: 12px;
+  color: #fff;
+  font-size: 10px;
 }
 .shop-sidebar .filter-element ul.scrollbar li.active .cust-checkbox-label .cust-check,
 .shop-sidebar .filter-element ul.scrollbar li:hover .cust-checkbox-label .cust-check,
 .shop-sidebar .filter-element ul.scrollbar li .cust-checkbox-label input.cust-checkbox:checked ~ span.cust-check {
-  box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.15);
+  background: var(--color_primary);
+  border-color: var(--color_primary);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.12);
 }
 .shop-sidebar .filter-element ul.scrollbar li.active .cust-checkbox-label span.cust-check::after,
 .shop-sidebar .filter-element ul.scrollbar li:hover .cust-checkbox-label span.cust-check::after,
