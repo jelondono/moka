@@ -71,7 +71,14 @@
                   {% if brand_menu_items == blank and column.links and column.links.size > 0 %}
                     {% assign brand_menu_items = column.links %}
                   {% endif %}
-                  <div class="catalog-panel__column{% if brand_menu_items and brand_menu_items.size > 0 %} catalog-panel__column--has-sub{% endif %}">
+                  {% assign column_classes = 'catalog-panel__column' %}
+                  {% if brand_menu_items and brand_menu_items.size > 0 %}
+                    {% assign column_classes = column_classes | append: ' catalog-panel__column--has-sub' %}
+                  {% endif %}
+                  {% if column_handle contains 'marca' or column.title contains 'Marca' %}
+                    {% assign column_classes = column_classes | append: ' catalog-panel__column--brands' %}
+                  {% endif %}
+                  <div class="{{ column_classes }}">
                     <div class="catalog-panel__column-header">
                       <span class="catalog-panel__column-title">{{ column.title }}</span>
                       {% if column.url != blank %}
@@ -79,7 +86,11 @@
                       {% endif %}
                     </div>
                     {% if brand_menu_items and brand_menu_items.size > 0 %}
-                    <ul class="catalog-panel__list">
+                    {% assign list_classes = 'catalog-panel__list' %}
+                    {% if column_classes contains 'catalog-panel__column--brands' %}
+                      {% assign list_classes = list_classes | append: ' catalog-panel__list--brands' %}
+                    {% endif %}
+                    <ul class="{{ list_classes }}">
                       {% for item in brand_menu_items %}
                       {% liquid
                         assign item_title = item.title | default: item.name
@@ -135,7 +146,11 @@
             {% if column_items == blank and column.links %}
               {% assign column_items = column.links %}
             {% endif %}
-            <li class="catalog-mobile-column">
+            {% assign column_classes = 'catalog-mobile-column' %}
+            {% if column_handle contains 'marca' or column.title contains 'Marca' %}
+              {% assign column_classes = column_classes | append: ' catalog-mobile-column--brands' %}
+            {% endif %}
+            <li class="{{ column_classes }}">
               <a class="catalog-mobile-column-title" href="{{ column.url }}">{{ column.title }}</a>
               {% if column_items %}
               <ul class="catalog-mobile-column-list">
