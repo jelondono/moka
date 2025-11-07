@@ -629,33 +629,36 @@
         .catalog-mobile-submenu .container.ul {
             padding: 0 20px 15px;
         }
-        .catalog-mobile-submenu li.submenu-li > a.sublink-title {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
+        .catalog-mobile-category {
             padding: 12px 0;
-            font-weight: 600;
-            border-bottom: 1px solid rgba(0,0,0,0.08);
+            border-bottom: 1px solid rgba(0,0,0,0.05);
         }
-        .catalog-mobile-submenu .dropdown-supmenu {
-            padding: 10px 0 15px 15px;
+        .catalog-mobile-category-title {
+            display: block;
+            font-weight: 700;
+            font-size: 15px;
+            color: var(--color_secondary);
+            margin-bottom: 10px;
         }
-        .catalog-mobile-column {
-            margin-bottom: 18px;
+        .catalog-mobile-columns {
+            list-style: none;
+            margin: 0;
+            padding: 0 0 8px 15px;
+            display: grid;
+            gap: 12px;
         }
         .catalog-mobile-column-title {
             display: block;
-            font-weight: 700;
+            font-weight: 600;
             font-size: 14px;
             color: var(--color_secondary);
-            margin-bottom: 8px;
         }
         .catalog-mobile-column-list {
             list-style: none;
-            margin: 0;
-            padding: 0 0 0 10px;
+            margin: 6px 0 0 12px;
+            padding: 0;
             display: grid;
-            gap: 8px;
+            gap: 6px;
         }
         .catalog-mobile-column-list a {
             font-size: 13px;
@@ -687,9 +690,10 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!megaMenu) {
             return;
         }
+        var mobileMenu = item.querySelector('.catalog-mobile-submenu');
 
-        const buttons = megaMenu.querySelectorAll('.catalog-category-trigger');
-        const panels = megaMenu.querySelectorAll('.catalog-panel');
+        var buttons = megaMenu.querySelectorAll('.catalog-category-trigger');
+        var panels = megaMenu.querySelectorAll('.catalog-panel');
 
         function setActive(targetId) {
             if (!targetId) {
@@ -753,6 +757,42 @@ document.addEventListener('DOMContentLoaded', function() {
 
         if (buttons.length > 0) {
             setActive(buttons[0].dataset.catalogTarget);
+        }
+
+        if (mobileMenu) {
+            mobileMenu.querySelectorAll('.catalog-mobile-columns').forEach(function(list) {
+                list.style.maxHeight = null;
+            });
+            mobileMenu.querySelectorAll('.catalog-mobile-category-title').forEach(function(link) {
+                link.addEventListener('click', function(evt) {
+                    if (window.innerWidth > 991) {
+                        return;
+                    }
+                    var section = link.closest('.catalog-mobile-category');
+                    if (!section) {
+                        return;
+                    }
+                    var columns = section.querySelector('.catalog-mobile-columns');
+                    if (!columns) {
+                        return;
+                    }
+                    if (columns.style.maxHeight) {
+                        columns.style.maxHeight = null;
+                        section.classList.remove('open');
+                    } else {
+                        mobileMenu.querySelectorAll('.catalog-mobile-columns').forEach(function(other) {
+                            other.style.maxHeight = null;
+                            var parent = other.closest('.catalog-mobile-category');
+                            if (parent) {
+                                parent.classList.remove('open');
+                            }
+                        });
+                        columns.style.maxHeight = columns.scrollHeight + 'px';
+                        section.classList.add('open');
+                    }
+                    evt.preventDefault();
+                });
+            });
         }
     });
 });
