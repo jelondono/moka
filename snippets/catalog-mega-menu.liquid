@@ -108,10 +108,43 @@
   <ul class="dropdown-submenu collapse catalog-mobile-submenu" id="main-collapse-{{ link.title | handleize }}">
     <div class="container p-0 ul">
       {% for category in category_links %}
+      {% assign category_handle = category.title | handleize %}
+      {% assign category_target = 'mobile-collapse-' | append: category_handle %}
       <li class="submenu-li parant">
-        <a href="{{ category.url }}" class="sublink-title">
+        <a href="{{ category.url }}" class="sublink-title collapsed" data-bs-toggle="collapse" data-bs-target="#{{ category_target }}" aria-expanded="false">
           <span class="sp-link-title">{{ category.title }}</span>
+          <i class="ri-arrow-down-s-line"></i>
         </a>
+        <ul class="dropdown-supmenu collapse" id="{{ category_target }}">
+          {% assign category_columns = category.links %}
+          {% if category_columns %}
+            {% for column in category_columns %}
+              {% assign column_handle = column.title | handleize %}
+              {% assign column_combined_handle = category_handle | append: '-' | append: column_handle %}
+              {% assign column_items = linklists[column_combined_handle].links %}
+              {% if column_items == blank and menus != blank and menus[column_combined_handle] %}
+                {% assign column_items = menus[column_combined_handle].items %}
+              {% endif %}
+              {% if column_items == blank and linklists[column_handle] %}
+                {% assign column_items = linklists[column_handle].links %}
+              {% endif %}
+              {% if column_items == blank and column.links %}
+                {% assign column_items = column.links %}
+              {% endif %}
+              <li class="catalog-mobile-column">
+                <a class="catalog-mobile-column-title" href="{{ column.url }}">{{ column.title }}</a>
+                {% if column_items %}
+                <ul class="catalog-mobile-column-list">
+                  {% for item in column_items %}
+                  {% liquid assign item_title = item.title | default: item.name assign item_url = item.url | default: item.link %}
+                  <li><a href="{{ item_url }}">{{ item_title }}</a></li>
+                  {% endfor %}
+                </ul>
+                {% endif %}
+              </li>
+            {% endfor %}
+          {% endif %}
+        </ul>
       </li>
       {% endfor %}
     </div>
