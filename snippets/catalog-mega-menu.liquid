@@ -136,7 +136,8 @@
                 {% if column_items %}
                 <ul class="catalog-mobile-column-list">
                   {% for item in column_items %}
-                  {% liquid assign item_title = item.title | default: item.name assign item_url = item.url | default: item.link %}
+                  {% liquid assign item_title = item.title | default: item.name %}
+                  {% liquid assign item_url = item.url | default: item.link %}
                   <li><a href="{{ item_url }}">{{ item_title }}</a></li>
                   {% endfor %}
                 </ul>
