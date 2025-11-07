@@ -69,8 +69,8 @@
             <input type="checkbox" class="cust-checkbox" {% if type_checked %}checked{% endif %}
               data-filter-checkbox
               data-filter-target="type"
-              data-filter-value="{{ type_encoded }}"
-              value="{{ type_encoded }}">
+              data-filter-value="{{ type }}"
+              value="{{ type }}">
             <span class="filter-name">{{ type }}</span>
             <span class="count-check"></span>
             <span class="cust-check"></span>
@@ -103,8 +103,8 @@
             <input type="checkbox" class="cust-checkbox"
               data-filter-checkbox
               data-filter-target="vendor"
-              data-filter-value="{{ vendor_encoded }}"
-              value="{{ vendor_encoded }}"
+              data-filter-value="{{ vendor }}"
+              value="{{ vendor }}"
               {% if vendor_checked %}checked{% endif %}>
             <span class="filter-name">{{ vendor }}</span>
             <span class="count-check"></span>
