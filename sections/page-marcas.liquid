@@ -75,7 +75,8 @@
     <div class="brands-directory-body">
       <div class="brand-index">
         <span class="brand-index-label">{{ section.settings.index_label }}</span>
-        <div class="brand-index-links">
+        <div class="brand-index-links" id="brand-index-links">
+          <button type="button" class="brand-index-link brand-index-link--all" data-letter="all">{{ section.settings.index_all_label }}</button>
           {% for letter in letters_array %}
             {% if letter != '' %}
               {% if letter == '#' %}
@@ -83,13 +84,13 @@
               {% else %}
                 {% assign letter_text = letter %}
               {% endif %}
-              <a href="#brand-letter-{{ letter_text | handle }}" class="brand-index-link">{{ letter_text }}</a>
+              <button type="button" class="brand-index-link" data-letter="{{ letter_text | handle }}">{{ letter_text }}</button>
             {% endif %}
           {% endfor %}
         </div>
       </div>
 
-      <div class="brand-groups">
+      <div class="brand-groups" id="brand-groups">
         {% assign current_letter = '' %}
         {% for vendor in vendors %}
           {% assign letter = vendor | slice: 0 | upcase %}
@@ -106,7 +107,7 @@
             {% else %}
               {% assign group_title = letter %}
             {% endif %}
-            <div class="brand-group" id="brand-letter-{{ group_title | handle }}">
+            <div class="brand-group" data-letter="{{ group_title | handle }}">
               <h2 class="brand-group-title">{{ group_title }}</h2>
               <ul class="brand-list">
             {% assign current_letter = letter %}
@@ -154,6 +155,12 @@
       "id": "index_label",
       "label": "Etiqueta del índice",
       "default": "Buscar por letra"
+    },
+    {
+      "type": "text",
+      "id": "index_all_label",
+      "label": "Etiqueta de todas las marcas",
+      "default": "Todas"
     },
     {
       "type": "text",
@@ -340,8 +347,11 @@
     text-transform: uppercase;
     letter-spacing: 0.05em;
     transition: all 0.2s ease;
+    background: transparent;
+    cursor: pointer;
   }
-  .brand-index-link:hover {
+  .brand-index-link:hover,
+  .brand-index-link.active {
     background-color: var(--color_primary);
     border-color: var(--color_primary);
     color: #000;
@@ -351,6 +361,12 @@
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
     gap: 32px;
+  }
+  .brand-groups.filter-active .brand-group {
+    display: none;
+  }
+  .brand-groups.filter-active .brand-group.active {
+    display: block;
   }
   .brand-group-title {
     font-size: 18px;
@@ -414,4 +430,61 @@
     }
   }
 </style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const indexContainer = document.getElementById('brand-index-links');
+    const groupsContainer = document.getElementById('brand-groups');
+    if (!indexContainer || !groupsContainer) return;
+
+    const buttons = Array.from(indexContainer.querySelectorAll('[data-letter]'));
+    const groups = Array.from(groupsContainer.querySelectorAll('[data-letter]'));
+
+    function clearActive() {
+      buttons.forEach(btn => btn.classList.remove('active'));
+      groups.forEach(group => group.classList.remove('active'));
+    }
+
+    function showAll() {
+      groupsContainer.classList.remove('filter-active');
+      groups.forEach(group => group.classList.add('active'));
+      buttons.forEach(btn => btn.classList.remove('active'));
+      const allButton = indexContainer.querySelector('[data-letter="all"]');
+      if (allButton) {
+        allButton.classList.add('active');
+      }
+    }
+
+    showAll();
+
+    indexContainer.addEventListener('click', function(event) {
+      const target = event.target.closest('[data-letter]');
+      if (!target) return;
+
+      const letter = target.getAttribute('data-letter');
+
+      if (letter === 'all') {
+        showAll();
+        return;
+      }
+
+      const matchingGroups = groups.filter(group => group.getAttribute('data-letter') === letter);
+
+      if (matchingGroups.length === 0) {
+        showAll();
+        return;
+      }
+
+      if (target.classList.contains('active')) {
+        showAll();
+        return;
+      }
+
+      groupsContainer.classList.add('filter-active');
+      clearActive();
+      target.classList.add('active');
+      matchingGroups.forEach(group => group.classList.add('active'));
+    });
+  });
+</script>
 
