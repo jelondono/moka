@@ -1483,6 +1483,13 @@
               "brand_url": "",
               "brand_image": "shopify://shop_images/productos-cosmeticos-en-medellin.webp"
             }
+          },
+          "single_brand_LPCPPn": {
+            "type": "single_brand",
+            "settings": {
+              "brand_url": "",
+              "brand_image": "shopify://shop_images/Productos-Samy-Cosmetics-Matices-Cosmetics_jpg.webp"
+            }
           }
         },
         "block_order": [
@@ -1492,7 +1499,8 @@
           "7d27bf61-d67b-4910-9128-1a63e4084b0e",
           "single_brand_X4JPTC",
           "single_brand_bxXXHp",
-          "single_brand_jKWBeq"
+          "single_brand_jKWBeq",
+          "single_brand_LPCPPn"
         ],
         "settings": {
           "brand_padding_top": 100,
