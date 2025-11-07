@@ -39,6 +39,16 @@
   </div>
   {%- endif -%}
 
+  {%- assign selected_vendor_values = '' -%}
+  {%- assign selected_type_values = '' -%}
+  {%- for filter in results.filters -%}
+    {%- if filter.param_name == 'filter.p.vendor' -%}
+      {%- assign selected_vendor_values = filter.active_values | map: 'value' -%}
+    {%- elsif filter.param_name == 'filter.p.product_type' -%}
+      {%- assign selected_type_values = filter.active_values | map: 'value' -%}
+    {%- endif -%}
+  {%- endfor -%}
+
   {%- if section.settings.collection_types_enable and results.all_types.size > 0 -%}
   <div class="shop-sidebar sidebar-wedget">
     {%- if section.settings.collection_types_title != '' -%}
@@ -46,17 +56,12 @@
     <a class="title" data-bs-toggle="collapse" href="#collapse-types">{{ section.settings.collection_types_title }}</a>
     {%- endif -%}
     <div class="collapse filter-element show" id="collapse-types">
-      <ul class="scrollbar brands-scroll">
+      <ul class="scrollbar type-scroll">
         {% for type in results.all_types %}
         {% if type != blank %}
-        {% assign type_handle = type | handle %}
-        {% assign type_handle = type | handle %}
-        {% assign type_separator = '?' %}
-        {% if results.url contains '?' %}
-          {% assign type_separator = '&' %}
-        {% endif %}
+        {% assign type_encoded = type | url_encode %}
         {% assign type_checked = false %}
-        {% if results.current_type and results.current_type == type %}
+        {% if selected_type_values and selected_type_values contains type_encoded %}
           {% assign type_checked = true %}
         {% endif %}
         <li class="facet-type-item{% if type_checked %} active{% endif %}">
@@ -64,9 +69,11 @@
             <input type="checkbox" class="cust-checkbox" {% if type_checked %}checked{% endif %}
               data-filter-checkbox
               data-filter-target="type"
-              data-filter-value="{{ type | url_encode }}"
-              value="{{ type | url_encode }}">
+              data-filter-value="{{ type_encoded }}"
+              value="{{ type_encoded }}">
             <span class="filter-name">{{ type }}</span>
+            <span class="count-check"></span>
+            <span class="cust-check"></span>
           </label>
         </li>
         {% endif %}
@@ -83,15 +90,12 @@
     <a class="title" data-bs-toggle="collapse" href="#collapse-vendors">{{ section.settings.collection_vendors_title }}</a>
     {%- endif -%}
     <div class="collapse filter-element show" id="collapse-vendors">
-      <ul class="scrollbar">
+      <ul class="scrollbar brands-scroll">
         {% for vendor in results.all_vendors %}
         {% if vendor != blank %}
-        {% assign vendor_separator = '?' %}
-        {% if results.url contains '?' %}
-          {% assign vendor_separator = '&' %}
-        {% endif %}
+        {% assign vendor_encoded = vendor | url_encode %}
         {% assign vendor_checked = false %}
-        {% if results.current_vendor and results.current_vendor == vendor %}
+        {% if selected_vendor_values and selected_vendor_values contains vendor_encoded %}
           {% assign vendor_checked = true %}
         {% endif %}
         <li class="facet-vendor-item{% if vendor_checked %} active{% endif %}">
@@ -99,10 +103,12 @@
             <input type="checkbox" class="cust-checkbox"
               data-filter-checkbox
               data-filter-target="vendor"
-              data-filter-value="{{ vendor | url_encode }}"
-              value="{{ vendor | url_encode }}"
+              data-filter-value="{{ vendor_encoded }}"
+              value="{{ vendor_encoded }}"
               {% if vendor_checked %}checked{% endif %}>
             <span class="filter-name">{{ vendor }}</span>
+            <span class="count-check"></span>
+            <span class="cust-check"></span>
           </label>
         </li>
         {% endif %}
