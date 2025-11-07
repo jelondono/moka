@@ -17,7 +17,7 @@
     <a class="title" data-bs-toggle="collapse" href="#collapse-{{ settings.categories_title }}">{{ section.settings.collection_categories_title }}</a>
     {%- endif -%}
     <div class="collapse filter-element" id="collapse-{{ section.settings.collection_categories_title }}">
-      <ul class="scrollbar">
+      <ul class="scrollbar type-scroll">
         {% for c in collections %}
         {%- if c.products_count >= 1 -%}
         <li {% if collection and collection.handle == c.handle %}class="active"{% endif %}>
@@ -46,18 +46,25 @@
     <a class="title" data-bs-toggle="collapse" href="#collapse-types">{{ section.settings.collection_types_title }}</a>
     {%- endif -%}
     <div class="collapse filter-element show" id="collapse-types">
-      <ul class="scrollbar">
+      <ul class="scrollbar brands-scroll">
         {% for type in results.all_types %}
         {% if type != blank %}
+        {% assign type_handle = type | handle %}
         {% assign type_handle = type | handle %}
         {% assign type_separator = '?' %}
         {% if results.url contains '?' %}
           {% assign type_separator = '&' %}
         {% endif %}
-        <li class="facet-type-item{% if results.current_type == type %} active{% endif %}">
-          <a href="{{ results.url }}{{ type_separator }}filter.p.product_type={{ type | url_encode }}" class="cust-checkbox-label" title="{{ type }}">
+        {% assign type_checked = results.current_type == type %}
+        <li class="facet-type-item{% if type_checked %} active{% endif %}">
+          <label class="cust-checkbox-label" title="{{ type }}">
+            <input type="checkbox" class="cust-checkbox" {% if type_checked %}checked{% endif %}
+              data-filter-checkbox
+              data-filter-target="type"
+              data-filter-value="{{ type | url_encode }}"
+              value="{{ type | url_encode }}">
             <span class="filter-name">{{ type }}</span>
-          </a>
+          </label>
         </li>
         {% endif %}
         {% endfor %}
@@ -80,10 +87,17 @@
         {% if results.url contains '?' %}
           {% assign vendor_separator = '&' %}
         {% endif %}
-        <li class="facet-vendor-item{% if results.current_vendor == vendor %} active{% endif %}">
-          <a href="{{ results.url }}{{ vendor_separator }}filter.p.vendor={{ vendor | url_encode }}" class="cust-checkbox-label" title="{{ vendor }}">
+        {% assign vendor_checked = results.current_vendor == vendor %}
+        <li class="facet-vendor-item{% if vendor_checked %} active{% endif %}">
+          <label class="cust-checkbox-label" title="{{ vendor }}">
+            <input type="checkbox" class="cust-checkbox"
+              data-filter-checkbox
+              data-filter-target="vendor"
+              data-filter-value="{{ vendor | url_encode }}"
+              value="{{ vendor | url_encode }}"
+              {% if vendor_checked %}checked{% endif %}>
             <span class="filter-name">{{ vendor }}</span>
-          </a>
+          </label>
         </li>
         {% endif %}
         {% endfor %}
@@ -232,3 +246,56 @@
   </div>
 </div>
 {% render 'collection-sidebar-css' %}
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var wrapper = document.getElementById('FacetFiltersForm');
+    if (!wrapper) return;
+
+    wrapper.addEventListener('change', function(event) {
+      var target = event.target;
+      if (!target.matches('[data-filter-checkbox]')) {
+        return;
+      }
+
+      var url = new URL(window.location.href);
+      var params = url.searchParams;
+
+      var filterType = target.getAttribute('data-filter-target');
+      var filterValue = target.getAttribute('data-filter-value');
+
+      if (!filterType || !filterValue) {
+        return;
+      }
+
+      switch (filterType) {
+        case 'vendor':
+          handleListParam(params, 'filter.p.vendor', filterValue, target.checked);
+          break;
+        case 'type':
+          handleListParam(params, 'filter.p.product_type', filterValue, target.checked);
+          break;
+      }
+
+      params.delete('page');
+
+      window.location.search = params.toString();
+    });
+
+    function handleListParam(params, key, value, shouldAdd) {
+      var currentValues = params.getAll(key);
+      if (shouldAdd) {
+        if (!currentValues.includes(value)) {
+          params.append(key, value);
+        }
+      } else {
+        params.delete(key);
+        currentValues = currentValues.filter(function(item) {
+          return item !== value;
+        });
+        currentValues.forEach(function(item) {
+          params.append(key, item);
+        });
+      }
+    }
+  });
+</script>
