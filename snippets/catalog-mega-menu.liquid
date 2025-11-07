@@ -4,6 +4,9 @@
     assign category_handle = link.title | handleize
     assign category_links = linklists[category_handle].links
   endif
+  if category_links == blank and menus != blank and menus[category_handle]
+    assign category_links = menus[category_handle].links
+  endif
 %}
 <li class="menu-link menu-link--catalog parant">
   <a href="{{ link.url }}" class="link-title {% if link.current %}active{% endif %}" {% if link.current %}aria-current="page"{% endif %}>
@@ -63,14 +66,8 @@
                       {% endif %}
                     </div>
                     {% if brand_menu and brand_menu.links.size > 0 %}
-                    <ul class="catalog-panel__list catalog-panel__list--brands">
-                      {% for brand in brand_menu.links %}
-                      <li><a href="{{ brand.url }}">{{ brand.title }}</a></li>
-                      {% endfor %}
-                    </ul>
-                    {% elsif column.links and column.links.size > 0 %}
                     <ul class="catalog-panel__list">
-                      {% for item in column.links %}
+                      {% for item in brand_menu.links %}
                       <li><a href="{{ item.url }}">{{ item.title }}</a></li>
                       {% endfor %}
                     </ul>
