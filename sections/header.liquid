@@ -571,16 +571,17 @@
         border-color: currentColor;
     }
     .catalog-panel__columns {
-        display: flex;
-        gap: 32px;
-        align-items: flex-start;
-        flex-wrap: nowrap;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        column-gap: 32px;
+        row-gap: 24px;
+        align-items: start;
     }
     .catalog-panel__column {
         display: flex;
         flex-direction: column;
         gap: 12px;
-        min-width: 180px;
+        min-width: 0;
     }
     .catalog-panel__column-header {
         display: flex;
